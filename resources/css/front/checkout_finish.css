@@ -1,0 +1,102 @@
+/* Container */
+.checkout-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Card */
+.checkout-card {
+    background: rgba(240, 240, 240, 0.95);
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    width: 600px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    animation: slideUp 0.8s ease-out;
+}
+
+/* Title */
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #222;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Refund */
+.refund {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+.refund span {
+    color: #d35400;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn.primary {
+    background: #3498db;
+    color: white;
+}
+.btn.primary:hover {
+    background: #2980b9;
+    transform: translateY(-3px);
+}
+
+.btn.success {
+    background: #27ae60;
+    color: white;
+}
+.btn.success:hover {
+    background: #1e8449;
+    transform: translateY(-3px);
+}
+
+.btn.secondary {
+    background: #e0e0e0;
+    color: #222;
+}
+.btn.secondary:hover {
+    background: #bdbdbd;
+    transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

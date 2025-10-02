@@ -1,0 +1,109 @@
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* background: url('/images/bg-water.jpg') no-repeat center center fixed; */
+    background-size: cover;
+    padding: 20px;
+}
+
+/* Card glass effect */
+.form-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    text-align: left;
+}
+
+/* Judul elegan */
+.form-title {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #111;
+    line-height: 1.2;
+}
+
+/* Input group */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #222;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    outline: none;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+}
+
+/* Link kecil */
+.form-footer {
+    text-align: right;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.form-footer:hover {
+    color: #4A90E2;
+    text-decoration: underline;
+}
+
+/* Tombol lebih elegan */
+.btn-submit {
+    display: block;
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    color: #fff;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #357ABD, #2C5F9E);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-title {
+        font-size: 28px;
+    }
+    .form-card {
+        padding: 25px;
+    }
+}

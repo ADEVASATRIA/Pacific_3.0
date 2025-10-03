@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Front\Admin\AdminAuthController;
+use App\Http\Controllers\Front\Admin\MemberViewController;
+use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
 use App\Http\Controllers\Front\Customer\CheckCustomerController;
 use App\Http\Controllers\Front\Customer\RegisterCustomerController;
@@ -26,4 +29,11 @@ Route::get("/checkout/success/{id}", [CheckoutController::class, 'checkoutSucces
 
 // Route Print Ticket Regular 
 Route::get('/print-ticket/{purchaseID}', [CheckoutViewController::class, 'printTickets'])->name('print_ticket');
+
+
+// Admin Routes
+Route::get('/admin', [AdminAuthController::class, 'index'])->name('admin.index');
+Route::post('/admin/check-pin', [AdminAuthController::class, 'checkPin'])->name('admin.check_pin');
+Route::get('/admin/transaction', [TransactionViewController::class, 'transactionIndex'])->name('admin.transaksi');
+Route::get('/admin/member', [MemberViewController::class, 'viewMemberIndex'])->name('admin.member');
 

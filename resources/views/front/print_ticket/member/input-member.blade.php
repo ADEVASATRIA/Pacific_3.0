@@ -5,7 +5,7 @@
         <div class="form-card">
             <h2 class="form-title">Masukkan No Telepon</h2>
 
-            <form action="{{ route('member_pass') }}" method="POST" class="ticket-form">
+            <form action="{{ route('check_member') }}" method="POST" class="ticket-form">
                 @csrf
                 <div class="form-group">
                     <label for="phone">No Telephone</label>

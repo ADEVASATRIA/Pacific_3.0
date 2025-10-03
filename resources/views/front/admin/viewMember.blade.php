@@ -41,6 +41,7 @@
         <tr>
           <th>ID</th>
           <th>Nama Member</th>
+          <th>Phone</th>
           <th>Masa Awal</th>
           <th>Masa Akhir</th>
           <th>Status</th>
@@ -62,6 +63,7 @@
           <tr>
             <td>{{ $member->id }}</td>
             <td>{{ $member->name }}</td>
+            <td>{{ $member->phone }}</td>
             <td>{{ $member->tiketTerbaru?->date_start ? \Carbon\Carbon::parse($member->tiketTerbaru->date_start)->format('d M Y') : '-' }}</td>
             <td>{{ $endDate?->format('d M Y') ?? '-' }}</td>
             <td><span class="{{ $statusClass }}">{{ $status }}</span></td>

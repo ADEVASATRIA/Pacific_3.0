@@ -16,23 +16,18 @@
             </div>
             <div class="info-row">
                 <span>Nama Club House</span>
-                <span>{{ $customer->clubhouse->name ?? 'Tidak Ada'}}</span>
+                <span>{{ $customer->clubhouse->name ?? 'Tidak Ada' }}</span>
             </div>
         </div>
 
         <!-- Kartu Tiket -->
         <div class="print_content">
-            @foreach ($tickets as $ticket)
-                @php
-                    $entries = $ticketEntries->where('ticket_id', $ticket->id);
-                    //$purchaseDetail = $purchaseDetails->where('id', $ticket->purchase_detail_id)->first();
-                @endphp
-
-                @foreach ($entries as $entry)
+            @if($ticket)
+                @foreach ($ticketEntries as $entry)
                     <div class="ticket-card">
                         <!-- QR Code -->
                         <div class="qr-section">
-                            {!! QrCode::size(120)->generate($entry->code_qr) !!}
+                            {!! QrCode::size(120)->generate($entry->code) !!}
                         </div>
 
                         <!-- Detail Tiket -->
@@ -50,18 +45,12 @@
                                 {{ $ticket->ticketType->name ?? 'Tiket' }} - 
                                 {{ \Carbon\Carbon::parse($entry->date_valid)->translatedFormat('d F Y') }}
                             </p>
-                        
-                            {{-- <p class="ticket-price">
-                                @if($entry->is_free)
-                                    Gratis
-                                @else
-                                    Rp {{ number_format($purchaseDetail->price ?? 0, 0, ',', '.') }}
-                                @endif
-                            </p> --}}
                         </div>
                     </div>
                 @endforeach
-            @endforeach
+            @else
+                <p class="text-center text-red-500">Tidak ada tiket member aktif.</p>
+            @endif
         </div>
     </div>
 @endsection

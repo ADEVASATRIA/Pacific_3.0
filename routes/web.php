@@ -6,6 +6,8 @@ use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
 use App\Http\Controllers\Front\Customer\CheckCustomerController;
 use App\Http\Controllers\Front\Customer\RegisterCustomerController;
+use App\Http\Controllers\Front\Member\MemberController;
+use App\Http\Controllers\Front\Member\PrintMemberViewController;
 use App\Http\Controllers\Front\View\CheckoutViewController;
 use App\Http\Controllers\Front\View\CustomerController;
 use App\Http\Controllers\Front\View\HomeController;
@@ -37,3 +39,7 @@ Route::post('/admin/check-pin', [AdminAuthController::class, 'checkPin'])->name(
 Route::get('/admin/transaction', [TransactionViewController::class, 'transactionIndex'])->name('admin.transaksi');
 Route::get('/admin/member', [MemberViewController::class, 'viewMemberIndex'])->name('admin.member');
 
+// Route Print member
+Route::get('/input-member', [MemberController::class, 'inputMember'])->name('input_member');
+Route::post('/check-member', [MemberController::class, 'checkMember'])->name('check_member');
+Route::get('/print-member/{customerID}', [PrintMemberViewController::class, 'printMember'])->name('member.print_member');

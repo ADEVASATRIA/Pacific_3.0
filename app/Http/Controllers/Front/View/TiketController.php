@@ -17,23 +17,23 @@ class TiketController extends Controller
         
         // Ticket Regular
         $ticketRegular = $filterType == 1 || $filterType == null
-            ? TicketType::where('tipe_khusus', 1)->where('is_active', 1)->get() : collect();
+            ? TicketType::where('tipe_khusus', 1)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
             
         // Ticket Pengantar
         $ticketPengantar = $filterType == 2 || $filterType == null
-            ? TicketType::where('tipe_khusus', 2)->where('is_active', 1)->get() : collect();
+            ? TicketType::where('tipe_khusus', 2)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
         
         // Ticket Pelatih
         $ticketPelatih = $filterType == 3 || $filterType == null
-            ? TicketType::where('tipe_khusus', 3)->where('is_active', 1)->get() : collect();
+            ? TicketType::where('tipe_khusus', 3)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
             
         // Ticket Member
         $ticketMember = $filterType == 4 || $filterType == null
-            ? TicketType::where('tipe_khusus', 4)->where('is_active', 1)->get() : collect();
+            ? TicketType::where('tipe_khusus', 4)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
         
         // Ticket Package 
         $ticketPackage = $filterType == 5 || $filterType == null
-            ? PackageCombo::where('is_active', 1)->get() : collect();
+            ? PackageCombo::where('is_active', 1)->where('deleted_at', null)->get() : collect();
         
         $customer = $customerId ? Customer::find($customerId) : null;
 

@@ -29,12 +29,12 @@ class MemberViewController extends Controller
             ->whereHas('tiketTerbaru', function ($q) use ($request, $today) {
                 if ($request->active === "1") { // hanya aktif
                     $q->whereDate('date_end', '>=', $today)
-                      ->where('code', 'LIKE', 'M%');
+                        ->where('code', 'LIKE', 'M%');
                 }
 
                 if ($request->active === "0") { // hanya non-aktif/expired
                     $q->whereDate('date_end', '<', $today)
-                      ->where('code', 'LIKE', 'M%');
+                        ->where('code', 'LIKE', 'M%');
                 }
 
                 if ($request->awal_masa) {
@@ -51,7 +51,9 @@ class MemberViewController extends Controller
                 'tiketTerbaru',
                 'tickets' => fn($q) => $q->where('code', 'LIKE', 'M%')->orderBy('created_at', 'desc'),
             ])
-            ->get();
+            ->paginate(perPage: 20) // ✅ 10 data per halaman
+            ->withQueryString(); // supaya filter tetap ke-bawa saat pindah halaman
+
 
         // ✅ Hitung total
         $totalActive = $members->filter(function ($m) use ($today) {

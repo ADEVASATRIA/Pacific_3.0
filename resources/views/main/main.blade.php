@@ -60,11 +60,10 @@
             <p class="card-description">Masukkan Nomor Telephone anda untuk cetak tiket pelatih</p>
         </div>
     </div>
-    
+
     <div style="display: flex; justify-content: center; margin-top: -10px; margin-bottom: 30px;">
-        <div class="service-card admin-card" 
-             onclick="handleAdminLogin()"
-             style="max-width: 300px; /* Batasi lebar tombol */
+        <div class="service-card admin-card" onclick="handleAdminLogin()"
+            style="max-width: 300px; /* Batasi lebar tombol */
                     margin: 0; /* Pastikan tidak ada margin tambahan */
                     cursor: pointer;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambah shadow agar menonjol */
@@ -123,35 +122,31 @@
             </div>
         </div>
     </footer>
-    
-    <div id="adminPinModal" class="modal">
+    <div id="adminPinModal" class="modal modal-pin hidden">
         <div class="modal-content">
             <div class="lock-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C9.243 2 7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5zm-3 5c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7zm4 10.723V20h-2v-2.277a1.993 1.993 0 0 1-.567-3.677A2.001 2.001 0 0 1 14 14a1.99 1.99 0 0 1-1 1.723z"/>
+                    <path
+                        d="M12 2C9.243 2 7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5zm-3 5c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7zm4 10.723V20h-2v-2.277a1.993 1.993 0 0 1-.567-3.677A2.001 2.001 0 0 1 14 14a1.99 1.99 0 0 1-1 1.723z" />
                 </svg>
             </div>
-            
+
             <h3>Masukkan PIN Admin</h3>
             <p class="subtitle">Masukkan 4 digit PIN untuk melanjutkan</p>
-            
+
             <p id="pin-error">PIN salah. Silakan coba lagi.</p>
-            
-            <input 
-                type="password" 
-                id="adminPinInput" 
-                class="pin-input" 
-                maxlength="4" 
-                placeholder="••••" 
-                inputmode="numeric"
-                autocomplete="one-time-code">
-            
+
+            <input type="password" id="adminPinInput" class="pin-input" maxlength="4" placeholder="••••"
+                inputmode="numeric" autocomplete="one-time-code">
+
             <div class="button-group">
                 <button class="modal-button cancel" onclick="closeAdminModal()">Batal</button>
-                <button id="adminPinSubmitBtn" class="modal-button submit" type="button" onclick="submitPin()">Verifikasi</button>
+                <button id="adminPinSubmitBtn" class="modal-button submit" type="button"
+                    onclick="submitPin()">Verifikasi</button>
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

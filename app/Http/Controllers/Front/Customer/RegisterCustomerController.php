@@ -10,20 +10,29 @@ class RegisterCustomerController extends Controller
 {
     public function registerDataCustomer(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|regex:/^08[1-9][0-9]{6,10}$/',
-            'dob' => 'required|date',
-            'type_customer' => 'required|in:laki-laki,wanita,anak-anak',
-            'category_customer' => 'required|in:biasa,private,coach',
-            'clubhouse_id' => 'nullable|exists:clubhouses,id',
-            'catatan' => 'nullable|string|max:500',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'phone' => 'required|regex:/^08[1-9][0-9]{6,10}$/',
+                'dob' => 'required|date',
+                'type_customer' => 'required|in:1,2,3',
+                'category_customer' => 'required|in:1,2,3',
+                'clubhouse_id' => 'nullable|exists:clubhouses,id',
+                'catatan' => 'nullable|string|max:500',
+            ]);
 
-        $customer = Customer::create($validatedData);
+            if (Customer::where('phone', $validatedData['phone'])->exists()) {
+                throw new \Exception("Nomor telepon sudah digunakan.");
+            }
 
-        return redirect()->route('index_ticket', ['customer' => $customer->id])
-            ->with('success', 'Data customer berhasil disimpan.');
+            $customer = Customer::create($validatedData);
 
+            return redirect()->route('index_ticket', ['customer' => $customer->id])
+                ->with('success', 'Data customer berhasil disimpan.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
+
 }

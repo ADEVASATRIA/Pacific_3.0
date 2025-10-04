@@ -29,27 +29,27 @@
                             {{ $filterType == 1 ? 'checked' : '' }}>
                         <label for="regular">Regular</label>
 
-                        <input type="radio" id="tiketPengantar" name="filter_type" value="2" onchange="this.form.submit()"
-                            {{ $filterType == 2 ? 'checked' : '' }}>
+                        <input type="radio" id="tiketPengantar" name="filter_type" value="2"
+                            onchange="this.form.submit()" {{ $filterType == 2 ? 'checked' : '' }}>
                         <label for="tiketPengantar">Tiket Pengantar</label>
 
-                        <input type="radio" id="tiketPelatih" name="filter_type" value="3" onchange="this.form.submit()"
-                            {{ $filterType == 3 ? 'checked' : '' }}>
+                        <input type="radio" id="tiketPelatih" name="filter_type" value="3"
+                            onchange="this.form.submit()" {{ $filterType == 3 ? 'checked' : '' }}>
                         <label for="tiketPelatih">Tiket Pelatih</label>
-                        
-                        <input type="radio" id="tiketMember" name="filter_type" value="4" onchange="this.form.submit()"
-                            {{ $filterType == 4 ? 'checked' : '' }}>
+
+                        <input type="radio" id="tiketMember" name="filter_type" value="4"
+                            onchange="this.form.submit()" {{ $filterType == 4 ? 'checked' : '' }}>
                         <label for="tiketMember">Tiket Member</label>
-                        
-                        <input type="radio" id="tiketPackage" name="filter_type" value="5" onchange="this.form.submit()"
-                            {{ $filterType == 5 ? 'checked' : '' }}>
+
+                        <input type="radio" id="tiketPackage" name="filter_type" value="5"
+                            onchange="this.form.submit()" {{ $filterType == 5 ? 'checked' : '' }}>
                         <label for="tiketPackage">Tiket Package</label>
                     </div>
                 </form>
             </div>
 
             <form action="{{ route('submit_form_ticket') }}" method="POST" class="ticket-form">
-            {{-- <form action="" method="POST" class="ticket-form"> --}}
+                {{-- <form action="" method="POST" class="ticket-form"> --}}
                 @csrf
 
                 {{-- Tiket Regular --}}
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 {{-- Tiket Pengantar --}}
                 @if ($ticketPengantar->count())
                     <div class="ticket-section">
@@ -107,7 +107,8 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
+                                    value="{{ $ticket->id }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
                                     value="{{ $ticket->name }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
@@ -118,7 +119,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 {{-- Tiket Pelatih --}}
                 @if ($ticketPelatih->count())
                     <div class="ticket-section">
@@ -132,13 +133,15 @@
                                         <button type="button" class="btn-minus"
                                             data-target="qty-{{ $ticket->id }}">-</button>
                                         <input type="number" name="tickets[{{ $ticket->id }}][qty]"
-                                            id="qty-{{ $ticket->id }}" value="0" min="0" class="qty-input">
+                                            id="qty-{{ $ticket->id }}" value="0" min="0"
+                                            class="qty-input">
                                         <button type="button" class="btn-plus"
                                             data-target="qty-{{ $ticket->id }}">+</button>
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
+                                    value="{{ $ticket->id }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
                                     value="{{ $ticket->name }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
@@ -149,7 +152,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 {{-- Member --}}
                 @if ($ticketMember->count())
                     <div class="ticket-section">
@@ -163,13 +166,15 @@
                                         <button type="button" class="btn-minus"
                                             data-target="qty-{{ $ticket->id }}">-</button>
                                         <input type="number" name="tickets[{{ $ticket->id }}][qty]"
-                                            id="qty-{{ $ticket->id }}" value="0" min="0" class="qty-input">
+                                            id="qty-{{ $ticket->id }}" value="0" min="0"
+                                            class="qty-input">
                                         <button type="button" class="btn-plus"
                                             data-target="qty-{{ $ticket->id }}">+</button>
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
+                                    value="{{ $ticket->id }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
                                     value="{{ $ticket->name }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
@@ -224,7 +229,7 @@
     </div>
 
     {{-- Konfirmasi Modal --}}
-    <div id="confirmModal" class="modal hidden">
+    <div id="confirmModal" class="modal modal-confirm hidden">
         <div class="modal-content">
             <h3>Konfirmasi Pembelian</h3>
             <div class="modal-body">
@@ -242,44 +247,44 @@
         </div>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    function showAlert(type, message) {
-        const existing = document.querySelector('.alert-slide');
-        if (existing) existing.remove();
 
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert-slide ${type}`;
-        alertDiv.innerHTML = `
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
             <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
             <div style="flex:1;">${message}</div>
             <button class="alert-close" aria-label="close">&times;</button>
         `;
-        document.body.appendChild(alertDiv);
+                document.body.appendChild(alertDiv);
 
-        alertDiv.querySelector('.alert-close').addEventListener('click', () => {
-            alertDiv.classList.remove('show');
-            setTimeout(() => alertDiv.remove(), 250);
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                // show
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+
+                // auto hide
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 4000);
+            }
+
+            @if (session('error'))
+                showAlert('error', @json(session('error')));
+            @endif
+
+            @if (session('success'))
+                showAlert('success', @json(session('success')));
+            @endif
         });
-
-        // show
-        setTimeout(() => alertDiv.classList.add('show'), 50);
-
-        // auto hide
-        setTimeout(() => {
-            alertDiv.classList.remove('show');
-            setTimeout(() => alertDiv.remove(), 300);
-        }, 4000);
-    }
-
-    @if(session('error'))
-        showAlert('error', @json(session('error')));
-    @endif
-
-    @if(session('success'))
-        showAlert('success', @json(session('success')));
-    @endif
-});
-</script>
+    </script>
 @endsection
-

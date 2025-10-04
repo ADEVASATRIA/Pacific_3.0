@@ -43,4 +43,27 @@ class Customer extends Model
                 ->where('code', 'LIKE', 'M%')
                 ->latest('created_at'); // ambil ticket terbaru by created_at desc
     }
+
+    public function generateMemberId()
+    {
+        $ctr = 0;
+        $search_limit = 3;
+        $length = 6; // panjang angka random
+
+        while (true) {
+            $member_id = 'PP' . \Carbon\Carbon::now()->format('y') . str_pad(random_int(1, 999999), $length, '0', STR_PAD_LEFT);
+
+            if (self::where('member_id', $member_id)->exists()) {
+                $ctr++;
+                if ($ctr > $search_limit) {
+                    $ctr = 0;
+                    $length++; // kalau mentok, tambah panjang digit
+                }
+            } else {
+                break;
+            }
+        }
+
+        return $member_id;
+    }
 }

@@ -42,7 +42,7 @@ class MemberController extends Controller
         if ($customer) {
             return redirect()->route('member.print_member', ['customerID' => $customer->id]);
         } else {
-            return redirect()->back()->with('error', 'Data Member tidak ditemukan.');
+            return redirect()->back()->with('error', 'Data Member tidak ditemukan / Masa member telah berakhir.');
         }
     }
 

@@ -41,32 +41,37 @@ window.handlePrintTrainerTicket = function () {
 }
 document.addEventListener('DOMContentLoaded', function () {
 
+    const modal = document.getElementById('adminPinModal');
+    const input = document.getElementById('adminPinInput');
+    const errorElement = document.getElementById('pin-error');
+    const submitBtn = document.getElementById('adminPinSubmitBtn');
+
     // 🔹 Fungsi buka modal PIN (global)
     window.handleAdminLogin = function () {
-        const modal = document.getElementById('adminPinModal');
-        const input = document.getElementById('adminPinInput');
-        const errorElement = document.getElementById('pin-error');
+        if (!modal) return;
 
-        if (modal) modal.style.display = 'flex';
-        if (input) {
-            input.value = '';
-            input.focus();
-        }
-        if (errorElement) errorElement.style.display = 'none';
+        modal.classList.remove('hidden');
+        input.value = '';
+        input.focus();
+        errorElement.style.display = 'none';
     };
 
-    // 🔹 Fungsi tutup modal (global, supaya bisa dipanggil onclick HTML)
+    // 🔹 Fungsi tutup modal (global)
     window.closeAdminModal = function () {
-        const modal = document.getElementById('adminPinModal');
-        if (modal) modal.style.display = 'none';
+        if (!modal) return;
+        modal.classList.add('hidden');
     };
 
-    // 🔹 Fungsi submit PIN (private)
-    function submitAdminPin() {
-        const inputPin = document.getElementById('adminPinInput').value;
-        const errorElement = document.getElementById('pin-error');
+    // 🔹 Fungsi submit PIN
+    window.submitPin = function () {
+        const inputPin = input.value.trim();
+        if (!inputPin) {
+            errorElement.innerText = 'Masukkan PIN terlebih dahulu.';
+            errorElement.style.display = 'block';
+            return;
+        }
 
-        fetch('/admin/check-pin', {   // ✅ sesuaikan dengan route
+        fetch('/admin/check-pin', {   // ✅ sesuaikan route backend kamu
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,33 +83,44 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 window.closeAdminModal();
-                window.location.href = data.redirect;
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                }
             } else {
-                errorElement.innerText = data.message;
+                errorElement.innerText = data.message || 'PIN salah. Silakan coba lagi.';
                 errorElement.style.display = 'block';
-                document.getElementById('adminPinInput').value = '';
+                input.value = '';
+                input.focus();
             }
         })
-        .catch(err => {
-            errorElement.innerText = 'Terjadi kesalahan. Coba lagi.';
+        .catch(() => {
+            errorElement.innerText = 'Terjadi kesalahan. Silakan coba lagi.';
             errorElement.style.display = 'block';
         });
-    }
+    };
 
     // 🔹 Bind tombol submit klik
-    const submitBtn = document.getElementById('adminPinSubmitBtn');
     if (submitBtn) {
-        submitBtn.addEventListener('click', submitAdminPin);
+        submitBtn.addEventListener('click', window.submitPin);
     }
 
     // 🔹 Support Enter key
-    const input = document.getElementById('adminPinInput');
     if (input) {
         input.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') submitAdminPin();
+            if (e.key === 'Enter') window.submitPin();
+        });
+    }
+
+    // 🔹 Tutup modal jika klik di luar area konten
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                window.closeAdminModal();
+            }
         });
     }
 });
+
 
 
 

@@ -38,6 +38,11 @@ body {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #e5e7eb;
+  min-height: 100vh;
+  width: 220px;
 }
 
 .brand {
@@ -70,31 +75,52 @@ body {
   color: var(--muted);
 }
 
+.menu {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  flex: 1;
+}
+
 nav {
   margin-top: 6px;
 }
+
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: var(--muted);
-  cursor: pointer;
+  padding: 12px;
   margin-bottom: 6px;
+  border-radius: 8px;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
   transition: all 0.2s ease;
 }
 
-.nav-item.active {
+.nav-item i {
+  width: 20px;
+  height: 20px;
+}
+
+/* .nav-item.active {
   background: var(--glass);
   color: var(--accent);
   font-weight: 600;
-}
+} */
 
+.nav-item.active {
+  background: #111827;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
 .nav-item:hover {
-  color: var(--accent);
-  background: var(--glass);
+  background: #f3f4f6;
+  color: #111827;
 }
 
 .nav-item svg {

@@ -18,7 +18,7 @@
             </div>
             <div class="info-row">
                 <span>Nama Club House</span>
-                <span>{{ $customer->clubhouse->name ?? 'Tidak Ada'}}</span>
+                <span>{{ $customer->clubhouse->name ?? $customer->clubhouse2->name ?? 'Tidak Ada' }}</span>
             </div>
         </div>
 
@@ -44,13 +44,13 @@
                             {{-- Versi front office --}}
                             <p class="ticket-desc screen-only">
                                 {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai Tanggal <strong>{{ \Carbon\Carbon::parse($entry->date_valid)->translatedFormat('d F Y') }}</strong>
+                                Berlaku Sampai Tanggal <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
                         
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
                                 {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} - 
-                                {{ \Carbon\Carbon::parse($entry->date_valid)->translatedFormat('d F Y') }}
+                                {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
                         
                             <p class="ticket-price">

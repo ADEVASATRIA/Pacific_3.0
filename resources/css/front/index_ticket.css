@@ -188,54 +188,6 @@
     transform: translateY(-2px);
 }
 
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  animation: fadeIn 0.3s ease;
-}
-
-.modal.hidden { display: none; }
-
-.modal-content {
-  background: #fff;
-  padding: 24px;
-  border-radius: 16px;
-  max-width: 480px;
-  width: 90%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  animation: scaleIn 0.25s ease;
-}
-
-.modal-content h3 {
-  font-size: 1.3rem;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
-
-.modal-body {
-  margin-top: 10px;
-}
-
-.modal-body p {
-  margin: 6px 0;
-  font-size: 0.95rem;
-}
-
-.modal-body h4 {
-  margin-top: 16px;
-  font-size: 1.05rem;
-  color: #333;
-}
-
 #confirmItems {
   margin: 8px 0;
   padding-left: 20px;
@@ -245,21 +197,6 @@
   margin-bottom: 4px;
   list-style-type: disc;
   font-size: 0.95rem;
-}
-
-.modal-body .total {
-  margin-top: 16px;
-  font-size: 1.15rem;
-  font-weight: bold;
-  color: #222;
-  background: #f8f9fa;
-  padding: 8px 12px;
-  border-radius: 8px;
-}
-
-.modal-actions {
-  margin-top: 22px;
-  text-align: right;
 }
 
 .btn-cancel,
@@ -293,17 +230,142 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(40,167,69,0.4);
 }
+/* =========================
+   MODAL CONFIRM SPECIFIC (index_ticket.css)
+   ========================= */
+
+/* Gunakan selector spesifik agar tidak ditimpa app.css */
+.modal.modal-confirm {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55) !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500 !important;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.modal.modal-confirm.hidden {
+  display: none !important;
+}
+
+.modal-confirm .modal-content {
+  background: #fff !important;
+  padding: 28px !important;
+  border-radius: 18px !important;
+  max-width: 480px !important;
+  width: 90% !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  animation: scaleIn 0.25s ease;
+  border: 2px solid #4A90E2;
+}
+
+.modal-confirm .modal-content h3 {
+  font-size: 1.35rem !important;
+  margin-bottom: 14px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid #e3e8ef;
+  padding-bottom: 10px;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.modal-confirm .modal-body {
+  margin-top: 10px;
+  color: #333;
+}
+
+.modal-confirm .modal-body p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+
+.modal-confirm .modal-body h4 {
+  margin-top: 16px;
+  font-size: 1.05rem;
+  color: #222;
+  font-weight: 600;
+}
+
+.modal-confirm #confirmItems {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.modal-confirm #confirmItems li {
+  margin-bottom: 4px;
+  list-style-type: disc;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.modal-confirm .modal-body .total {
+  margin-top: 18px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #111;
+  background: #f1f5f9;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border-left: 4px solid #4A90E2;
+}
+
+.modal-confirm .modal-actions {
+  margin-top: 24px;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-confirm .btn-cancel,
+.modal-confirm .btn-confirm {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.modal-confirm .btn-cancel {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.modal-confirm .btn-cancel:hover {
+  background: #d6d6d6;
+}
+
+.modal-confirm .btn-confirm {
+  background: #28a745;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+}
+
+.modal-confirm .btn-confirm:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
 
 /* Animations */
 @keyframes fadeIn {
-  from { background: rgba(0,0,0,0); }
-  to { background: rgba(0,0,0,0.5); }
+  from { opacity: 0 }
+  to { opacity: 1 }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from { transform: scale(0.9); opacity: 0 }
+  to { transform: scale(1); opacity: 1 }
 }
+
+
 
 /* Simple Alert Animation */
 .alert-slide {

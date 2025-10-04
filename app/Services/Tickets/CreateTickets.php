@@ -17,17 +17,17 @@ class CreateTickets
     {
         $purchase = $purchaseDetail->purchase;
         $ticketType = TicketType::find($purchaseDetail->purchase_item_id);
-    
+
         if (!$purchase || !$ticketType) {
             throw new \Exception("Purchase atau TicketType tidak ditemukan.");
         }
-    
+
         $createdTickets = [];
         $qty = (int) $purchaseDetail->qty;
-    
+
         for ($i = 0; $i < $qty; $i++) {
             $ticketkodeRef = $ticketType->ticket_kode_ref;
-    
+
             $ticket = new Ticket();
             $ticket->purchase_detail_id = $purchaseDetail->id;
             $ticket->customer_id = $purchase->customer_id;
@@ -37,19 +37,19 @@ class CreateTickets
             $ticket->date_end = now()->addDays($ticketType->duration);
             $ticket->is_active = true;
             $ticket->save();
-    
+
             $entries = [];
-    
+
             // ✅ Entry original
             $entries[] = $this->createEntry($ticket, 1);
-    
+
             // ✅ Entry extra jika ada
             if ($ticketType->qty_extra > 0) {
                 for ($j = 0; $j < $ticketType->qty_extra; $j++) {
                     $entries[] = $this->createEntry($ticket, 2);
                 }
             }
-    
+
             $ticket->entries = $entries;
             $createdTickets[] = $ticket;
         }
@@ -59,10 +59,10 @@ class CreateTickets
         //    'createdTickets' => $createdTickets,
         // ]);
 
-    
+
         return $createdTickets;
     }
-    
+
     private function createEntry(Ticket $ticket, int $type): TicketEntry
     {
         $entry = new TicketEntry();
@@ -73,7 +73,63 @@ class CreateTickets
         $entry->type = $type;
         $entry->created_at = now();
         $entry->save();
-    
+
         return $entry;
+    }
+
+    // Create Ticket Pelatih
+    public function createTicketMember(PurchaseDetail $purchaseDetail)
+    {
+        $purchase = $purchaseDetail->purchase;
+        $ticketType = TicketType::find($purchaseDetail->purchase_item_id);
+
+        if (!$purchase || !$ticketType) {
+            throw new \Exception("Purchase atau TicketType tidak ditemukan.");
+        }
+
+        $createdTickets = [];
+        $qty = (int) $purchaseDetail->qty;
+
+        for ($i = 0; $i < $qty; $i++) {
+            $ticketkodeRef = $ticketType->ticket_kode_ref;
+
+            $ticket = new Ticket();
+            $ticket->purchase_detail_id = $purchaseDetail->id;
+            $ticket->customer_id = $purchase->customer_id;
+            $ticket->code = $ticketkodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
+            $ticket->date_start = now();
+            $ticket->date_end = now()->addDays($ticketType->duration);
+            $ticket->is_active = true;
+            $ticket->save();
+
+            $entries = [];
+
+            // ✅ Entry original
+            $entries[] = $this->createEntry($ticket, 1);
+
+            // ✅ Entry extra jika ada
+            if ($ticketType->qty_extra > 0) {
+                for ($j = 0; $j < $ticketType->qty_extra; $j++) {
+                    $entries[] = $this->createEntry($ticket, 2);
+                }
+            }
+
+            $ticket->entries = $entries;
+            $createdTickets[] = $ticket;
+        }
+
+        $customer = $purchase->customer;
+        $customer->awal_masa_berlaku = Carbon::now();
+        $customer->akhir_masa_berlaku = Carbon::now()->addDays($ticketType->duration);
+
+        // ✅ generate member_id kalau masih kosong
+        if (empty($customer->member_id)) {
+            $customer->member_id = $customer->generateMemberId();
+        }
+
+        $customer->save();
+
+        return $createdTickets;
     }
 }

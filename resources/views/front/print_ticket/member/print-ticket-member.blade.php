@@ -37,13 +37,13 @@
                             {{-- Versi front office --}}
                             <p class="ticket-desc screen-only">
                                 {{ $ticket->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai Tanggal <strong>{{ \Carbon\Carbon::parse($entry->date_valid)->translatedFormat('d F Y') }}</strong>
+                                Berlaku Sampai Tanggal <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
                         
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
                                 {{ $ticket->ticketType->name ?? 'Tiket' }} - 
-                                {{ \Carbon\Carbon::parse($entry->date_valid)->translatedFormat('d F Y') }}
+                                {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
                         </div>
                     </div>

@@ -27,9 +27,9 @@
                     <label for="type_customer">Tipe Customer</label>
                     <select name="type_customer" id="type_customer" required>
                         <option value="">Pilih Tipe Customer</option>
-                        <option value="laki-laki">Laki-laki</option>
-                        <option value="wanita">Wanita</option>
-                        <option value="anak-anak">Anak-anak</option>
+                        <option value="1">Pria</option>
+                        <option value="2">Wanita</option>
+                        <option value="3">Anak</option>
                     </select>
                 </div>
 
@@ -37,9 +37,9 @@
                     <label for="category_customer">Kategori Customer</label>
                     <select name="category_customer" id="category_customer" required>
                         <option value="">Pilih Kategori Customer</option>
-                        <option value="biasa">Biasa</option>
-                        <option value="private">Private</option>
-                        <option value="coach">Coach</option>
+                        <option value="1">Biasa</option>
+                        <option value="2">Coach</option>
+                        <option value="3">Private</option>
                     </select>
                 </div>
 
@@ -63,4 +63,45 @@
 
         </div>
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
+                document.body.appendChild(alertDiv);
+
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                // show
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+
+                // auto hide
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 4000);
+            }
+
+            @if (session('error'))
+                showAlert('error', @json(session('error')));
+            @endif
+
+            @if (session('success'))
+                showAlert('success', @json(session('success')));
+            @endif
+        });
+    </script>
 @endsection

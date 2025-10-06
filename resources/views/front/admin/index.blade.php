@@ -27,18 +27,15 @@
                     <i data-lucide="credit-card"></i>
                     <span>Transaksi</span>
                 </a>
-                <a href="{{ route('admin.member') }}"
-                    class="nav-item @if (request()->routeIs('admin.member')) active @endif">
+                <a href="{{ route('admin.member') }}" class="nav-item @if (request()->routeIs('admin.member')) active @endif">
                     <i data-lucide="users"></i>
                     <span>Member</span>
                 </a>
 
-                <a href="{{ route('admin.package') }}"
-                    class="nav-item @if (request()->routeIs('admin.package')) active @endif">
+                <a href="{{ route('admin.package') }}" class="nav-item @if (request()->routeIs('admin.package')) active @endif">
                     <i data-lucide="package"></i>
                     <span>Package</span>
                 </a>
-
 
                 <a href="{{ route('main') }}" class="nav-item">
                     <i data-lucide="home"></i>
@@ -86,7 +83,8 @@
 
                 <div class="closecashier-form">
                     <label for="saldo_akhir">Saldo Akhir:</label>
-                    <input type="number" id="saldo_akhir" class="closecashier-input" placeholder="Masukkan saldo akhir">
+                    <input type="number" id="saldo_akhir" class="closecashier-input"
+                        placeholder="Masukkan saldo akhir">
                 </div>
 
                 <div class="closecashier-report">
@@ -102,9 +100,28 @@
         </div>
     </div>
 
+    <!-- 🔹 Modal Konfirmasi Success -->
+    <div id="successModal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-icon">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <h3 class="success-title">Kasir Berhasil Ditutup!</h3>
+            <p class="success-message">Anda akan logout.</p>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons();
+        window.CashierRoutes = {
+            processClose: "{{ route('cashsession.processClose') }}",
+            exportReport: "{{ route('cashsession.export') }}"
+        };
+        window.CsrfToken = "{{ csrf_token() }}";
     </script>
     @stack('scripts')
 </body>

@@ -54,6 +54,9 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/input-member', [MemberController::class, 'inputMember'])->name('input_member');
     Route::post('/check-member', [MemberController::class, 'checkMember'])->name('check_member');
     Route::get('/print-member/{customerID}', [PrintMemberViewController::class, 'printMember'])->name('member.print_member');
+    Route::post('/member/extend', [MemberController::class, 'memberExtend'])->name('member.extend');
+    Route::get('/member/list-ticket-member', [MemberController::class, 'indexExtendMember'])->name('member.list-ticket-member');
+    Route::post('/submitFormMember', [CheckoutController::class, 'submitFormMember'])->name('submit_form_member');
 });
 
 Route::middleware('bo.auth')->group(function () {

@@ -55,22 +55,41 @@ class CheckoutService
         $customerId = $request->input('customer_id');
 
 
-        // Cek Member Aktif 
         $member = Customer::where('id', $customerId)
             ->whereNotNull('member_id')
-            ->where('awal_masa_berlaku', '<=', now())
-            ->where('akhir_masa_berlaku', '>=', now())
-            ->where('member_id', '!=', null)
+            ->whereNotNull('awal_masa_berlaku')
+            ->whereNotNull('akhir_masa_berlaku')
+            ->whereNull('deleted_at') // cek yang masih aktif
             ->first();
 
         if ($member) {
-            $hasMemberTicket = $items->contains(function ($i) {
-                $ticketType = TicketType::find($i['id']);
-                return $ticketType && $ticketType->tipe_khusus == 4;
-            });
+            // 🔹 Cek apakah ada tiket member yang masih aktif dan berlaku
+            $ticketMemberExists = Ticket::where('customer_id', $member->id)
+                ->where('is_active', 1)
+                ->where('code', 'like', 'M%')
+                ->where('date_start', '<=', now())
+                ->where('date_end', '>=', now())
+                ->exists();
 
-            if ($hasMemberTicket) {
-                throw new \Exception('Anda masih memiliki tiket member aktif, silakan gunakan terlebih dahulu sebelum membeli kembali.');
+            if ($ticketMemberExists) {
+                // Jika masih ada tiket aktif → cek apakah mau beli tiket member lagi
+                $ticketTypeIds = $items->pluck('id')->toArray();
+                $ticketTypes   = TicketType::whereIn('id', $ticketTypeIds)->get();
+
+                $hasMemberTicket = $ticketTypes->contains(fn($t) => $t->tipe_khusus == 4);
+
+                if ($hasMemberTicket) {
+                    throw new \Exception(
+                        'Anda masih memiliki tiket member aktif, silakan gunakan terlebih dahulu sebelum membeli kembali.'
+                    );
+                }
+            } else {
+                // 🔹 Nonaktifkan tiket lama yang sudah expired tapi statusnya masih active
+                Ticket::where('customer_id', $member->id)
+                    ->where('is_active', 1)
+                    ->where('code', 'like', 'M%')
+                    ->where('date_end', '<', now()) // hanya expired yg di-nonaktifkan
+                    ->update(['is_active' => 0]);
             }
         }
 

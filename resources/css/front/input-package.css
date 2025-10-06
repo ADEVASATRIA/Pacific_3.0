@@ -148,3 +148,29 @@
     cursor: pointer;
     opacity: 0.7;
 }
+
+/* Modal expired pada member input */
+.member-modal {
+    position: fixed; inset: 0; display: flex; justify-content: center; align-items: center;
+    background: rgba(0,0,0,0.6); z-index: 9999;
+}
+.member-modal-content {
+    background: #fff; padding: 2rem; border-radius: 12px; max-width: 400px; text-align: center;
+    animation: memberFadeIn .3s ease;
+}
+.member-modal-actions {
+    margin-top: 1.5rem; display: flex; justify-content: space-around;
+}
+.member-btn {
+    padding: .6rem 1.2rem; border-radius: 6px; text-decoration: none;
+    font-weight: 600; transition: background .2s ease;
+}
+.member-btn-primary { background: #2563eb; color:#fff; }
+.member-btn-primary:hover { background: #1e40af; }
+.member-btn-secondary { background: #e5e7eb; color:#111; }
+.member-btn-secondary:hover { background: #d1d5db; }
+
+@keyframes memberFadeIn {
+    from {opacity:0; transform: scale(.9);}
+    to {opacity:1; transform: scale(1);}
+}

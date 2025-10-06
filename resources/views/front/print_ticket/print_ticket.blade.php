@@ -54,7 +54,7 @@
                             </p>
                         
                             <p class="ticket-price">
-                                @if($entry->is_free)
+                                @if($entry->type == 2)
                                     Gratis
                                 @else
                                     Rp {{ number_format($purchaseDetail->price ?? 0, 0, ',', '.') }}

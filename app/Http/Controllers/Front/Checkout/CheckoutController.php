@@ -5,21 +5,42 @@ namespace App\Http\Controllers\Front\Checkout;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Checkout\CheckoutService;
+use App\Services\Member\ExtendsService;
 use App\Models\Purchase;
 
 class CheckoutController extends Controller
 {
     protected $checkoutService;
+    protected $extendsService;
 
-    public function __construct(CheckoutService $checkoutService)
+    public function __construct(CheckoutService $checkoutService, ExtendsService $extendsService)
     {
         $this->checkoutService = $checkoutService;
+        $this->extendsService = $extendsService;
     }
 
     public function submitFormTicket(Request $request)
     {
         try {
             $data = $this->checkoutService->prepareCheckoutData($request);
+
+            $token = bin2hex(random_bytes(16));
+            $data['checkout_token'] = $token;
+
+            session(['checkout_token' => $token]);
+
+
+            return redirect()->route('checkout_ticket')->with($data);
+
+        } catch (\Throwable $e) {
+            // kembali dengan input dan flash error
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    public function submitFormMember(Request $request){
+        try {
+            $data = $this->extendsService->prepareCheckoutData($request);
 
             $token = bin2hex(random_bytes(16));
             $data['checkout_token'] = $token;

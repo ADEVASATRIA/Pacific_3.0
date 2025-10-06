@@ -5,6 +5,7 @@ use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
+use App\Http\Controllers\Front\Admin\PackageViewController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
 use App\Http\Controllers\Front\Customer\CheckCustomerController;
@@ -57,6 +58,8 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/admin/member', [MemberViewController::class, 'viewMemberIndex'])->name('admin.member');
 
     Route::get('/admin/close', [CashSessionController::class, 'close'])->name('admin.close');
+
+    Route::get('/admin/package', [PackageViewController::class, 'index'])->name('admin.package');
 
     // Member print
     Route::get('/input-member', [MemberController::class, 'inputMember'])->name('input_member');

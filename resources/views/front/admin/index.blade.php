@@ -32,6 +32,14 @@
                     <i data-lucide="users"></i>
                     <span>Member</span>
                 </a>
+
+                <a href="{{ route('admin.package') }}"
+                    class="nav-item @if (request()->routeIs('admin.package')) active @endif">
+                    <i data-lucide="package"></i>
+                    <span>Package</span>
+                </a>
+
+
                 <a href="{{ route('main') }}" class="nav-item">
                     <i data-lucide="home"></i>
                     <span>Home</span>

@@ -16,7 +16,7 @@
             </div>
             <div class="info-row">
                 <span>Nama Club House</span>
-                <span>{{ $customer->clubhouse->name ?? 'Tidak Ada' }}</span>
+                <span>{{ $customer->clubhouse->name ?? $customer->clubhouse2->name ?? 'Tidak Ada' }}</span>
             </div>
         </div>
 

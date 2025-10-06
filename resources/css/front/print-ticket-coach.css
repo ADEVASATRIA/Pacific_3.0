@@ -1,3 +1,6 @@
+/* =======================
+   COMMON STYLES
+======================= */
 .section-title {
     font-size: 18px;
     font-weight: bold;
@@ -8,15 +11,9 @@
 .info-row {
     display: flex;
     justify-content: space-between;
-    font-size: 15px; 
+    font-size: 15px;
     margin-bottom: 8px;
     color: #333;
-}
-
-.divider {
-    margin: 14px 0;
-    border: none;
-    border-top: 1px solid #bbb;
 }
 
 .ticket-wrapper {
@@ -43,8 +40,8 @@
     align-items: center;
 }
 
-
-.qr-section img {
+.qr-section img,
+.qr-section svg {
     width: 180px;
     height: 180px;
     margin: 0 auto 12px auto;
@@ -94,22 +91,128 @@
     transform: scale(1.05);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
+/* =======================
+   SCREEN ONLY
+======================= */
+.screen-only { display: block; }
+.print-only { display: none; }
 
+/* =======================
+   PRINT STYLES
+======================= */
 @media print {
     body {
         background: #fff !important;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-family: monospace, sans-serif;
     }
 
+    /* Hilangkan tombol print */
     .print-btn {
         display: none;
     }
 
-    .ticket-card {
-        box-shadow: none;
-        border: 1px solid #ddd;
+    /* Hanya tampilkan print_content */
+    body * {
+        visibility: hidden;
     }
+    .print_content, .print_content * {
+        visibility: visible;
+    }
+    .print_content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Thermal Ticket Layout */
+    .ticket-card {
+        width: 58mm; /* Bisa diubah sesuai printer thermal */
+        margin: 0 auto 10px auto;
+        padding: 8px 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: none;
+        text-align: center;
+        page-break-inside: avoid;
+    }
+
+    .qr-section img,
+    .qr-section svg {
+        width: 150px !important;
+        height: 150px !important;
+        margin: 0 auto 10px auto;
+        display: block;
+    }
+
+    .ticket-title {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .ticket-subtitle {
+        font-size: 12px;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .ticket-desc {
+        font-size: 12px;
+        margin-bottom: 6px;
+        display: none;
+    }
+
+    .ticket-price {
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+}
+
+/* =======================
+   ALERT STYLES (optional)
+======================= */
+.alert-slide {
+    position: fixed;
+    top: 20px;
+    right: -350px;
+    width: 320px;
+    max-width: 90vw;
+    padding: 12px 16px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 9999;
+    transition: right 0.3s ease;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alert-slide.show { right: 20px; }
+
+.alert-slide.error {
+    background: #fee;
+    border-left: 4px solid #e53e3e;
+    color: #c53030;
+}
+
+.alert-slide.success {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    color: #2f855a;
+}
+
+.alert-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
 }

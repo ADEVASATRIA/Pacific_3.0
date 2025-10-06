@@ -8,6 +8,7 @@ use App\Http\Controllers\Front\Admin\MemberViewController;
 use App\Http\Controllers\Front\Admin\PackageViewController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
+use App\Http\Controllers\Front\Coach\CoachController;
 use App\Http\Controllers\Front\Customer\CheckCustomerController;
 use App\Http\Controllers\Front\Customer\RegisterCustomerController;
 use App\Http\Controllers\Front\Member\MemberController;
@@ -73,6 +74,10 @@ Route::middleware('fo.auth')->group(function () {
     // Package Print 
     Route::get('/input-package', [PackageController::class, 'inputPackage'])->name('input_package');
     Route::post('/check-package', [PackageController::class, 'checkPackage'])->name('check_package');
+
+    // Coach Print
+    Route::get('/input-coach', [CoachController::class, 'inputCoach'])->name('input_coach');
+    Route::post('/check-coach', [CoachController::class, 'checkCoach'])->name('check_coach');
 });
 
 Route::middleware('bo.auth')->group(function () {

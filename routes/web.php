@@ -12,6 +12,7 @@ use App\Http\Controllers\Front\Customer\CheckCustomerController;
 use App\Http\Controllers\Front\Customer\RegisterCustomerController;
 use App\Http\Controllers\Front\Member\MemberController;
 use App\Http\Controllers\Front\Member\PrintMemberViewController;
+use App\Http\Controllers\Front\Package\PackageController;
 use App\Http\Controllers\Front\View\CheckoutViewController;
 use App\Http\Controllers\Front\View\CustomerController;
 use App\Http\Controllers\Front\View\HomeController;
@@ -68,6 +69,10 @@ Route::middleware('fo.auth')->group(function () {
     Route::post('/member/extend', [MemberController::class, 'memberExtend'])->name('member.extend');
     Route::get('/member/list-ticket-member', [MemberController::class, 'indexExtendMember'])->name('member.list-ticket-member');
     Route::post('/submitFormMember', [CheckoutController::class, 'submitFormMember'])->name('submit_form_member');
+
+    // Package Print 
+    Route::get('/input-package', [PackageController::class, 'inputPackage'])->name('input_package');
+    Route::post('/check-package', [PackageController::class, 'checkPackage'])->name('check_package');
 });
 
 Route::middleware('bo.auth')->group(function () {

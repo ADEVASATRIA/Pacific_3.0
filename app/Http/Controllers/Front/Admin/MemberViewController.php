@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use Carbon\Carbon;
+use App\Models\CashSession;
+use Illuminate\Support\Facades\Auth;
 
 class MemberViewController extends Controller
 {
@@ -20,6 +22,7 @@ class MemberViewController extends Controller
             'akhir_masa' => 'nullable|date_format:Y-m-d|after_or_equal:awal_masa',
             'active' => 'nullable|in:0,1',
         ]);
+        $staff = Auth::guard('fo')->user();
 
         $today = now()->startOfDay();
 
@@ -62,10 +65,27 @@ class MemberViewController extends Controller
 
         $totalAll = $members->count();
 
+        $cashSessionQuery = CashSession::where('staff_id', $staff->id)
+            ->whereDate('waktu_buka', $today)
+            ->where('status', 1)
+            ->latest();
+
+        $cashSession = $cashSessionQuery->first();
+
+        if (!$cashSession) {
+            $cashSession = new CashSession([
+                'saldo_awal' => 0,
+                'waktu_buka' => null,
+                'status' => 0,
+            ]);
+        }
+
         return view('front.admin.viewMember', [
             'members' => $members,
             'totalActive' => $totalActive,
             'totalAll' => $totalAll,
+            'cashSession' => $cashSession,
+            'staff' => $staff,
         ]);
     }
 }

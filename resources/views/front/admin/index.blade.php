@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Dashboard Admin')</title>
-    @vite('resources/css/admin/admin.css')
+    @vite(['resources/css/admin/admin.css', 'resources/css/admin/close-modal.css', 'resources/js/admin/index.js'])
     @stack('styles')
 </head>
 
@@ -27,34 +27,22 @@
                     <i data-lucide="credit-card"></i>
                     <span>Transaksi</span>
                 </a>
-                <a href="{{ route('admin.member') }}" class="nav-item @if (request()->routeIs('admin.member')) active @endif">
+                <a href="{{ route('admin.member') }}"
+                    class="nav-item @if (request()->routeIs('admin.member')) active @endif">
                     <i data-lucide="users"></i>
                     <span>Member</span>
                 </a>
-                {{-- <a href="{{ route('admin.customers') }}"
-                    class="nav-item @if (request()->routeIs('admin.customers')) active @endif">
-                    <i data-lucide="user-check"></i>
-                    <span>Pelatih</span>
-                </a> --}}
                 <a href="{{ route('main') }}" class="nav-item">
                     <i data-lucide="home"></i>
                     <span>Home</span>
                 </a>
 
-                <form id="logout-form" action="{{ route('logout.fo') }}" method="POST" style="display:none;">
-                    @csrf
-                </form>
-
-                <a href="#" class="nav-item"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <!-- Tombol Tutup Kasir -->
+                <a href="#" id="btnOpenCloseModal" class="nav-item">
                     <i data-lucide="power"></i>
-                    <span>Logout</span>
+                    <span>Closing</span>
                 </a>
-
-
-
             </nav>
-
 
             <div class="sidebar-footer">© Pacific Global</div>
         </aside>
@@ -73,13 +61,44 @@
         </main>
     </div>
 
+    <!-- 🔹 Modal Tutup Kasir -->
+    <div id="closeCashierModal" class="closecashier-modal">
+        <div class="closecashier-modal-content">
+            <h2>Tutup Kasir</h2>
+
+            <div class="closecashier-body">
+                <p><strong>Staff:</strong> {{ $staff->name ?? '—' }}</p>
+                <p><strong>Saldo Awal:</strong> Rp{{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
+                <p><strong>Waktu Buka:</strong>
+                    {{ isset($cashSession->waktu_buka) ? \Carbon\Carbon::parse($cashSession->waktu_buka)->format('H:i | d M Y') : '—' }}
+                </p>
+                <p><strong>Waktu Closing:</strong>
+                    <span id="closeCashierTime">{{ now()->format('H:i | d M Y') }}</span>
+                </p>
+
+                <div class="closecashier-form">
+                    <label for="saldo_akhir">Saldo Akhir:</label>
+                    <input type="number" id="saldo_akhir" class="closecashier-input" placeholder="Masukkan saldo akhir">
+                </div>
+
+                <div class="closecashier-report">
+                    <p><strong>Report:</strong></p>
+                    <button id="btnExportReport" class="btn-secondary">Export Laporan Harian</button>
+                </div>
+            </div>
+
+            <div class="closecashier-footer">
+                <button id="btnCloseModal" class="btn-danger">Batalkan</button>
+                <button id="btnProcessClose" class="btn-success">Tutup Kasir & Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
     @stack('scripts')
 </body>
-
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
-    lucide.createIcons();
-</script>
-
 
 </html>

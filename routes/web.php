@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
+use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
@@ -24,6 +25,9 @@ Route::post('/logout-bo', [AuthController::class, 'logoutBo'])->name('logout.bo'
 
 
 Route::middleware('fo.auth')->group(function () {
+    Route::post('/cash/open', [CashSessionController::class, 'store'])->name('cash.store');
+    Route::get('/cashsession/export', [CashSessionController::class, 'exportReport'])->name('cashsession.export');
+    Route::post('/cashsession/close', [CashSessionController::class, 'processClose'])->name('cashsession.processClose');
 
     // Halaman utama FO
     Route::get('/', [HomeController::class, 'index'])->name('main');
@@ -51,6 +55,8 @@ Route::middleware('fo.auth')->group(function () {
     Route::post('/admin/check-pin', [AdminAuthController::class, 'checkPin'])->name('admin.check_pin');
     Route::get('/admin/transaction', [TransactionViewController::class, 'transactionIndex'])->name('admin.transaksi');
     Route::get('/admin/member', [MemberViewController::class, 'viewMemberIndex'])->name('admin.member');
+
+    Route::get('/admin/close', [CashSessionController::class, 'close'])->name('admin.close');
 
     // Member print
     Route::get('/input-member', [MemberController::class, 'inputMember'])->name('input_member');

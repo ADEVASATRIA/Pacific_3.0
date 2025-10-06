@@ -22,27 +22,25 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Cari user berdasarkan username
         $user = Admin::where('username', $credentials['username'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return back()->withErrors(['username' => 'Login gagal, periksa username atau password.']);
+            return response()->json(['success' => false, 'message' => 'Login gagal, periksa username atau password.']);
         }
 
-        // 🔹 Jika user adalah FO (is_admin=0, is_root=0)
         if ($user->is_admin == 0 && $user->is_root == 0) {
             Auth::guard('fo')->login($user);
-            return redirect()->route('main'); // dashboard FO
+            return response()->json(['success' => true, 'role' => 'fo']);
         }
 
-        // 🔹 Jika user adalah BO (is_admin=1 atau is_root=1)
         if ($user->is_admin == 1 || $user->is_root == 1) {
             Auth::guard('bo')->login($user);
-            return redirect()->route('dashboard'); // dashboard BO
+            return response()->json(['success' => true, 'role' => 'bo']);
         }
 
-        return back()->withErrors(['username' => 'Role user tidak valid.']);
+        return response()->json(['success' => false, 'message' => 'Role user tidak valid.']);
     }
+
 
     public function logoutFo()
     {

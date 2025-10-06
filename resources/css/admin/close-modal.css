@@ -1,0 +1,92 @@
+/* 🔹 Modal Tutup Kasir (Unique Classes) */
+.closecashier-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+    transition: all 0.3s ease;
+}
+
+.closecashier-modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    animation: closecashierFadeIn 0.25s ease-in-out;
+}
+
+@keyframes closecashierFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.closecashier-body p {
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.closecashier-form {
+    margin: 15px 0;
+}
+
+.closecashier-input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #d3d3d3;
+    font-size: 14px;
+}
+
+.closecashier-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.btn-secondary,
+.btn-danger,
+.btn-success {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #2ecc71;
+}
+
+.btn-danger {
+    background: #e74c3c;
+}
+
+.btn-success {
+    background: #16a085;
+}
+
+.btn-secondary:hover {
+    background: #28b765;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+.btn-success:hover {
+    background: #138a6d;
+}

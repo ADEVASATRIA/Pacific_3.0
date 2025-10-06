@@ -13,6 +13,7 @@
         "laravel/framework": "^12.0",
         "laravel/pulse": "^1.4",
         "laravel/tinker": "^2.10.1",
+        "maatwebsite/excel": "*",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
@@ -54,8 +55,8 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
-        "dev": "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:work --timeout=0 --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite",
-        
+        "dev": "npx concurrently -k -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" \"php artisan serve\" \"php artisan queue:work --timeout=0 --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" \"(sleep 43200 && composer run dev:kill)\" --names=server,queue,logs,vite,autokill",
+        "dev:kill": "pkill -f 'php artisan serve' || true && pkill -f 'queue:work' || true && pkill -f 'npm run dev' || true && pkill -f 'php artisan pail' || true",
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"

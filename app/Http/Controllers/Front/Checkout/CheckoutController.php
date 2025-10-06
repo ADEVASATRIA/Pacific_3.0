@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Checkout\CheckoutService;
 use App\Services\Member\ExtendsService;
 use App\Models\Purchase;
+use Milon\Barcode\DNS1D;
 
 class CheckoutController extends Controller
 {
@@ -38,7 +39,8 @@ class CheckoutController extends Controller
         }
     }
 
-    public function submitFormMember(Request $request){
+    public function submitFormMember(Request $request)
+    {
         try {
             $data = $this->extendsService->prepareCheckoutData($request);
 
@@ -61,18 +63,18 @@ class CheckoutController extends Controller
         $request->validate([
             'items' => 'required|array',
             'customer_id' => 'required|exists:customers,id',
-            
+
             // Promo Validate if data promo is valid
             'promo_id' => 'nullable|exists:promos,id',
-            
+
             // Validate the staff that doing purchase complete
             'staff_pin' => 'required|string',
-            
+
             // Validate payment Method
             'payment' => 'required|integer',
             'payment_info' => 'nullable|string',
             'approval_code' => 'nullable|string',
-            
+
             // Uang kembalian maupun uang yang diterima
             'uangDiterima' => 'nullable|numeric|min:0',
             'kembalian' => 'nullable|numeric|min:0',
@@ -83,14 +85,14 @@ class CheckoutController extends Controller
             'discount' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
         ]);
-        
-        
+
+
         try {
             $purchase = $this->checkoutService->processCheckout($request);
-        
+
             return redirect()->route('checkout_success', $purchase->id)
                 ->with('success', 'Order berhasil dibuat. Nomor Invoice: ' . $purchase->invoice);
-        
+
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal membuat purchase: ' . $e->getMessage());
         }
@@ -98,7 +100,14 @@ class CheckoutController extends Controller
 
     public function checkoutSuccess($id)
     {
-        $purchase = Purchase::with('customer', 'purchaseDetails')->findOrFail($id);
-        return view('front.buy_ticket.checkout_finish', compact('purchase'));
+        // Ambil purchase dengan relasi
+        $purchase = Purchase::with(['customer.clubhouse', 'purchaseDetails', 'staff'])->findOrFail($id);
+
+        // Buat instance DNS1D
+        $barcodeGenerator = new DNS1D();
+        $barcode = $barcodeGenerator->getBarcodePNG($purchase->invoice_no, 'C39'); // Code39
+
+        return view('front.buy_ticket.checkout_finish', compact('purchase', 'barcode'));
     }
+
 }

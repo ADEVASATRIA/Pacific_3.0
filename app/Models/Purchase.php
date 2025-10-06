@@ -39,7 +39,7 @@ class Purchase extends Model
 
     public function staff()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Admin::class);
     }
     public function promo()
     {

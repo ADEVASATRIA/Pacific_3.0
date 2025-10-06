@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 // Login Route
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin'])->name('login.do');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout-fo', [AuthController::class, 'logoutFo'])->name('logout.fo');
+Route::post('/logout-bo', [AuthController::class, 'logoutBo'])->name('logout.bo');
+
 
 Route::middleware('fo.auth')->group(function () {
 

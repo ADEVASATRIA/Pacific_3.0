@@ -41,7 +41,7 @@
           <tr>
             <td><strong>{{ $tx->id }}</strong></td>
             <td>{{ $tx->customer?->name ?? '-' }}</td>
-            <td class="small">{{ $tx->created_at->format('Y-m-d H:i') }}</td>
+            <td class="small">{{ \Carbon\Carbon::parse($tx->created_at)->format('d M Y | H:i') }}</td>
             <td>
               <ul>
                 @foreach($tx->purchaseDetails as $detail)

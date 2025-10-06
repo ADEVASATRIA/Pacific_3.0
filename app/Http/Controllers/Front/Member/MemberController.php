@@ -38,7 +38,7 @@ class MemberController extends Controller
 
         if ($customer && $customer->tiketTerbaru) {
             $ticket = $customer->tiketTerbaru;
-            $dateEnd = \Carbon\Carbon::parse($ticket->date_end)->startOfDay();
+            $dateEnd = Carbon::parse($ticket->date_end)->startOfDay();
 
             if ($dateEnd->gte($today)) {
                 $diffDays = $today->diffInDays($dateEnd, false);

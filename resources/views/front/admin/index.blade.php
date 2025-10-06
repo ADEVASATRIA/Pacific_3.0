@@ -40,6 +40,19 @@
                     <i data-lucide="home"></i>
                     <span>Home</span>
                 </a>
+
+                <form id="logout-form" action="{{ route('logout.fo') }}" method="POST" style="display:none;">
+                    @csrf
+                </form>
+
+                <a href="#" class="nav-item"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i data-lucide="power"></i>
+                    <span>Logout</span>
+                </a>
+
+
+
             </nav>
 
 
@@ -65,7 +78,7 @@
 
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
-  lucide.createIcons();
+    lucide.createIcons();
 </script>
 
 

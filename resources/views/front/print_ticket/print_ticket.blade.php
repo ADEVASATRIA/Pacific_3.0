@@ -3,6 +3,14 @@
 @section('content')
     @vite('resources/css/front/print_ticket.css')
 
+    <div class="notice-info">
+        <p>
+            <strong>Catatan:</strong> Tiket paket <u>tidak dapat dicetak</u> di halaman ini.
+            Silakan cetak tiket paket melalui tombol <b>"Cetak Tiket"</b> di halaman utama.
+        </p>
+    </div>
+
+
     <div class="ticket-wrapper">
         <!-- Tombol Print -->
         <div class="print-btn">
@@ -18,7 +26,7 @@
             </div>
             <div class="info-row">
                 <span>Nama Club House</span>
-                <span>{{ $customer->clubhouse->name ?? $customer->clubhouse2->name ?? 'Tidak Ada' }}</span>
+                <span>{{ $customer->clubhouse->name ?? ($customer->clubhouse2->name ?? 'Tidak Ada') }}</span>
             </div>
         </div>
 
@@ -40,21 +48,22 @@
                         <!-- Detail Tiket -->
                         <div class="ticket-info">
                             <h2 class="ticket-title">{{ $ticket->code }}</h2>
-                        
+
                             {{-- Versi front office --}}
                             <p class="ticket-desc screen-only">
                                 {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai Tanggal <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                Berlaku Sampai Tanggal
+                                <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
-                        
+
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} - 
+                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} -
                                 {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
-                        
+
                             <p class="ticket-price">
-                                @if($entry->type == 2)
+                                @if ($entry->type == 2)
                                     Gratis
                                 @else
                                     Rp {{ number_format($purchaseDetail->price ?? 0, 0, ',', '.') }}

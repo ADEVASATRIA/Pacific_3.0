@@ -74,7 +74,7 @@ class CheckoutService
             if ($ticketMemberExists) {
                 // Jika masih ada tiket aktif → cek apakah mau beli tiket member lagi
                 $ticketTypeIds = $items->pluck('id')->toArray();
-                $ticketTypes   = TicketType::whereIn('id', $ticketTypeIds)->get();
+                $ticketTypes = TicketType::whereIn('id', $ticketTypeIds)->get();
 
                 $hasMemberTicket = $ticketTypes->contains(fn($t) => $t->tipe_khusus == 4);
 
@@ -142,12 +142,27 @@ class CheckoutService
                 $ticket_kode_ref = $row->ticket_kode_ref ?? null;
             } elseif ($type === 3) {
                 $row = PackageCombo::find($id);
+                $packageComboDetail = PackageComboDetail::where('package_combo_id', $id)->first();
                 if (!$row) {
                     throw new \Exception("Package #{$id} tidak ditemukan.");
                 }
                 $price = intval($row->price);
                 $name = $row->name;
+                $qty_extra = $packageComboDetail->qty_extra ?? 0;
             }
+
+            // dd(
+            //     $type,
+            //     $id,
+            //     $name,
+            //     $qty,
+            //     $price,
+            //     $type === 1 ? $id : null,
+            //     $type === 3 ? $id : null,
+            //     $type === 2 ? $id : null,
+            //     $qty_extra,
+            //     $ticket_kode_ref,
+            // );
 
             return [
                 'type_purchase' => $type,
@@ -211,16 +226,20 @@ class CheckoutService
 
             // // 🎟️ Generate ticket (kalau diaktifkan)
             $ticketService = new CreateTickets();
-            $purchase->load('purchaseDetails.ticketType');
+            $purchase->load('purchaseDetails.ticketType', 'purchaseDetails.packageCombo');
+
             foreach ($purchase->purchaseDetails as $pd) {
-                if ($pd->type == 1 && $pd->ticketType && $pd->ticketType->tipe_khusus == 1) {
-                    // dd('sini');
-                    $ticketService->createTicketRegular($pd);
-                } elseif ($pd->type == 1 && $pd->ticketType && $pd->ticketType->tipe_khusus == 4) {
-                    // dd('masuk sini');
-                    $ticketService->createTicketMember($pd);
+                if ($pd->type == 1 && $pd->ticketType) {
+                    if ($pd->ticketType->tipe_khusus == 1) {
+                        $ticketService->createTicketRegular($pd);
+                    } elseif ($pd->ticketType->tipe_khusus == 4) {
+                        $ticketService->createTicketMember($pd);
+                    }
+                } elseif ($pd->type == 3 && $pd->packageCombo && $pd->packageCombo->tipe_khusus == 1) {
+                    $ticketService->createTicketPackage($pd);
                 }
             }
+
 
 
             DB::commit();

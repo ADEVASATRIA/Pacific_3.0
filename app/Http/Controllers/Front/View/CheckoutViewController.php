@@ -16,7 +16,7 @@ class CheckoutViewController extends Controller
 {
     public function checkoutView(Request $request)
     {
-        
+
         $items = session("items");
         $customerId = session('customer_id');
         $token = session('checkout_token');
@@ -26,7 +26,7 @@ class CheckoutViewController extends Controller
                 ->route("main")
                 ->with("error", "Akses tidak valid.");
         }
-        
+
         $customer = Customer::find($customerId);
         return view("front.buy_ticket.checkout_view", [
             "items" => $items,
@@ -39,19 +39,25 @@ class CheckoutViewController extends Controller
             // "sponsor" => $sponsor,
         ]);
     }
-    
-    public function printTickets($purchaseId){
+
+    public function printTickets($purchaseId)
+    {
         // Ambil data utama
         $purchase = Purchase::findOrFail($purchaseId);
         $purchaseDetails = PurchaseDetail::where('purchase_id', $purchaseId)->get();
         $customer = Customer::findOrFail($purchase->customer_id);
-    
-        // Ambil semua tiket dari semua purchase detail
-        $tickets = Ticket::whereIn('purchase_detail_id', $purchaseDetails->pluck('id'))->get();
-    
-        // Ambil ticket entries untuk semua tiket
+
+        // Filter hanya purchase detail dengan type == 1 (ticket_type)
+        $allowedDetailIds = $purchaseDetails
+            ->filter(fn($detail) => $detail->type == 1)
+            ->pluck('id');
+
+        // Ambil semua tiket dari detail yang diizinkan
+        $tickets = Ticket::whereIn('purchase_detail_id', $allowedDetailIds)->get();
+
+        // Ambil ticket entries untuk tiket tersebut
         $ticketEntries = TicketEntry::whereIn('ticket_id', $tickets->pluck('id'))->get();
-    
+
         return view("front.print_ticket.print_ticket", [
             "purchase" => $purchase,
             "customer" => $customer,
@@ -60,4 +66,6 @@ class CheckoutViewController extends Controller
             "ticketEntries" => $ticketEntries,
         ]);
     }
+
+
 }

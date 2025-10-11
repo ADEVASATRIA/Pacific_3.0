@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
@@ -19,6 +20,9 @@ use App\Http\Controllers\Front\View\CustomerController;
 use App\Http\Controllers\Front\View\HomeController;
 use App\Http\Controllers\Front\View\TiketController;
 use Illuminate\Support\Facades\Route;
+
+// Controller Back
+
 
 // Login Route
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -83,5 +87,9 @@ Route::middleware('fo.auth')->group(function () {
 Route::middleware('bo.auth')->group(function () {
     // Halaman utama BO
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Route Transaction View
+    Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
+    Route::get('/transaction/detail/{id}', [TransactionController::class, 'detail'])->name('transaction.detail');
 });
 

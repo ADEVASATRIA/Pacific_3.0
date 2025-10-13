@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Back\Promo\PromoController;
 use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
@@ -91,5 +92,12 @@ Route::middleware('bo.auth')->group(function () {
     // Route Transaction View
     Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
     Route::get('/transaction/detail/{id}', [TransactionController::class, 'detail'])->name('transaction.detail');
+
+    //Route Promo Management view back office
+    Route::get('/promo', [PromoController::class, 'index'])->name('promo');
+    Route::get('/create-promo', [PromoController::class, 'viewCreate'])->name('view.add.promo');
+    Route::post('/do-create-promo', [PromoController::class, 'add'])->name('add.promo');
+    Route::post('/edit-promo/{id}', [PromoController::class, 'edit'])->name('edit.promo');
+    Route::delete('/delete-promo/{id}', [PromoController::class, 'delete'])->name('delete.promos');
 });
 

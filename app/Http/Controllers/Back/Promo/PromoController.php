@@ -41,11 +41,12 @@ class PromoController extends Controller
         // Kirim variabel ke view
         return view('back.promo.index', compact('promo', 'isActive', 'tickets'));
     }
-    public function viewCreate()
+    public function getPromo($id)
     {
-        $tickets = TicketType::all();
-        return view('back.promo.create', compact('tickets'));
+        $promo = Promo::findOrFail($id);
+        return response()->json($promo);
     }
+
 
     public function add(Request $request)
     {

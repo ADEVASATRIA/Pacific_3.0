@@ -62,11 +62,15 @@
                                 @endif
                             </td>
                             <td>
+                                <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
+                                    Edit
+                                </button>
                                 <button class="btn btn-danger btn-sm"
                                     onclick="openConfirmModal({{ $item->id }}, '{{ $item->code }}')">
                                     Delete
                                 </button>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
@@ -232,6 +236,120 @@
         </div>
     </div>
 
+    {{-- ✅ Modal Edit Promo --}}
+    <div class="modal fade" id="modalEditPromo" tabindex="-1" aria-labelledby="modalEditPromoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                <div class="modal-header bg-warning text-white py-3 px-4">
+                    <h5 class="modal-title fw-semibold" id="modalEditPromoLabel">
+                        <i class="fas fa-edit me-2"></i> Edit Data Promo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body bg-light py-4">
+                    <form id="formEditPromo" method="POST" class="needs-validation" novalidate>
+                        @csrf
+                        {{-- nanti action diisi via JS: /edit-promo/{id} --}}
+                        <div class="container-fluid">
+                            <div class="row g-4">
+                                {{-- semua field sama seperti tambah promo --}}
+                                <div class="col-md-6">
+                                    <label for="edit_code" class="form-label fw-semibold">Kode Promo</label>
+                                    <input type="text" id="edit_code" name="code" class="form-control shadow-sm"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_description" class="form-label fw-semibold">Deskripsi</label>
+                                    <textarea id="edit_description" name="description" class="form-control shadow-sm" rows="1"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_type" class="form-label fw-semibold">Tipe Promo</label>
+                                    <select id="edit_type" name="type" class="form-select shadow-sm" required>
+                                        <option value="1">Persentase</option>
+                                        <option value="2">Nominal Tetap</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_value" class="form-label fw-semibold">Nilai</label>
+                                    <input type="number" id="edit_value" name="value" class="form-control shadow-sm"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_quota" class="form-label fw-semibold">Kuota</label>
+                                    <input type="number" id="edit_quota" name="quota" class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_start_date" class="form-label fw-semibold">Tanggal Mulai</label>
+                                    <input type="date" id="edit_start_date" name="start_date"
+                                        class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_expired_date" class="form-label fw-semibold">Tanggal Berakhir</label>
+                                    <input type="date" id="edit_expired_date" name="expired_date"
+                                        class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_min_purchase" class="form-label fw-semibold">Minimal
+                                        Pembelian</label>
+                                    <input type="number" id="edit_min_purchase" name="min_purchase"
+                                        class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_max_discount" class="form-label fw-semibold">Maksimal Diskon</label>
+                                    <input type="number" id="edit_max_discount" name="max_discount"
+                                        class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_is_active" class="form-label fw-semibold">Status</label>
+                                    <select id="edit_is_active" name="is_active" class="form-select shadow-sm" required>
+                                        <option value="1">Aktif</option>
+                                        <option value="0">Tidak Aktif</option>
+                                    </select>
+                                </div>
+
+                                {{-- Select Tickets --}}
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold d-block mb-2">Pilih Tiket yang Berlaku</label>
+                                    <div class="border bg-white p-3 rounded-3 shadow-sm">
+                                        <div class="row">
+                                            @foreach ($tickets as $ticket)
+                                                <div class="col-md-4 col-sm-6 mb-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input edit-ticket-checkbox"
+                                                            type="checkbox" value="{{ $ticket->id }}"
+                                                            id="edit_ticket_{{ $ticket->id }}" name="ticket_types[]">
+                                                        <label class="form-check-label"
+                                                            for="edit_ticket_{{ $ticket->id }}">
+                                                            {{ $ticket->name }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer bg-white border-0 pt-0 pb-4 pe-4">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                        Batal
+                    </button>
+                    <button type="submit" form="formEditPromo" class="btn btn-warning text-white px-4">
+                        <i class="fas fa-save me-1"></i> Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     {{-- ====================== --}}
     {{-- ✅ Modal Konfirmasi Delete --}}
@@ -267,6 +385,8 @@
             <h3 class="success-title">
                 @if (session('action') === 'delete')
                     Promo Berhasil Dihapus!
+                @elseif (session('action') === 'edit')
+                    Promo Berhasil Diedit!
                 @else
                     Promo Berhasil Ditambahkan!
                 @endif
@@ -274,10 +394,13 @@
             <p class="success-message">
                 @if (session('action') === 'delete')
                     Data promo telah dihapus dari sistem.
+                @elseif (session('action') === 'edit')
+                    Data promo telah berhasil diperbarui.
                 @else
                     Data promo baru telah berhasil disimpan.
                 @endif
             </p>
+
         </div>
     </div>
 
@@ -309,6 +432,50 @@
             promoInfo.innerHTML = `<p>Apakah Anda yakin ingin menghapus promo <strong>${code}</strong>?</p>`;
             deletePromoForm.action = `/delete-promo/${id}`;
         }
+
+        async function openEditModal(id) {
+            try {
+                const response = await fetch(`/get-promo/${id}`);
+                const data = await response.json();
+                // console.log(data);
+
+                // ambil ticket_types langsung dari data (bukan result.ticket_types)
+                const ticketTypes = Array.isArray(data.ticket_types) ?
+                    data.ticket_types :
+                    [];
+
+                // isi field form edit
+                document.getElementById('formEditPromo').action = `/edit-promo/${id}`;
+                document.getElementById('edit_code').value = data.code ?? '';
+                document.getElementById('edit_description').value = data.description ?? '';
+                document.getElementById('edit_type').value = data.type ?? '';
+                document.getElementById('edit_value').value = data.value ?? '';
+                document.getElementById('edit_quota').value = data.quota ?? '';
+                document.getElementById('edit_start_date').value = data.start_date ?? '';
+                document.getElementById('edit_expired_date').value = data.expired_date ?? '';
+                document.getElementById('edit_min_purchase').value = data.min_purchase ?? '';
+                document.getElementById('edit_max_discount').value = data.max_discount ?? '';
+                document.getElementById('edit_is_active').value = data.is_active ?? 1;
+
+                // reset semua checkbox tiket
+                document.querySelectorAll('.edit-ticket-checkbox').forEach(cb => cb.checked = false);
+
+                // centang tiket sesuai data ticket_types
+                ticketTypes.forEach(ticketId => {
+                    const checkbox = document.getElementById(`edit_ticket_${ticketId}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+
+                // tampilkan modal edit
+                const modal = new bootstrap.Modal(document.getElementById('modalEditPromo'));
+                modal.show();
+            } catch (error) {
+                alert('Gagal memuat data promo.');
+                console.error(error);
+            }
+        }
+
+
 
         cancelBtn.addEventListener('click', () => {
             confirmModal.style.display = 'none';

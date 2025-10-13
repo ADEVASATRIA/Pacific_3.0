@@ -95,7 +95,7 @@ Route::middleware('bo.auth')->group(function () {
 
     //Route Promo Management view back office
     Route::get('/promo', [PromoController::class, 'index'])->name('promo');
-    Route::get('/create-promo', [PromoController::class, 'viewCreate'])->name('view.add.promo');
+    Route::get('/get-promo/{id}', [PromoController::class, 'getPromo']);
     Route::post('/do-create-promo', [PromoController::class, 'add'])->name('add.promo');
     Route::post('/edit-promo/{id}', [PromoController::class, 'edit'])->name('edit.promo');
     Route::delete('/delete-promo/{id}', [PromoController::class, 'delete'])->name('delete.promos');

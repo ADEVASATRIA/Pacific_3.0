@@ -32,4 +32,11 @@ class Promo extends Model
     {
         return json_decode($value);
     }
+
+    public function tickets()
+    {
+        return $this->belongsToMany(TicketType::class);
+    }
 }
+
+

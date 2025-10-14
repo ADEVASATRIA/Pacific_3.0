@@ -104,7 +104,9 @@ Route::middleware('bo.auth')->group(function () {
 
     // Route Ticket Types view back office
     Route::get('/ticket-types', [TicketTypeController::class, 'index'])->name('ticket-types');
+    Route::get('/get-ticket-types/{id}', [TicketTypeController::class, 'getTicketTypes']);
     Route::post('/do-create-ticket-type', [TicketTypeController::class, 'add'])->name('add.ticket_types');
+    Route::post('/edit-ticket-type/{id}', [TicketTypeController::class, 'edit'])->name('edit.ticket_types');
     Route::delete('/delete-ticket-type/{id}', [TicketTypeController::class, 'delete'])->name('delete.ticket_types');
 });
 

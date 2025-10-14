@@ -69,4 +69,35 @@ class TicketTypeController extends Controller
         ]);
     }
 
+    public function getTicketTypes($id){
+        $ticketType = TicketType::findOrFail($id);
+        
+        return response()->json($ticketType);
+    }
+
+    public function edit(Request $request, $id){
+        $ticketType = TicketType::findOrFail($id);
+
+        $validatedFields = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'duration' => 'required|integer|min:1',
+            'qty_extra' => 'required|integer|min:0',
+            'weight' => 'required|integer|min:1',
+            'is_dob_mandatory' => 'required|integer',
+            'is_phone_mandatory' => 'required|integer',
+            'is_active' => 'required|integer',
+            'can_buy_tiket_pengantar' => 'required|integer',
+            'tipe_khusus' => 'required|integer',
+            'ticket_kode_ref' => 'required|string|max:255'
+        ]);
+
+        $ticketType->update($validatedFields);
+
+        return redirect()->route('ticket-types')->with([
+            'success' => true,
+            'action' => 'edit'
+        ]);
+    }
+
 }

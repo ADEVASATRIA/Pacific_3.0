@@ -87,9 +87,9 @@
 
                             <td class="text-center">{{ $item->ticket_kode_ref }}</td>
                             <td>
-                                {{-- <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
+                                <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
                                     Edit
-                                </button> --}}
+                                </button>
                                 <button class="btn btn-danger btn-sm"
                                     onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
                                     Delete
@@ -113,6 +113,8 @@
             </div>
         </div>
 
+
+        {{-- Modal Tambah data Ticket Types --}}
         <div class="modal fade" id="modalTambahTicketTypes" tabindex="-1" aria-labelledby="modalTambahTicketTypesLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -246,6 +248,145 @@
             </div>
         </div>
 
+        {{-- Modal edit data ticket Types --}}
+        <div class="modal fade" id="modalEditTicketTypes" tabindex="-1" aria-labelledby="modalEditTicketTypesLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+
+                    {{-- Header --}}
+                    <div class="modal-header bg-gradient-primary text-white py-3 px-4">
+                        <h5 class="modal-title fw-semibold" id="modalEditTicketTypesLabel">
+                            <i class="fas fa-tags me-2"></i>Tambah Ticket Type Baru
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="modal-body bg-light py-4">
+                        <form id="formEditTicketTypes" method="POST" class="needs-validation" novalidate>
+                            @csrf
+
+                            <div class="container-fluid">
+                                <div class="row g-4">
+                                    {{-- Nama Tiket --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_name" class="form-label fw-semibold">Nama Tiket</label><span
+                                            class="text-danger">*</span>
+                                        <input type="text" id="edit_name" name="name" class="form-control shadow-sm"
+                                            required>
+                                    </div>
+
+                                    {{-- Harga Tiket --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_price" class="form-label fw-semibold">Harga Tiket</label><span
+                                            class="text-danger">*</span>
+                                        <input type="number" id="edit_price" name="price" class="form-control shadow-sm"
+                                            required>
+                                    </div>
+
+                                    {{-- Durasi Tiket --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_duration" class="form-label fw-semibold">Durasi (hari)</label><span
+                                            class="text-danger">*</span>
+                                        <input type="number" id="edit_duration" name="duration"
+                                            class="form-control shadow-sm" required>
+                                    </div>
+
+                                    {{-- Extra Ticket --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_qty_extra" class="form-label fw-semibold">Extra Tiket</label>
+                                        <input type="number" id="edit_qty_extra" name="qty_extra"
+                                            class="form-control shadow-sm">
+                                    </div>
+
+                                    {{-- Weight --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_weight" class="form-label fw-semibold">Urutan Prioritas</label>
+                                        <input type="number" id="edit_weight" name="weight" class="form-control shadow-sm"
+                                            min="1">
+                                    </div>
+
+                                    {{-- Ticket Kode Ref --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_ticket_kode_ref" class="form-label fw-semibold">Ticket Code
+                                            Reference</label><span class="text-danger">*</span>
+                                        <input type="text" id="edit_ticket_kode_ref" name="ticket_kode_ref"
+                                            class="form-control shadow-sm" required>
+                                    </div>
+
+                                    {{-- DOB Mandatory --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_is_dob_mandatory" class="form-label fw-semibold">DOB Required</label>
+                                        <select name="is_dob_mandatory" id="edit_is_dob_mandatory"
+                                            class="form-select shadow-sm" required>
+                                            <option value="1">Iya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Phone Mandatory --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_is_phone_mandatory" class="form-label fw-semibold">Phone
+                                            Required</label>
+                                        <select name="is_phone_mandatory" id="edit_is_phone_mandatory"
+                                            class="form-select shadow-sm" required>
+                                            <option value="1">Iya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Active --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_is_active" class="form-label fw-semibold">Status Aktif</label>
+                                        <select name="is_active" id="edit_is_active" class="form-select shadow-sm" required>
+                                            <option value="1">Iya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Bisa Beli Tiket Pengantar --}}
+                                    <div class="col-md-6">
+                                        <label for="edit_can_buy_tiket_pengantar" class="form-label fw-semibold">Bisa Beli
+                                            Tiket
+                                            Pengantar</label>
+                                        <select name="can_buy_tiket_pengantar" id="edit_can_buy_tiket_pengantar"
+                                            class="form-select shadow-sm" required>
+                                            <option value="1">Iya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Tipe Khusus --}}
+                                    <div class="col-md-6" id="edit_tipeKhusus">
+                                        <label for="edit_tipeKhusus" class="form-label fw-semibold">Tipe Khusus</label>
+                                        <select name="tipe_khusus" id="edit_tipeKhusus" class="form-select shadow-sm"
+                                            required>
+                                            <option value="1">Normal</option>
+                                            <option value="2">Pengantar</option>
+                                            <option value="3">Pelatih</option>
+                                            <option value="4">Member</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer bg-white border-0 pt-0 pb-4 pe-4">
+                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" form="formEditTicketTypes" class="btn btn-warning text-white px-4">
+                            <i class="fas fa-save me-1"></i> Update
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         {{-- Modal Delete --}}
         <div id="confirmDeleteModal" class="closecashier-modal">
             <div class="closecashier-modal-content">
@@ -296,7 +437,6 @@
         </div>
 
 
-        {{-- Script: hide "Tipe Khusus" jika can_buy_tiket_pengantar = 1 --}}
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const canBuyTiket = document.getElementById('can_buy_tiket_pengantar');
@@ -322,6 +462,63 @@
                 deleteTicketTypeForm.action = `/delete-ticket-type/${id}`;
             }
 
+            async function openEditModal(id) {
+                try {
+                    // Ambil data ticket type dari backend
+                    const response = await fetch(`/get-ticket-types/${id}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                    const data = await response.json();
+                    console.log('Ticket Type Data:', data);
+
+                    // Pastikan form action diarahkan ke route edit
+                    document.getElementById('formEditTicketTypes').action = `/edit-ticket-type/${id}`;
+
+                    // Isi semua field form edit sesuai data dari response
+                    document.getElementById('edit_name').value = data.name ?? '';
+                    document.getElementById('edit_price').value = data.price ?? '';
+                    document.getElementById('edit_duration').value = data.duration ?? '';
+                    document.getElementById('edit_qty_extra').value = data.qty_extra ?? '';
+                    document.getElementById('edit_weight').value = data.weight ?? '';
+                    document.getElementById('edit_ticket_kode_ref').value = data.ticket_kode_ref ?? '';
+
+                    document.getElementById('edit_is_dob_mandatory').value = data.is_dob_mandatory ?? 0;
+                    document.getElementById('edit_is_phone_mandatory').value = data.is_phone_mandatory ?? 0;
+                    document.getElementById('edit_is_active').value = data.is_active ?? 1;
+                    document.getElementById('edit_can_buy_tiket_pengantar').value = data.can_buy_tiket_pengantar ?? 0;
+                    document.getElementById('edit_tipeKhusus').value = data.tipe_khusus ?? 1;
+
+                    // Tampilkan modal edit
+                    const modal = new bootstrap.Modal(document.getElementById('modalEditTicketTypes'));
+                    modal.show();
+
+                    // Jalankan toggle visibilitas untuk "Tipe Khusus" (agar konsisten)
+                    toggleEditTipeKhusus();
+
+                } catch (error) {
+                    alert('Gagal memuat data Ticket Type.');
+                    console.error('Error:', error);
+                }
+            }
+
+            // Fungsi untuk sembunyikan field "Tipe Khusus" jika can_buy_tiket_pengantar = 1
+            function toggleEditTipeKhusus() {
+                const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
+                const tipeKhususContainer = document.getElementById('edit_tipeKhusus').closest('div');
+
+                tipeKhususContainer.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
+            }
+
+            // Event listener agar toggle tetap aktif kalau user ubah dropdown
+            document.addEventListener('DOMContentLoaded', function() {
+                const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
+                if (canBuyTiket) {
+                    canBuyTiket.addEventListener('change', toggleEditTipeKhusus);
+                }
+            });
+
+
+
             cancelBtn.addEventListener('click', () => {
                 confirmModal.style.display = 'none';
             });
@@ -334,6 +531,5 @@
                 });
             @endif
         </script>
-
 
     @endsection

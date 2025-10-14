@@ -38,7 +38,7 @@
                             <a href="{{ route('ticket-types') }}" class="menu-link">Ticket Types</a>
                         </li>
                         <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
-                            <a href="" class="menu-link">Package Combo</a>
+                            <a href="{{ route('package-combo') }}" class="menu-link">Package Combo</a>
                         </li>
                     </ul>
                 </li>

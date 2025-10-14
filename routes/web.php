@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\Promo\PromoController;
+use App\Http\Controllers\Back\Tickets\PackageComboController;
 use App\Http\Controllers\Back\Tickets\TicketTypeController;
 use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
@@ -108,5 +109,12 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/do-create-ticket-type', [TicketTypeController::class, 'add'])->name('add.ticket_types');
     Route::post('/edit-ticket-type/{id}', [TicketTypeController::class, 'edit'])->name('edit.ticket_types');
     Route::delete('/delete-ticket-type/{id}', [TicketTypeController::class, 'delete'])->name('delete.ticket_types');
+
+    //Route Package Combo view Back office
+    Route::get('/package-combo', [PackageComboController::class, 'index'])->name('package-combo');
+    Route::get('/get-package-combo/{id}', [PackageComboController::class, 'getPackageCombo'])->name('get.package-combo');
+    Route::post('/add-package-combo', [PackageComboController::class, 'add'])->name('add.package-combo');
+    Route::post('/edit-package-combo/{id}', [PackageComboController::class, 'edit'])->name('edit.package-combo');
+    Route::delete('/delete-package-combo/{id}', [PackageComboController::class, 'delete'])->name('delete.package-combo');
 });
 

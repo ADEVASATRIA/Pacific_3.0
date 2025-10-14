@@ -17,7 +17,7 @@ class TicketTypeController extends Controller
             $query->where('is_active', (bool) $isActive);
         }
 
-        $ticketTypes = $query->orderBy('weight', 'asc')->paginate(10);
+        $ticketTypes = $query->where('deleted_at', null)->orderBy('weight', 'asc')->paginate(10);
         return view('back.tickets.index', compact('ticketTypes'));
     }
 

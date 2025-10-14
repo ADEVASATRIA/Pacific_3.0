@@ -36,7 +36,7 @@ class PromoController extends Controller
         }
 
         // Ambil data dengan pagination (10 per halaman)
-        $promo = $query->orderBy('created_at', 'desc')->paginate(10);
+        $promo = $query->whereNull('deleted_at')->orderBy('created_at', 'desc')->paginate(10);
 
         // Kirim variabel ke view
         return view('back.promo.index', compact('promo', 'isActive', 'tickets'));

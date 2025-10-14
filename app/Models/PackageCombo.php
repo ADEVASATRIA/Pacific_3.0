@@ -20,4 +20,12 @@ class PackageCombo extends Model
     public function packageComboRedeem() {
         return $this->hasMany(PackageComboRedeem::class);
     }
+
+    public function getBadgeHtml($value)
+    {
+        if ($value) {
+            return '<span class="badge bg-success">YES</span>';
+        }
+        return '<span class="badge bg-danger">NO</span>';
+    }
 }

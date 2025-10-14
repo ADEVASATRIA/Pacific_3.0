@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\Promo\PromoController;
+use App\Http\Controllers\Back\Tickets\TicketTypeController;
 use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
@@ -99,5 +100,11 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/do-create-promo', [PromoController::class, 'add'])->name('add.promo');
     Route::post('/edit-promo/{id}', [PromoController::class, 'edit'])->name('edit.promo');
     Route::delete('/delete-promo/{id}', [PromoController::class, 'delete'])->name('delete.promos');
+
+
+    // Route Ticket Types view back office
+    Route::get('/ticket-types', [TicketTypeController::class, 'index'])->name('ticket-types');
+    Route::post('/do-create-ticket-type', [TicketTypeController::class, 'add'])->name('add.ticket_types');
+    Route::delete('/delete-ticket-type/{id}', [TicketTypeController::class, 'delete'])->name('delete.ticket_types');
 });
 

@@ -27,8 +27,24 @@
                     <a href="{{ route('promo') }}" class="menu-link">Promo</a>
                 </li>
 
+                <!-- Grouped Menu: Management Ticket -->
+                <li class="menu-group">
+                    <div class="menu-group-header">
+                        <span>Management Ticket</span>
+                        <span class="arrow">&#9662;</span> <!-- down arrow -->
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item {{ request()->is('ticket-types') ? 'active' : '' }}">
+                            <a href="{{ route('ticket-types') }}" class="menu-link">Ticket Types</a>
+                        </li>
+                        <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                            <a href="" class="menu-link">Package Combo</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </aside>
+
 
         <!-- Main Content -->
         <main class="main-content">
@@ -50,8 +66,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+
+    <script>
+        document.querySelectorAll('.menu-group-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const parent = header.parentElement;
+                parent.classList.toggle('open');
+            });
+        });
+    </script>
+
 </body>
 
 </html>
 @stack('scripts')
-

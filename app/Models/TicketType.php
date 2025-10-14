@@ -15,20 +15,32 @@ class TicketType extends Model
         'is_dob_mandatory',
         'is_phone_mandatory',
         'is_active',
-        'can_buy_ticket_pengantar',
+        'can_buy_tiket_pengantar', // ✅ diperbaiki di sini
         'tipe_khusus',
-        'ticket_kode_ref'
+        'ticket_kode_ref',
     ];
-    
-    public function ticket(){
+
+
+    public function ticket()
+    {
         return $this->hasMany(Ticket::class);
     }
-    
-    public function clubhouse(){
+
+    public function clubhouse()
+    {
         return $this->belongsTo(Clubhouse::class);
     }
-    
-    public function purchaseDetail(){
+
+    public function purchaseDetail()
+    {
         return $this->hasMany(PurchaseDetail::class);
+    }
+
+    public function getBadgeHtml($value)
+    {
+        if ($value) {
+            return '<span class="badge bg-success">YES</span>';
+        }
+        return '<span class="badge bg-danger">NO</span>';
     }
 }

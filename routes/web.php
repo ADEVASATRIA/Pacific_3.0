@@ -7,6 +7,8 @@ use App\Http\Controllers\Back\Tickets\PackageComboController;
 use App\Http\Controllers\Back\Tickets\TicketTypeController;
 use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
+use App\Http\Controllers\Back\Member\MemberController as BackMemberController;
+
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
@@ -124,5 +126,11 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-staff', [StaffController::class, 'add'])->name('add.staff');
     Route::post('/edit-staff/{id}', [StaffController::class, 'edit'])->name('edit.staff');
     Route::delete('/delete-staff/{id}', [StaffController::class, 'delete'])->name('delete.staff');
+
+    // Routes for management member
+    Route::get('/member', [BackMemberController::class, 'index'])->name('member');
+    Route::get('/get-member/{id}', [BackMemberController::class, 'getMember']);
+    Route::post('/edit-member/{id}', [BackMemberController::class, 'edit'])->name('edit.member');
+    Route::delete('/delete-member/{id}', [BackMemberController::class, 'delete'])->name('delete.member');
 });
 

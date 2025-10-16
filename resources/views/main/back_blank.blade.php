@@ -46,6 +46,25 @@
                         </li>
                     </ul>
                 </li>
+
+                {{-- Grouped Menu: Management Member, Coach, & Clubhouse --}}
+                <li class="menu-group">
+                    <div class="menu-group-header">
+                        <span>Management Member, Coach & Clubhouse</span>
+                        <span class="arrow">&#9662;</span> <!-- down arrow -->
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item {{ request()->is('member') ? 'active' : '' }}">
+                            <a href="{{ route('member') }}" class="menu-link">Member</a>
+                        </li>
+                        {{-- <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                            <a href="{{ route('coach') }}" class="menu-link">Coach</a>
+                        </li>
+                        <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                            <a href="{{ route('clubhouse') }}" class="menu-link">Clubhouse</a>
+                        </li> --}}
+                    </ul>
+                </li>
             </ul>
         </aside>
 

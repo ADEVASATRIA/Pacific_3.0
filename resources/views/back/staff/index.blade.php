@@ -25,7 +25,7 @@
                         </button>
                         <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
                             data-bs-toggle="modal" data-bs-target="#modalTambahStaff">
-                            Tambah Promo
+                            Tambah Data Staff
                         </button>
                     </div>
                 </div>

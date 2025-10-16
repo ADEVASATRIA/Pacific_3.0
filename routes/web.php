@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Back\Coach\BackCoachController;
 use App\Http\Controllers\Back\Promo\PromoController;
 use App\Http\Controllers\Back\Staff\StaffController;
 use App\Http\Controllers\Back\Tickets\PackageComboController;
@@ -132,5 +133,12 @@ Route::middleware('bo.auth')->group(function () {
     Route::get('/get-member/{id}', [BackMemberController::class, 'getMember']);
     Route::post('/edit-member/{id}', [BackMemberController::class, 'edit'])->name('edit.member');
     Route::delete('/delete-member/{id}', [BackMemberController::class, 'delete'])->name('delete.member');
+
+    // Routes for management coach
+    Route::get('/coach', [BackCoachController::class, 'index'])->name('coach');
+    Route::get('/get-coach/{id}', [BackCoachController::class, 'getCoach']);
+    Route::post('/add-coach', [BackCoachController::class, 'add'])->name('add.coach');
+    Route::post('/edit-coach/{id}', [BackCoachController::class, 'edit'])->name('edit.coach');
+    Route::delete('/delete-coach/{id}', [BackCoachController::class, 'delete'])->name('delete.coach');
 });
 

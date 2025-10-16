@@ -66,10 +66,6 @@
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
                             <i class="fas fa-filter me-1"></i> Filter
                         </button>
-                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
-                            data-bs-toggle="modal" data-bs-target="#modalTambahMember">
-                            <i class="fas fa-plus me-1"></i> Tambah Data Member
-                        </button>
                     </div>
                 </div>
             </form>

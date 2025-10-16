@@ -57,10 +57,10 @@
                         <li class="submenu-item {{ request()->is('member') ? 'active' : '' }}">
                             <a href="{{ route('member') }}" class="menu-link">Member</a>
                         </li>
-                        {{-- <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                        <li class="submenu-item {{ request()->is('coach') ? 'active' : '' }}">
                             <a href="{{ route('coach') }}" class="menu-link">Coach</a>
                         </li>
-                        <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                        {{-- <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
                             <a href="{{ route('clubhouse') }}" class="menu-link">Clubhouse</a>
                         </li> --}}
                     </ul>

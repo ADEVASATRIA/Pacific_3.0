@@ -19,6 +19,10 @@
         <aside class="sidebar">
             <div class="logo">Dashboard</div>
             <ul class="menu">
+                <li class="menu-item {{ request()->is('staff') ? 'active' : '' }}">
+                    <a href="{{ route('staff') }}" class="menu-link">Management Staff</a>
+                </li>
+
                 <li class="menu-item {{ request()->is('transaction') ? 'active' : '' }}">
                     <a href="{{ route('transaction') }}" class="menu-link">Transaction</a>
                 </li>

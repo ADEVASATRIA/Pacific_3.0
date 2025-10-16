@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\Promo\PromoController;
+use App\Http\Controllers\Back\Staff\StaffController;
 use App\Http\Controllers\Back\Tickets\PackageComboController;
 use App\Http\Controllers\Back\Tickets\TicketTypeController;
 use App\Http\Controllers\Back\Transaction\TransactionController;
@@ -116,5 +117,12 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-package-combo', [PackageComboController::class, 'add'])->name('add.package-combo');
     Route::post('/edit-package-combo/{id}', [PackageComboController::class, 'edit'])->name('edit.package-combo');
     Route::delete('/delete-package-combo/{id}', [PackageComboController::class, 'delete'])->name('delete.package-combo');
+
+    // Routes for management staff
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff');
+    Route::get('/get-staff/{id}', [StaffController::class, 'getAdmin']);
+    Route::post('/add-staff', [StaffController::class, 'add'])->name('add.staff');
+    Route::post('/edit-staff/{id}', [StaffController::class, 'edit'])->name('edit.staff');
+    Route::delete('/delete-staff/{id}', [StaffController::class, 'delete'])->name('delete.staff');
 });
 

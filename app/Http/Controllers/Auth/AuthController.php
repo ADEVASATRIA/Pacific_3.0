@@ -28,7 +28,7 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'message' => 'Login gagal, periksa username atau password.']);
         }
 
-        if ($user->is_admin == 0 && $user->is_root == 0) {
+        if ($user->is_admin == 0 && $user->is_root == 0 || $user->is_staff == 1) {
             Auth::guard('fo')->login($user);
             return response()->json(['success' => true, 'role' => 'fo']);
         }

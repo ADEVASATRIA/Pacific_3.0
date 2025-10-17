@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Back\Clubhouse\ClubhouseController;
 use App\Http\Controllers\Back\Coach\BackCoachController;
 use App\Http\Controllers\Back\Promo\PromoController;
 use App\Http\Controllers\Back\Staff\StaffController;
@@ -140,5 +141,12 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-coach', [BackCoachController::class, 'add'])->name('add.coach');
     Route::post('/edit-coach/{id}', [BackCoachController::class, 'edit'])->name('edit.coach');
     Route::delete('/delete-coach/{id}', [BackCoachController::class, 'delete'])->name('delete.coach');
+
+    // Routes for management Clubhouse
+    Route::get('/clubhouse', [ClubhouseController::class, 'index'])->name('clubhouse');
+    Route::get('/get-clubhouse/{id}', [ClubhouseController::class, 'getClubhouse']);
+    Route::post('/add-clubhouse', [ClubhouseController::class, 'add'])->name('add.clubhouse');
+    Route::post('/edit-clubhouse/{id}', [ClubhouseController::class, 'edit'])->name('edit.clubhouse');
+    Route::delete('/delete-clubhouse/{id}', [ClubhouseController::class, 'delete'])->name('delete.clubhouse');
 });
 

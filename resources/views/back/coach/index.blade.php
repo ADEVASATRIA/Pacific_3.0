@@ -1,10 +1,10 @@
 @extends('main.back_blank')
-@section('title', 'Data Member')
+@section('title', 'Data pelatih')
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
     <div class="promo-page">
-        <h2 class="page-title">Data Member</h2>
+        <h2 class="page-title">Data Pelatih</h2>
         <div class="filter-section mb-4">
             <div class="filter-form flex items-end gap-4 flex-wrap">
                 <div class="form-group">

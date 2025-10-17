@@ -60,9 +60,9 @@
                         <li class="submenu-item {{ request()->is('coach') ? 'active' : '' }}">
                             <a href="{{ route('coach') }}" class="menu-link">Coach</a>
                         </li>
-                        {{-- <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                        <li class="submenu-item {{ request()->is('clubhouse') ? 'active' : '' }}">
                             <a href="{{ route('clubhouse') }}" class="menu-link">Clubhouse</a>
-                        </li> --}}
+                        </li>
                     </ul>
                 </li>
             </ul>

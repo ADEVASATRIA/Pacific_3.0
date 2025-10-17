@@ -10,6 +10,7 @@ use App\Http\Controllers\Back\Tickets\TicketTypeController;
 use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Back\Member\MemberController as BackMemberController;
+use App\Http\Controllers\Back\Customer\CustomerController as BackCustomerController;
 
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
@@ -148,5 +149,16 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-clubhouse', [ClubhouseController::class, 'add'])->name('add.clubhouse');
     Route::post('/edit-clubhouse/{id}', [ClubhouseController::class, 'edit'])->name('edit.clubhouse');
     Route::delete('/delete-clubhouse/{id}', [ClubhouseController::class, 'delete'])->name('delete.clubhouse');
+
+
+    // Routes For Management data customer
+    Route::get('/customer', [BackCustomerController::class, 'index'])->name('customer');
+    Route::get('/get-customer/{id}', [BackCustomerController::class, 'getCustomer']);
+    Route::post('/add-customer', [BackCustomerController::class, 'add'])->name('add.customer');
+    Route::post('/edit-customer/{id}', [BackCustomerController::class, 'edit'])->name('edit.customer');
+    Route::delete('/delete-customer/{id}', [BackCustomerController::class, 'delete'])->name('delete.customer');
+
+
+    
 });
 

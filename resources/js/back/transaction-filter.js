@@ -1,6 +1,5 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const filterForm = document.getElementById('filterForm');
     const contentArea = document.getElementById('contentArea');

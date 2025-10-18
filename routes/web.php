@@ -99,6 +99,7 @@ Route::middleware('bo.auth')->group(function () {
 
     // Route Transaction View
     Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
+    Route::get('/transaction/filter', [TransactionController::class, 'filter'])->name('transaction.filter');
     Route::get('/transaction/detail/{id}', [TransactionController::class, 'detail'])->name('transaction.detail');
 
     //Route Promo Management view back office
@@ -161,4 +162,7 @@ Route::middleware('bo.auth')->group(function () {
 
     
 });
+
+
+
 

@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    // public function index(){
+    //     return view('main.back_blank');
+    // }
+
     public function index(){
-        return view('main.back_blank');
+        return view('main.back-office');
     }
 }

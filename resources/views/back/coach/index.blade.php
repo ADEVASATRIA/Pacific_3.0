@@ -1,4 +1,4 @@
-@extends('main.back_blank')
+@extends('main.back-office')
 @section('title', 'Data pelatih')
 @vite('resources/css/admin/close-modal.css')
 

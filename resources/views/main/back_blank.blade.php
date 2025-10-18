@@ -66,7 +66,7 @@
                     </ul>
                 </li>
 
-                                {{-- Grouped Menu: Management Member, Coach, & Clubhouse --}}
+                {{-- Grouped Menu: Management Member, Coach, & Clubhouse --}}
                 <li class="menu-group">
                     <div class="menu-group-header">
                         <span>Management Customer</span>

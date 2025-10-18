@@ -119,7 +119,7 @@
                             <td>Rp {{ number_format($purchase->total, 0, ',', '.') }}</td>
                             <td>
                                 <button type="button"
-                                    class="rounded-md bg-blue-600 text-white px-3 py-1 text-sm hover:bg-blue-700"
+                                    class="btn btn-secondary btn-sm"
                                     onclick="showTransactionDetail({{ $purchase->id }})">
                                     Detail
                                 </button>

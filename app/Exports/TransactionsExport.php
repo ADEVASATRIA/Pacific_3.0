@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 class TransactionsExport implements FromView
 {
     protected $transactions;
+    protected $staff;
     
     public function __construct($transactions, $staff)
     {

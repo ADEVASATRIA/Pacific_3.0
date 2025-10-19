@@ -123,7 +123,7 @@
                 {{-- Tiket Pelatih --}}
                 @if ($ticketPelatih->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Tiket Pengantar</h3>
+                        <h3 class="section-title">Tiket Pelatih</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketPelatih as $ticket)
                                 <div class="ticket-item">

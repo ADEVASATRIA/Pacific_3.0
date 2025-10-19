@@ -39,9 +39,14 @@
             <h3>Masukkan Saldo Awal</h3>
             <p>Silakan masukkan saldo awal kasir sebelum memulai shift.</p>
             <input type="text" id="saldoAwal" placeholder="Masukkan nominal saldo awal">
-            <button id="submitSaldo">Mulai Shift</button>
+
+            <div class="button-group">
+                <button id="submitSaldo">Mulai Shift</button>
+                <button id="cancelSaldo" class="cancel-btn" data-dismiss="modal">Batalkan</button>
+            </div>
         </div>
     </div>
+
 
     <script>
         const loginForm = document.getElementById('loginForm');
@@ -49,6 +54,14 @@
         const saldoInput = document.getElementById('saldoAwal');
         const submitSaldo = document.getElementById('submitSaldo');
         const loginError = document.getElementById('loginError');
+        const cancelSaldo = document.getElementById('cancelSaldo');
+
+        // Saat tombol batalkan diklik
+        cancelSaldo.addEventListener('click', () => {
+            saldoModal.classList.remove('active'); // Tutup modal
+            window.location.href = '{{ route('login') }}'; // Redirect kembali ke halaman login
+        });
+
 
         // Fungsi format ke rupiah saat mengetik
         saldoInput.addEventListener('input', function(e) {
@@ -121,4 +134,5 @@
     </script>
 
 </body>
+
 </html>

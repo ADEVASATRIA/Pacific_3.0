@@ -32,6 +32,7 @@ body {
     font-weight: 300;
     margin-top: 5px;
 }
+
 .wrapper h1 {
     font-size: 36px;
     text-align: center;
@@ -58,11 +59,11 @@ body {
     padding-left: 50px;
 }
 
-.input-box input::placeholder{
+.input-box input::placeholder {
     color: gray;
 }
 
-.input-box i{
+.input-box i {
     position: absolute;
     left: 20px;
     top: 50%;
@@ -99,11 +100,11 @@ body {
 }
 
 .register-btn {
-    background-color: #033653; 
-    color: #fff; 
+    background-color: #033653;
+    color: #fff;
     border: none;
     border-radius: 30px;
-    padding: 10px 20px; 
+    padding: 10px 20px;
     cursor: pointer;
     font-size: 16px;
     width: 100%;
@@ -112,33 +113,34 @@ body {
 }
 
 .register-btn:hover {
-    background-color: #02233a; 
+    background-color: #02233a;
 }
 
-.container{
+.container {
     position: relative;
     width: 500px;
     text-align: center;
     margin-top: 10px;
-    
+
 }
+
 .left-line {
     border: none;
-    border-bottom: 0.8px solid black; 
-    width: 96%; 
-    margin: 0; 
-    padding-top: 10px; 
+    border-bottom: 0.8px solid black;
+    width: 96%;
+    margin: 0;
+    padding-top: 10px;
     margin-bottom: 10px;
 }
 
 h6 {
-    position: absolute; 
-    top: 50%; 
-    left: 225px; 
-    margin-top: -7px; 
-    font-size: 14px; 
-    background-color: white; 
-    padding: 0 5px; 
+    position: absolute;
+    top: 50%;
+    left: 225px;
+    margin-top: -7px;
+    font-size: 14px;
+    background-color: white;
+    padding: 0 5px;
     color: #A0A0A0;
     font-weight: 600;
 }
@@ -200,4 +202,25 @@ h6 {
     margin-top: 10px;
     color: red;
     font-size: 0.9rem;
+}
+
+/* Tambahan style tombol batal */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cancel-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: .6rem;
+}
+
+.cancel-btn:hover {
+    background: #b02a37;
 }

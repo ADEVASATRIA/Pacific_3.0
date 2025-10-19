@@ -82,13 +82,21 @@
                 </p>
 
                 <div class="closecashier-form">
-                    <label for="saldo_akhir">Saldo Akhir:</label>
+                    <label for="saldo_akhir">Saldo Akhir (Total Fisik Kas):</label>
                     <!-- Saldo Akhir (formatted Rp) -->
-                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0">
-
+                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
                     <!-- Hidden real value for server -->
                     <input type="hidden" id="saldo_akhir" value="0">
 
+                    <!-- Input baru: FNB Balance -->
+                    <label for="fnb_balance">Saldo F&B (Uang F&B):</label>
+                    <input type="text" id="fnb_balance_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="hidden" id="fnb_balance" value="0">
+
+                    <!-- Input baru: Minus Balance -->
+                    <label for="minus_balance">Minus Balance (Kekurangan Kas):</label>
+                    <input type="text" id="minus_balance_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="hidden" id="minus_balance" value="0">
                 </div>
 
                 <div class="closecashier-report">

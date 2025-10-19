@@ -30,30 +30,6 @@ class CashSessionController
         return response()->json(['success' => true, 'redirect' => route('main')]);
     }
 
-    // public function close()
-    // {
-    //     $staff = Auth::guard('fo')->user();
-    //     $today = Carbon::today();
-
-    //     // ✅ Ambil cash session aktif hari ini untuk staff login
-    //     $cashSession = CashSession::where('staff_id', $staff->id)
-    //         ->whereDate('waktu_buka', $today)
-    //         ->where('status', 1)
-    //         ->latest()
-    //         ->first();
-
-    //     // Kalau belum ada, isi default agar view tidak error
-    //     if (!$cashSession) {
-    //         $cashSession = new CashSession([
-    //             'saldo_awal' => 0,
-    //             'waktu_buka' => null,
-    //             'status' => 0,
-    //         ]);
-    //     }
-
-    //     return view('front.admin.close', compact('staff', 'cashSession'));
-    // }
-
     // ✅ Export laporan harian kasir
     public function exportReport()
     {
@@ -77,6 +53,14 @@ class CashSessionController
         $staff = Auth::guard('fo')->user();
         $today = Carbon::today();
 
+        // dd($request->all());
+        // Validasi input
+        $request->validate([
+            'saldo_akhir' => 'required|numeric|min:0',
+            'fnb_balance' => 'required|numeric|min:0',
+            'minus_balance' => 'required|numeric|min:0',
+        ]);
+
         $cashSession = CashSession::where('staff_id', $staff->id)
             ->whereDate('waktu_buka', $today)
             ->where('status', 1)
@@ -84,14 +68,14 @@ class CashSessionController
             ->first();
 
         if ($cashSession) {
-            $cashSession->update([
-                'saldo_akhir' => $request->saldo_akhir,
-                'status' => 0,
-                'waktu_tutup' => now(),
-            ]);
+            $cashSession->saldo_akhir = $request->saldo_akhir;
+            $cashSession->fnb_balance = $request->fnb_balance;
+            $cashSession->minus_balance = $request->minus_balance;
+            $cashSession->status = 0;
+            $cashSession->waktu_tutup = now();
+            $cashSession->save();
         }
-
-        // ✅ Logout setelah tutup kasir
+        
         Auth::guard('fo')->logout();
 
         return response()->json(['success' => true, 'redirect' => route('login')]);

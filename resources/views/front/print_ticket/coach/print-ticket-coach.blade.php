@@ -4,9 +4,15 @@
 
     <div class="ticket-wrapper">
         <!-- Tombol Print -->
-        <div class="print-btn">
+        <div class="print-btn" style="display: flex; gap: 10px; justify-content: center;">
             <button onclick="window.print()">Print Tiket</button>
+
+            <button onclick="window.location.href='{{ route('main') }}'"
+                style="background-color: #6c757d; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                Back to Home
+            </button>
         </div>
+
 
         <!-- Informasi Customer -->
         <div class="ticket-card customer-info">
@@ -17,7 +23,7 @@
             </div>
             <div class="info-row">
                 <span>Nama Club House</span>
-                <span>{{ $customer->clubhouse->name ?? $customer->clubhouse2->name ?? 'Tidak Ada' }}</span>
+                <span>{{ $customer->clubhouse->name ?? ($customer->clubhouse2->name ?? 'Tidak Ada') }}</span>
             </div>
         </div>
 
@@ -38,12 +44,13 @@
                             {{-- Versi web --}}
                             <p class="ticket-desc screen-only">
                                 {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                Berlaku Sampai
+                                <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
 
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} - 
+                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} -
                                 {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
                         </div>

@@ -5,9 +5,15 @@
 
     <div class="ticket-wrapper">
         {{-- Tombol print hanya untuk web --}}
-        <div class="print-btn screen-only">
+        <div class="print-btn" style="display: flex; gap: 10px; justify-content: center;">
             <button onclick="window.print()">Print Tiket</button>
+
+            <button onclick="window.location.href='{{ route('main') }}'"
+                style="background-color: #6c757d; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                Back to Home
+            </button>
         </div>
+
 
         {{-- Customer Info hanya untuk web --}}
         <div class="ticket-card customer-info screen-only mb-3">
@@ -21,7 +27,9 @@
             <h3 class="section-title">Status Redeem Paket</h3>
             <div class="info-row"><span>Tiket Sudah Di Redeem</span><span>{{ $totalPrinted }} Tiket</span></div>
             <div class="info-row"><span>Sisa Tiket</span><span>{{ $totalRemaining }} Tiket</span></div>
-            <div class="info-row"><span>Tanggal Kedaluwarsa</span><span>{{ \Carbon\Carbon::parse($expiredDate)->translatedFormat('d F Y') }}</span></div>
+            <div class="info-row"><span>Tanggal
+                    Kedaluwarsa</span><span>{{ \Carbon\Carbon::parse($expiredDate)->translatedFormat('d F Y') }}</span>
+            </div>
         </div>
 
         {{-- Konten tiket untuk web & print --}}
@@ -36,7 +44,8 @@
                         <div class="ticket-info">
                             <h2 class="ticket-title">{{ $ticket->packageComboRedeemDetail->name ?? 'Tiket' }}</h2>
                             <p class="ticket-desc screen-only">
-                                Berlaku sampai <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                Berlaku sampai
+                                <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
                             <p class="ticket-subtitle print-only">
                                 Berlaku sampai {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}

@@ -3,10 +3,16 @@
     @vite('resources/css/front/print-ticket-member.css')
     <div class="ticket-wrapper">
         <!-- Tombol Print -->
-        <div class="print-btn">
+        <div class="print-btn" style="display: flex; gap: 10px; justify-content: center;">
             <button onclick="window.print()">Print Tiket</button>
+
+            <button onclick="window.location.href='{{ route('main') }}'"
+                style="background-color: #6c757d; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                Back to Home
+            </button>
         </div>
-        
+
+
         <!-- Informasi Customer -->
         <div class="ticket-card customer-info">
             <h3 class="section-title">Informasi Customer</h3>
@@ -16,13 +22,13 @@
             </div>
             <div class="info-row">
                 <span>Nama Club House</span>
-                <span>{{ $customer->clubhouse->name ?? $customer->clubhouse2->name ?? 'Tidak Ada' }}</span>
+                <span>{{ $customer->clubhouse->name ?? ($customer->clubhouse2->name ?? 'Tidak Ada') }}</span>
             </div>
         </div>
 
         <!-- Kartu Tiket -->
         <div class="print_content">
-            @if($ticket)
+            @if ($ticket)
                 @foreach ($ticketEntries as $entry)
                     <div class="ticket-card">
                         <!-- QR Code -->
@@ -33,16 +39,17 @@
                         <!-- Detail Tiket -->
                         <div class="ticket-info">
                             <h2 class="ticket-title">{{ $ticket->code }}</h2>
-                        
+
                             {{-- Versi front office --}}
                             <p class="ticket-desc screen-only">
                                 {{ $ticket->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai Tanggal <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                Berlaku Sampai Tanggal
+                                <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
-                        
+
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
-                                {{ $ticket->ticketType->name ?? 'Tiket' }} - 
+                                {{ $ticket->ticketType->name ?? 'Tiket' }} -
                                 {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
                         </div>

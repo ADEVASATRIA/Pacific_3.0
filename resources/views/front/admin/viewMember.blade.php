@@ -49,7 +49,7 @@
     <div class="cards">
         <div class="card">
             <h3>Total Member Aktif</h3>
-            <p>{{ $totalActive }}</p>
+            <p>{{ $totalActive_view }}</p>
         </div>
         <div class="card">
             <h3>Total Member All-Time</h3>

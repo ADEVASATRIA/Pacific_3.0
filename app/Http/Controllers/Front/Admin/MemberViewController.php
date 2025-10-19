@@ -58,10 +58,21 @@ class MemberViewController extends Controller
             ->withQueryString(); // supaya filter tetap ke-bawa saat pindah halaman
 
 
-        // ✅ Hitung total
-        $totalActive = $members->filter(function ($m) use ($today) {
-            return $m->tiketTerbaru && $m->tiketTerbaru->date_end >= $today;
-        })->count();
+        // // ✅ Hitung total
+        // $totalActive = $members->filter(function ($m) use ($today) {
+        //     return $m->tiketTerbaru && $m->tiketTerbaru->date_end >= $today;
+        // })->count();
+
+        $today = now()->toDateString();
+
+        $totalActive_view = Customer::whereDate('akhir_masa_berlaku', '>=', $today)
+            ->whereHas('tiketTerbaru', function ($query) {
+                $query->where('code', 'LIKE', 'M%');
+            })
+            ->count();
+
+
+        // dd($totalActive, $totalActive_view);
 
         $totalAll = $members->count();
 
@@ -82,7 +93,8 @@ class MemberViewController extends Controller
 
         return view('front.admin.viewMember', [
             'members' => $members,
-            'totalActive' => $totalActive,
+            // 'totalActive' => $totalActive,
+            'totalActive_view' => $totalActive_view,
             'totalAll' => $totalAll,
             'cashSession' => $cashSession,
             'staff' => $staff,

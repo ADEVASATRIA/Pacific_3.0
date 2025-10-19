@@ -23,6 +23,13 @@
             </div>
 
             <nav class="sidebar">
+
+                <a href="{{ route('admin.shift') }}"
+                    class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
+                    <i data-lucide="shirt"></i>
+                    <span>Shift Hari ini</span>
+                </a>
+
                 <a href="{{ route('admin.transaksi') }}"
                     class="nav-item @if (request()->routeIs('admin.transaksi')) active @endif">
                     <i data-lucide="credit-card"></i>

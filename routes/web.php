@@ -16,6 +16,7 @@ use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
 use App\Http\Controllers\Front\Admin\PackageViewController;
+use App\Http\Controllers\Front\Admin\ShiftViewController;
 use App\Http\Controllers\Front\Admin\SponsorController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
@@ -85,6 +86,10 @@ Route::middleware('fo.auth')->group(function () {
         Route::post('/sponsor/{sponsor}/update', [SponsorController::class, 'update'])->name('admin.sponsor.update');
         Route::delete('/sponsor/{sponsor}', [SponsorController::class, 'destroy'])->name('admin.sponsor.destroy');
     });
+
+    // Alur route lihat data shift
+    Route::get('/admin/shift', [ShiftViewController::class, 'index'])->name('admin.shift');
+    Route::get('/admin/shift/export', [ShiftViewController::class, 'export'])->name('admin.shift.export');
 
 
 

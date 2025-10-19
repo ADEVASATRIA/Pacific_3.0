@@ -4,13 +4,18 @@
     <div class="checkout-container">
         <div class="ads-box">
             {{-- Slider sponsor (opsional) --}}
-            {{-- <div class="ads-slider">
+            <div class="ads-slider">
                 @foreach ($sponsor as $item)
-                    <img src="{{ asset('storage/' . $item->image) }}" alt="Promo {{ $loop->iteration }}">
+                    @if ($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="Sponsor {{ $item->name }}"
+                            {{-- Style ini penting untuk mengisi area 550px yang baru di CSS --}}
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    @endif
                 @endforeach
-            </div> --}}
+            </div>
         </div>
         <div class="checkout-wrapper">
+            {{-- ... sisa konten checkout-card Anda ... --}}
             <div class="checkout-card">
                 <div class="checkout-header">
                     <h1 class="checkout-title">💳 Halaman Pembayaran</h1>
@@ -160,7 +165,8 @@
                             <div class="input-box">
                                 <label for="kembalian">↩️ Kembalian</label>
                                 <!-- Display kembalian -->
-                                <input type="text" name="kembalian_display" id="kembalian" readonly placeholder="Rp. 0">
+                                <input type="text" name="kembalian_display" id="kembalian" readonly
+                                    placeholder="Rp. 0">
 
                                 <!-- Hidden kembalian dikirim ke server -->
                                 <input type="hidden" name="kembalian" id="kembalian_hidden" value="0">

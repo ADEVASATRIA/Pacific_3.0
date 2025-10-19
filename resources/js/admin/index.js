@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('closeCashierModal');
-    const successModal = document.getElementById('successModal');
+    const successModal = document.getElementById('cashierSuccessModal');
 
     // Ambil semua elemen input yang relevan
     const saldoDisplay = document.getElementById('saldo_akhir_display');

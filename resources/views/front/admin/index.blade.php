@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Dashboard Admin')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/admin/admin.css', 'resources/css/admin/close-modal.css', 'resources/js/admin/index.js'])
     @stack('styles')
 </head>
@@ -35,6 +36,11 @@
                 <a href="{{ route('admin.package') }}" class="nav-item @if (request()->routeIs('admin.package')) active @endif">
                     <i data-lucide="package"></i>
                     <span>Package</span>
+                </a>
+
+                <a href="{{ route('admin.sponsor') }}" class="nav-item @if (request()->routeIs('admin.sponsor')) active @endif">
+                    <i data-lucide="ticket-slash"></i>
+                    <span>Sponsor</span>
                 </a>
 
                 <a href="{{ route('main') }}" class="nav-item">
@@ -112,8 +118,8 @@
         </div>
     </div>
 
-    <!-- 🔹 Modal Konfirmasi Success -->
-    <div id="successModal" class="success-modal">
+    <!-- 🔹 Modal Konfirmasi Success (KHUSUS Closing Kasir) -->
+    <div id="cashierSuccessModal" class="success-modal">
         <div class="success-modal-content">
             <div class="success-icon">
                 <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -125,6 +131,7 @@
             <p class="success-message">Anda akan logout.</p>
         </div>
     </div>
+
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>

@@ -16,6 +16,7 @@ use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
 use App\Http\Controllers\Front\Admin\PackageViewController;
+use App\Http\Controllers\Front\Admin\SponsorController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
 use App\Http\Controllers\Front\Coach\CoachController;
@@ -75,6 +76,17 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/admin/close', [CashSessionController::class, 'close'])->name('admin.close');
 
     Route::get('/admin/package', [PackageViewController::class, 'index'])->name('admin.package');
+
+    // Alur management sponsor pada admin
+    Route::prefix('admin')->group(function () {
+        Route::get('/sponsor', [SponsorController::class, 'index'])->name('admin.sponsor');
+        Route::post('/sponsor', [SponsorController::class, 'store'])->name('admin.sponsor.store');
+        Route::get('/sponsor/{sponsor}', [SponsorController::class, 'show'])->name('admin.sponsor.show');
+        Route::post('/sponsor/{sponsor}/update', [SponsorController::class, 'update'])->name('admin.sponsor.update');
+        Route::delete('/sponsor/{sponsor}', [SponsorController::class, 'destroy'])->name('admin.sponsor.destroy');
+    });
+
+
 
     // Member print
     Route::get('/input-member', [MemberController::class, 'inputMember'])->name('input_member');
@@ -159,6 +171,6 @@ Route::middleware('bo.auth')->group(function () {
     Route::delete('/delete-customer/{id}', [BackCustomerController::class, 'delete'])->name('delete.customer');
 
 
-    
+
 });
 

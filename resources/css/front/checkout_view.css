@@ -1,34 +1,38 @@
 .checkout-container {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* kiri 1 bagian, kanan 2 bagian */
+  grid-template-columns: 450px 1fr; /* Fixed width untuk ads, flexible untuk checkout */
   gap: 24px;
   padding: 20px;
   align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Ads box */
+/* Ads box - PERBAIKAN UTAMA */
 .ads-box {
   background: #f8f9fa;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  /* padding-left: 100px; */
-  margin-top: 30px;
-  margin-left: 100px;
+  position: sticky; /* Sticky position agar tetap terlihat saat scroll */
+  top: 20px;
+  max-height: calc(100vh - 40px); /* Maksimal tinggi sesuai viewport */
 }
 
 .ads-slider {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 600px; /* Tinggi yang cukup untuk menampilkan poster */
+  background: #e9ecef;
 }
 
 .ads-slider img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain; /* Ubah dari cover ke contain agar gambar tidak terpotong */
+  object-position: center;
   display: none;
-  object-fit: cover;
-  
+  background: #fff;
 }
 
 .ads-slider img.active {
@@ -41,16 +45,13 @@
   to { opacity: 1; }
 }
 
-
 /* Background Wrapper */
 .checkout-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 40px;
-    min-height: 100vh;
-    /* background: url('/images/bg-ticket.jpg') no-repeat center center fixed; */
-    background-size: cover;
+    align-items: flex-start; /* Ubah dari center ke flex-start */
+    padding: 0; /* Hapus padding berlebih */
+    min-height: auto; /* Hapus min-height */
 }
 
 /* Card */
@@ -58,7 +59,8 @@
     background: rgba(240, 240, 240, 0.95);
     padding: 40px;
     border-radius: 20px;
-    width: 750px;
+    width: 100%;
+    max-width: 800px;
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
     animation: fadeInUp 0.8s ease;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -75,6 +77,7 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
+    color: #1f2937;
 }
 
 .checkout-subtitle {
@@ -167,7 +170,8 @@
 
 /* Payment Method */
 .payment-method {
-    margin-top: 25px;
+    margin: 24px 0;
+    min-height: 120px;
 }
 
 .payment-method h2 {
@@ -194,48 +198,7 @@
     box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
 }
 
-/* Promo (Optional) */
-.promo-box {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.promo-box input {
-    flex: 1;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #bbb;
-    outline: none;
-    transition: 0.3s;
-}
-
-.promo-box input:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
-}
-
-.redeem-btn {
-    background: #666;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 20px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.redeem-btn:hover {
-    background: #4a90e2;
-}
-
-/* Submit */
-.checkout-submit {
-    text-align: center;
-    margin-top: 25px;
-}
-
-/* Custom Select Dropdown - Fixed Z-index Issues */
+/* Custom Select Dropdown */
 .custom-select {
     position: relative;
     user-select: none;
@@ -248,8 +211,7 @@
     min-height: 50px;
     display: flex;
     align-items: center;
-    z-index: 1001;
-    /* Higher than footer */
+    z-index: 100;
 }
 
 .custom-select:hover {
@@ -259,8 +221,7 @@
 .custom-select.open {
     border-color: #4f46e5;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    z-index: 1002;
-    /* Even higher when open */
+    z-index: 101;
 }
 
 .custom-select.selected {
@@ -302,30 +263,22 @@
     background: #fff;
     border: 2px solid #e1e5e9;
     border-radius: 12px;
-    z-index: 1003;
-    /* Highest z-index */
+    z-index: 102;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     max-height: 300px;
     overflow-y: auto;
-    animation: fadeIn 0.2s ease-out;
-}
-
-/* Alternative: Dropdown opens upward if close to bottom */
-.custom-select.dropup .options {
-    top: auto;
-    bottom: calc(100% + 4px);
+    animation: fadeInDropdown 0.2s ease-out;
 }
 
 .custom-select.open .options {
     display: block;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInDropdown {
     from {
         opacity: 0;
         transform: translateY(-10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -341,7 +294,6 @@
     transition: all 0.2s ease;
     color: #374151;
     border-bottom: 1px solid #f3f4f6;
-    position: relative;
 }
 
 .custom-select .options div[data-value]:last-child {
@@ -379,101 +331,12 @@
     justify-content: center;
 }
 
-/* Focus state for accessibility */
-.custom-select .selected:focus {
-    outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-/* Payment method section styling */
-.payment-method {
-    margin: 24px 0;
-    /* Add minimum height to prevent layout shift */
-    min-height: 120px;
-}
-
-.payment-method .section-title {
-    margin-bottom: 16px;
-    color: #1f2937;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-/* Dropdown overlay for mobile */
-@media (max-width: 768px) {
-    .custom-select.open::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.3);
-        z-index: 1000;
-        pointer-events: all;
-    }
-
-    .custom-select .options {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        max-width: 400px;
-        z-index: 1004;
-        border-radius: 16px;
-    }
-
-    .custom-select .selected {
-        padding: 10px 12px;
-        font-size: 14px;
-    }
-
-    .custom-select .options div[data-value] {
-        padding: 14px 16px;
-        font-size: 14px;
-    }
-
-    .custom-select img {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-/* Checkout wrapper spacing */
-.checkout-wrapper {
-    padding-bottom: 80px;
-    min-height: calc(100vh - 200px);
-}
-
-/* Loading state (optional) */
-.custom-select.loading .selected:after {
-    content: '⟳';
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: translateY(-50%) rotate(0deg);
-    }
-
-    to {
-        transform: translateY(-50%) rotate(360deg);
-    }
-}
-
-/* Specific fixes for footer overlap */
-.checkout-card {
-    margin-bottom: 40px;
-}
-
+/* Submit Button */
 .checkout-submit {
+    text-align: center;
     margin-top: 30px;
     margin-bottom: 20px;
 }
-
-
 
 .submit-btn {
     background: linear-gradient(45deg, #4a90e2, #357abd);
@@ -498,7 +361,6 @@
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -534,16 +396,21 @@
     box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
 }
 
-/* Grid 2 column (for uang diterima & kembalian) */
+/* Grid 2 column */
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
 }
 
-/* Hide / show dynamic form */
+/* Payment Details */
+.payment-details {
+    margin-top: 20px;
+}
+
+/* Hide / show */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .error-text {
@@ -553,3 +420,97 @@
     display: block;
 }
 
+/* Items Box */
+.items-box {
+    margin-bottom: 20px;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1200px) {
+    .checkout-container {
+        grid-template-columns: 350px 1fr;
+    }
+    
+    .ads-slider {
+        height: 500px;
+    }
+}
+
+@media (max-width: 992px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .ads-box {
+        position: relative;
+        max-height: none;
+        order: -1; /* Tampilkan di atas */
+    }
+    
+    .ads-slider {
+        height: 400px;
+    }
+    
+    .checkout-card {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 10px;
+    }
+    
+    .ads-slider {
+        height: 300px;
+    }
+    
+    .checkout-card {
+        padding: 20px 15px;
+    }
+    
+    .checkout-title {
+        font-size: 1.8rem;
+    }
+    
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    .custom-select.open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 99;
+    }
+    
+    .custom-select .options {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 400px;
+        z-index: 103;
+    }
+}
+
+@media (max-width: 480px) {
+    .ads-slider {
+        height: 250px;
+    }
+    
+    .checkout-table {
+        font-size: 0.85rem;
+    }
+    
+    .checkout-table th,
+    .checkout-table td {
+        padding: 8px;
+    }
+}

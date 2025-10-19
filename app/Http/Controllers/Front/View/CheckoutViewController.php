@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front\View;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 // use App\Models\Sponsor;
@@ -28,6 +29,7 @@ class CheckoutViewController extends Controller
         }
 
         $customer = Customer::find($customerId);
+        $sponsor = Sponsor::where('status', 1)->where('deleted_at', null)->get();
         return view("front.buy_ticket.checkout_view", [
             "items" => $items,
             "subTotal" => session("subTotal"),
@@ -36,7 +38,7 @@ class CheckoutViewController extends Controller
             "customer" => $customer,
             "customerId" => $customerId,
             "checkoutToken" => $token,
-            // "sponsor" => $sponsor,
+            "sponsor" => $sponsor,
         ]);
     }
 

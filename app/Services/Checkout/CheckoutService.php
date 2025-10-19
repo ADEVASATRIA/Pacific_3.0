@@ -49,21 +49,33 @@ class CheckoutService
         $items = $tickets->concat($packages)->values();
 
         if ($items->isEmpty()) {
-            // jangan return redirect di sini — lempar exception
             throw new \InvalidArgumentException('Silakan pilih tiket terlebih dahulu.');
         }
-        $customerId = $request->input('customer_id');
 
+        $customerId = $request->input('customer_id');
 
         $member = Customer::where('id', $customerId)
             ->whereNotNull('member_id')
             ->whereNotNull('awal_masa_berlaku')
             ->whereNotNull('akhir_masa_berlaku')
-            ->whereNull('deleted_at') // cek yang masih aktif
+            ->whereNull('deleted_at')
             ->first();
 
+        // ✅ 1. Ambil semua ticket type dari item yang dipilih
+        $ticketTypeIds = $items->pluck('id')->toArray();
+        $ticketTypes = TicketType::whereIn('id', $ticketTypeIds)->get();
+
+        // ✅ 2. Cek apakah user membeli lebih dari 1 jenis tiket member
+        $memberTickets = $ticketTypes->where('tipe_khusus', 4);
+
+        if ($memberTickets->count() > 1) {
+            throw new \Exception(
+                'Anda tidak diperkenankan membeli tiket member dengan jenis yang berbeda.'
+            );
+        }
+
+        // ✅ 3. Jika user sudah punya tiket member aktif, larang pembelian ulang
         if ($member) {
-            // 🔹 Cek apakah ada tiket member yang masih aktif dan berlaku
             $ticketMemberExists = Ticket::where('customer_id', $member->id)
                 ->where('is_active', 1)
                 ->where('code', 'like', 'M%')
@@ -72,10 +84,6 @@ class CheckoutService
                 ->exists();
 
             if ($ticketMemberExists) {
-                // Jika masih ada tiket aktif → cek apakah mau beli tiket member lagi
-                $ticketTypeIds = $items->pluck('id')->toArray();
-                $ticketTypes = TicketType::whereIn('id', $ticketTypeIds)->get();
-
                 $hasMemberTicket = $ticketTypes->contains(fn($t) => $t->tipe_khusus == 4);
 
                 if ($hasMemberTicket) {
@@ -84,22 +92,18 @@ class CheckoutService
                     );
                 }
             } else {
-                // 🔹 Nonaktifkan tiket lama yang sudah expired tapi statusnya masih active
+                // Nonaktifkan tiket member lama yang sudah expired
                 Ticket::where('customer_id', $member->id)
                     ->where('is_active', 1)
                     ->where('code', 'like', 'M%')
-                    ->where('date_end', '<', now()) // hanya expired yg di-nonaktifkan
+                    ->where('date_end', '<', now())
                     ->update(['is_active' => 0]);
             }
         }
 
-
+        // ✅ 4. Hitung subtotal, pajak, dan total
         $subTotal = $items->sum(fn($i) => $i['qty'] * $i['price']);
-
-        // simpan pajak (10% dari subtotal) untuk keperluan laporan
         $tax = intval(round($subTotal * 0.1));
-
-        // total = subtotal (tidak ditambah pajak lagi)
         $total = $subTotal;
 
         return [
@@ -110,6 +114,7 @@ class CheckoutService
             'customer_id' => $customerId,
         ];
     }
+
 
     public function processCheckout(Request $request)
     {

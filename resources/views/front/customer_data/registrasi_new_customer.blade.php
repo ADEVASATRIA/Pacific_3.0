@@ -38,7 +38,6 @@
                     <select name="category_customer" id="category_customer" required>
                         <option value="">Pilih Kategori Customer</option>
                         <option value="1">Biasa</option>
-                        <option value="2">Coach</option>
                         <option value="3">Private</option>
                     </select>
                 </div>

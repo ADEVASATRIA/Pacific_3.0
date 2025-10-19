@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('closeCashierModal');
     const successModal = document.getElementById('successModal');
-    const saldoInput = document.getElementById('saldo_akhir');
+    const saldoDisplay = document.getElementById('saldo_akhir_display');
+    const saldoHidden = document.getElementById('saldo_akhir');
 
     // 🔹 Tombol buka modal
     const btnOpen = document.getElementById('btnOpenCloseModal');
@@ -24,9 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🔹 Tutup modal saat klik di luar content
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
+        if (e.target === modal) modal.style.display = 'none';
     });
 
     // 🔹 Tombol export report
@@ -37,14 +36,40 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // === Helper format Rp ===
+    const formatRupiah = (num) => {
+        const str = num.toString().replace(/[^0-9]/g, '');
+        if (str === '') return '';
+        return 'Rp. ' + str.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+    const toNumber = (str) => parseInt(str.replace(/[^0-9]/g, '')) || 0;
+
+    // === Format saldo akhir otomatis ===
+    if (saldoDisplay) {
+        saldoDisplay.addEventListener('input', function () {
+            const raw = this.value.replace(/[^0-9]/g, '');
+            if (raw === '') {
+                this.value = '';
+                saldoHidden.value = 0;
+                return;
+            }
+
+            // Format tampilan
+            this.value = formatRupiah(raw);
+
+            // Simpan nilai murni
+            saldoHidden.value = parseInt(raw);
+        });
+    }
+
     // 🔹 Tombol tutup kasir & logout
     const btnProcess = document.getElementById('btnProcessClose');
     if (btnProcess) {
         btnProcess.addEventListener('click', async () => {
-            const saldoAkhir = saldoInput.value;
+            const saldoAkhir = toNumber(saldoDisplay.value);
 
-            if (!saldoAkhir) {
-                alert('Harap isi saldo akhir terlebih dahulu.');
+            if (!saldoAkhir || saldoAkhir <= 0) {
+                alert('Harap isi saldo akhir dengan benar.');
                 return;
             }
 
@@ -67,10 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     // Tutup modal utama
                     modal.style.display = 'none';
-                    
+
                     // Tampilkan modal success
                     successModal.style.display = 'flex';
-                    
+
                     // Redirect setelah 2 detik
                     setTimeout(() => {
                         window.location.href = data.redirect;

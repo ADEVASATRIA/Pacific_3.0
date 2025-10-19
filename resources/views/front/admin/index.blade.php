@@ -83,8 +83,12 @@
 
                 <div class="closecashier-form">
                     <label for="saldo_akhir">Saldo Akhir:</label>
-                    <input type="number" id="saldo_akhir" class="closecashier-input"
-                        placeholder="Masukkan saldo akhir">
+                    <!-- Saldo Akhir (formatted Rp) -->
+                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0">
+
+                    <!-- Hidden real value for server -->
+                    <input type="hidden" id="saldo_akhir" value="0">
+
                 </div>
 
                 <div class="closecashier-report">
@@ -105,8 +109,8 @@
         <div class="success-modal-content">
             <div class="success-icon">
                 <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                 </svg>
             </div>
             <h3 class="success-title">Kasir Berhasil Ditutup!</h3>

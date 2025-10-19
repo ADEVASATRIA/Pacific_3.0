@@ -60,6 +60,7 @@ class CheckoutController extends Controller
 
     public function doCheckout(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'items' => 'required|array',
             'customer_id' => 'required|exists:customers,id',

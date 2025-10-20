@@ -191,8 +191,10 @@ class CheckoutService
                 throw new \Exception('PIN Staff salah.');
             }
 
-            // 🔢 Generate invoice
-            $invoice = 'INV-' . strtoupper(Str::random(6)) . '-' . time();
+            // 🔢 Generate invoice berdasarkan tanggal + time (unik)
+            do {
+                $invoice = date('Ymd') . time();
+            } while (Purchase::where('invoice_no', $invoice)->exists());
 
             // 🛒 Buat Purchase
             $purchase = Purchase::create([
@@ -211,6 +213,7 @@ class CheckoutService
                 'approval_code' => $request->input('approval_code'),
                 'status' => Purchase::STATUS_PAID, // default → langsung paid
             ]);
+
             // dd($purchase);
 
             // 📝 Buat Purchase Detail

@@ -33,7 +33,7 @@
 
             <div class="barcode-section">
                 <img src="data:image/png;base64,{{ $barcode }}" id="barcodeImage">
-                <p class="invoice-text">Invoice :{{ $purchase->invoice_no }}</p>
+                <p class="invoice-text">Invoice : {{ $purchase->invoice_no }}</p>
             </div>
 
             <hr class="receipt-divider">
@@ -67,8 +67,6 @@
                     </li>
                 @endforeach
             </ul>
-
-            <hr class="receipt-divider">
 
             @if($purchase->promo)
                 <div class="receipt-row">

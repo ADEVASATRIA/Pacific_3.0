@@ -95,6 +95,7 @@
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -105,6 +106,7 @@
         transform: translateY(30px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -112,7 +114,7 @@
 }
 
 /* ============================= */
-/* Print Thermal / Struk & Tiket */
+/* Print Thermal / Struk (Updated)
 /* ============================= */
 @media print {
     body {
@@ -135,10 +137,12 @@
     #print_content {
         display: block !important;
         width: 80mm;
-        margin: 0 auto;
-        font-family: 'Courier New', monospace;
+        margin: 0 auto !important;
+        font-family: "Montserrat", sans-serif;
         font-size: 11pt;
         color: #000;
+        padding: 0 !important;
+        page-break-inside: avoid !important;
     }
 
     .receipt-card {
@@ -196,14 +200,28 @@
 
     /* Divider */
     .receipt-divider {
-        border: none;
-        border-top: 1px solid #000;
-        margin: 8px 0;
+        border: none !important;
+        border-top: 1px solid #000 !important;
+        margin: 6px 0 !important;
+        height: 0 !important;
+        display: block !important;
+        clear: both !important;
+        content: "" !important;
+    }
+
+    /* Divider fix khusus setelah info pelanggan */
+    .receipt-info+.receipt-divider {
+        margin-top: 10px !important;
+        display: block !important;
+        border-top: 1px solid #000 !important;
+        clear: both !important;
     }
 
     /* Receipt Info */
     .receipt-info {
         margin: 8px 0;
+        display: block !important;
+        clear: both !important;
     }
 
     .info-row {
@@ -292,5 +310,21 @@
         font-size: 11pt;
         font-weight: bold;
         margin: 12px 0 0 0;
+    }
+
+    /* === Fix whitespace bawah === */
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 80mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        overflow: hidden !important;
+        background: #fff;
     }
 }

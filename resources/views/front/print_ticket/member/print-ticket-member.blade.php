@@ -32,8 +32,8 @@
                 @foreach ($ticketEntries as $entry)
                     <div class="ticket-card">
                         <!-- QR Code -->
-                        <div class="qr-section">
-                            {!! QrCode::size(120)->generate($entry->code) !!}
+                        <div class="qr-section mt-5">
+                            {!! QrCode::size(300)->generate($entry->code) !!}
                         </div>
 
                         <!-- Detail Tiket -->

@@ -101,76 +101,92 @@
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Default (screen) */
-.screen-only { display: block; }
-.print-only { display: none; }
-
-/* Styling khusus saat print */
 @media print {
     .screen-only { display: none !important; }
     .print-only { display: block !important; }
-    
+
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
     body {
         background: #fff !important;
         margin: 0;
         padding: 0;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        width: 80mm;
     }
 
-    /* Sembunyikan elemen selain print_content */
+    /* Sembunyikan elemen non-print */
     #navbar, #footer, .print-btn, .customer-info {
         display: none !important;
     }
 
-    body * {
-        visibility: hidden;
-    }
+    /* Pastikan hanya area tiket yang kelihatan */
+    body * { visibility: hidden; }
     .print_content, .print_content * {
         visibility: visible;
     }
+
     .print_content {
         position: absolute;
         left: 0;
         top: 0;
-        width: 100%;
+        width: 80mm;
+        margin: 0;
+        padding-top: 20px;     /* ✅ Jarak dari tepi atas */
+        padding-bottom: 20px;  /* ✅ Jarak bawah halaman */
     }
 
-    /* Thermal layout */
+    /* Tiap tiket */
     .ticket-card {
-        width: 58mm; /* atau 80mm sesuai printer */
-        margin: 0 auto 10px auto;
+        width: 80mm;
         border: none;
-        box-shadow: none;
-        padding: 10px;
+        padding: 0;
         text-align: center;
-        font-family: monospace, sans-serif;
+        font-family: "Courier New", monospace;
+        line-height: 1.3;
+        page-break-inside: avoid;
+        margin-bottom: 35px; /* ✅ Jarak antar tiket (lebih nyaman digunting) */
     }
 
-    .qr-section img,
-    .qr-section svg {
-        width: 150px !important;
-        height: 150px !important;
-        margin: 0 auto 10px auto;
+    /* QR Code */
+    .qr-section svg,
+    .qr-section img {
+        width: 230px !important;
+        height: 230px !important;
         display: block;
+        margin: 15px auto 10px auto; /* ✅ Jarak atas & bawah QR */
+        transform: scale(1.05);
     }
 
+    /* Teks utama kode tiket */
     .ticket-title {
-        font-size: 14px;
+        font-size: 18px;     /* ✅ Diperkecil dari 22px → 18px */
         font-weight: bold;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
-    
+
+    /* Teks deskripsi di bawah kode */
     .ticket-subtitle {
-        font-size: 12px;
-        margin-bottom: 6px;
+        font-size: 13px;     /* ✅ Diperkecil dari 18px → 13px */
+        margin-bottom: 10px; /* ✅ Tambah jarak bawah tulisan sebelum tiket berikutnya */
+        color: #333;
     }
-    
-    .ticket-price {
-        font-size: 12px;
-        font-weight: bold;
-        margin-top: 5px;
+
+    html, body {
+        height: auto !important;
+        overflow: hidden !important;
+    }
+
+    .print_content {
+        transform: none !important;
     }
 }
+
+
+
 
 

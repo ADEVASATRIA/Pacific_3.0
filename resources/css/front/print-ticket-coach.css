@@ -94,131 +94,121 @@
 /* =======================
    SCREEN ONLY
 ======================= */
-.screen-only { display: block; }
-.print-only { display: none; }
+.screen-only {
+    display: block;
+}
+
+.print-only {
+    display: none;
+}
 
 @media print {
-    /* ===========================
-       GLOBAL SETTINGS
-    ============================ */
-    .screen-only { display: none !important; }
-    .print-only { display: block !important; }
+    .screen-only {
+        display: none !important;
+    }
 
+    .print-only {
+        display: block !important;
+    }
+
+    /* Ukuran thermal paper */
     @page {
-        size: 80mm auto;   /* ✅ Ukuran roll thermal 80mm */
-        margin: 0;         /* Hilangkan margin default printer */
+        size: 80mm auto;
+        margin: 0 !important;
     }
 
     body {
         background: #fff !important;
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         width: 80mm;
-        font-family: "Courier New", monospace;
+        overflow: visible !important;
+        font-family: "Montserrat", sans-serif;
     }
 
     /* Sembunyikan elemen non-print */
-    #navbar, #footer, .print-btn, .customer-info {
+    #navbar,
+    #footer,
+    .print-btn,
+    .customer-info {
         display: none !important;
     }
 
-    /* Tampilkan hanya area print */
-    body * { visibility: hidden; }
-    .print_content, .print_content * { visibility: visible; }
+    /* Hanya area print */
+    body * {
+        visibility: hidden;
+    }
+
+    .print_content,
+    .print_content * {
+        visibility: visible;
+    }
 
     .print_content {
         position: absolute;
-        left: 0;
         top: 0;
+        left: 0;
         width: 80mm;
         margin: 0;
-        padding-top: 20px;     /* ✅ Jarak dari tepi atas kertas */
-        padding-bottom: 20px;  /* ✅ Jarak bawah terakhir */
+        padding: 0;
     }
 
-    /* ===========================
-       LAYOUT TIKET
-    ============================ */
+    /* Tiap kartu tiket */
     .ticket-card {
         width: 80mm;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 0;
         text-align: center;
-        line-height: 1.3;
+        border: none;
+        margin: 0 0 12px 0;
+        padding: 0;
         page-break-inside: avoid;
-        margin-bottom: 35px;   /* ✅ Jarak antar tiket agar mudah digunting */
+        page-break-after: always;
+        line-height: 1.25;
     }
 
-    /* QR CODE */
+    /* Tiket terakhir tanpa break tambahan */
+    .ticket-card:last-child {
+        page-break-after: auto;
+        margin-bottom: 0;
+    }
+
+    /* QR */
     .qr-section svg,
     .qr-section img {
-        width: 230px !important;   /* ✅ Besar pas untuk 80mm */
-        height: 230px !important;
+        width: 160px !important;
+        height: 160px !important;
+        margin: 0 auto 6px auto;
         display: block;
-        margin: 15px auto 10px auto; /* ✅ Ada jarak atas & bawah QR */
-        transform: scale(1.05);
     }
 
-    /* ===========================
-       TEKS & DETAIL TIKET
-    ============================ */
+    /* Kode tiket */
     .ticket-title {
-        font-size: 18px;     /* ✅ Sedikit lebih kecil agar proporsional */
+        font-size: 16px;
         font-weight: bold;
-        margin-bottom: 3px;
+        margin-bottom: 2px;
     }
 
+    /* Subjudul */
     .ticket-subtitle {
-        font-size: 13px;     /* ✅ Lebih kecil dari kode */
-        margin-bottom: 12px; /* ✅ Tambah jarak bawah tulisan */
+        font-size: 11px;
         color: #333;
-        display: block;
-    }
-
-    .ticket-desc {
-        font-size: 13px;
         margin-bottom: 8px;
-        color: #444;
-        display: none; /* Optional, tampilkan jika butuh */
     }
 
-    .ticket-price {
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 5px;
-    }
-
-    /* ===========================
-       OPTIMISASI CETAK
-    ============================ */
-    html, body {
-        height: auto !important;
-        overflow: hidden !important;
-    }
-
-    .print_content {
-        transform: none !important;
-    }
-
-    /* ===========================
-       (Optional) Garis Putus-potong
-    ============================ */
+    /* Garis putus antar tiket */
     .ticket-card::after {
         content: "";
         display: block;
-        width: 70%;
-        margin: 15px auto 0 auto;
-        border-bottom: 1px dashed #ccc; /* ✅ Garis panduan potong */
+        width: 60%;
+        margin: 10px auto 0 auto;
+        border-bottom: 1px dashed #ccc;
     }
 
-    /* Hilangkan garis potong terakhir */
     .ticket-card:last-child::after {
         display: none;
     }
+
 }
 
 
@@ -233,7 +223,7 @@
     max-width: 90vw;
     padding: 12px 16px;
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     z-index: 9999;
     transition: right 0.3s ease;
     font-size: 14px;
@@ -242,7 +232,9 @@
     gap: 8px;
 }
 
-.alert-slide.show { right: 20px; }
+.alert-slide.show {
+    right: 20px;
+}
 
 .alert-slide.error {
     background: #fee;

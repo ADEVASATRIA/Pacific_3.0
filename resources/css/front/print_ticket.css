@@ -127,7 +127,7 @@
       margin: 0;
       padding: 0;
       width: 80mm;
-      font-family: "Courier New", monospace;
+      font-family: "Montserrat", sans-serif;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -142,7 +142,7 @@
       min-height: auto !important;
       justify-content: flex-start !important;
       padding-top: 0 !important;
-      margin-top: -170px !important;   /* kompensasi jarak fisik printer */
+      margin-top: -120px !important;   /* kompensasi jarak fisik printer */
     }
   
     .print_content {

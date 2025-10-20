@@ -33,7 +33,7 @@
                     <div class="ticket-card">
                         <!-- QR Code -->
                         <div class="qr-section mt-5">
-                            {!! QrCode::size(300)->generate($entry->code) !!}
+                            {!! QrCode::size(180)->generate($entry->code) !!}
                         </div>
 
                         <!-- Detail Tiket -->
@@ -51,6 +51,12 @@
                             <p class="ticket-subtitle print-only">
                                 {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} -
                                 {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                            </p>
+
+                            <p class="ticket-price">
+                                @if ($entry->type == 2)
+                                    Gratis
+                                @endif
                             </p>
                         </div>
                     </div>

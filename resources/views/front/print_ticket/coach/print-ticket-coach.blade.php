@@ -34,7 +34,7 @@
                     <div class="ticket-card">
                         <!-- QR Code -->
                         <div class="qr-section">
-                            {!! QrCode::size(120)->generate($entry->code) !!}
+                            {!! QrCode::size(320)->generate($entry->code) !!}
                         </div>
 
                         <!-- Detail Tiket -->

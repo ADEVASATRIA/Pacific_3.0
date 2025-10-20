@@ -50,6 +50,12 @@
                             <p class="ticket-subtitle print-only">
                                 Berlaku sampai {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
+
+                            <p class="ticket-price">
+                                @if ($entry->type == 2)
+                                    Gratis
+                                @endif
+                            </p>
                         </div>
                     </div>
                 @endforeach

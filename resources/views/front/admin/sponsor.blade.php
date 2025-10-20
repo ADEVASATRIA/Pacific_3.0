@@ -2,7 +2,9 @@
 
 @section('title', 'Data Sponsor Pacific')
 @section('page-title', 'Daftar Sponsor Pacific')
-@vite('resources/css/admin/member.css', 'resources/css/admin/close-modal.css')
+@vite('resources/css/admin/member.css')
+@vite('resources/css/admin/close-modal.css')
+
 @push('styles')
     <style>
         /* Styling Tambahan untuk CRUD */

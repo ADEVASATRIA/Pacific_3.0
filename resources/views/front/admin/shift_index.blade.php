@@ -2,8 +2,8 @@
 
 @section('title', 'Data Shitf Hari ini')
 @section('page-title', 'Daftar Shift Hari ini')
-@vite('resources/css/admin/transaction.css', 'resources/css/admin/member.css')
-
+@vite('resources/css/admin/member.css')
+@vite('resources/js/admin/index.js')
 @push('styles')
     <style>
         .btn.success {

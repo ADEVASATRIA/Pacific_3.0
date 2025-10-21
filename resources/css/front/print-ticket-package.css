@@ -111,150 +111,138 @@
     ============================ */
     .screen-only { display: none !important; }
     .print-only { display: block !important; }
-
+  
     @page {
-        size: 80mm auto;   /* ✅ Ukuran roll thermal 80mm dengan tinggi auto */
-        margin: 0;         /* FIX BUG 2: Hilangkan margin default */
+      size: 80mm;
+      margin: 0 !important;
     }
-
+  
     html, body {
-        background: #fff !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: auto !important; /* FIX: Auto height */
-        overflow: visible !important; /* FIX: Biarkan konten flow natural */
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        width: 80mm;
-        font-family: "Montserrat", sans-serif;
+      background: #fff !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 80mm !important;
+      height: auto !important;
+      overflow: visible !important;
+      font-family: "Montserrat", sans-serif;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
-
-    /* Sembunyikan elemen non-print */
+  
     #navbar, #footer, .print-btn, .customer-info {
-        display: none !important;
+      display: none !important;
+      visibility: hidden !important;
     }
-
-    /* Tampilkan hanya area print */
+  
     body * { visibility: hidden !important; }
-    .print_content, .print_content * { visibility: visible !important; }
-
-    /* FIX BUG 2: Optimasi positioning untuk hilangkan space putih */
-    .ticket-wrapper {
-        display: block !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: auto !important;
-        min-height: 0 !important;
+    .print_content, .print_content * {
+      visibility: visible !important;
     }
-
-    .print_content {
-        position: relative; /* FIX: Relative agar flow natural */
-        left: 0;
-        top: 0;
-        width: 80mm;
-        margin: 0 !important;
-        padding: 3mm 0 3mm 0 !important; /* FIX: Minimal padding, hanya 3mm atas-bawah */
-        height: auto !important;
-    }
-
+  
     /* ===========================
-       LAYOUT TIKET
+       STRUKTUR DASAR
+    ============================ */
+    .ticket-wrapper {
+      display: block !important;
+      width: 80mm !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #fff !important;
+      line-height: 1 !important;
+    }
+  
+    .print_content {
+      width: 80mm !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+    }
+  
+    /* ===========================
+       TIKET INDIVIDUAL (TIGHT MODE)
     ============================ */
     .ticket-card {
-        width: 80mm;
-        border: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        padding: 4mm 0 !important; /* FIX: Padding dalam mm untuk presisi */
-        margin: 0 auto 5mm auto !important; /* FIX: Margin antar tiket 5mm */
-        text-align: center;
-        line-height: 1.3;
-        page-break-inside: avoid;
-        break-inside: avoid;
-        background: #fff !important;
+      width: 78mm !important;
+      margin: 0 auto -1px auto !important;   /* ✅ Hilangkan gap antar tiket */
+      padding: 2mm 0 1mm 0 !important;      /* ✅ Rapat antar tiket */
+      background: #fff !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      text-align: center !important;
+      line-height: 1.2;
+  
+      /* ✅ Hindari pemotongan antar halaman */
+      page-break-before: avoid !important;
+      page-break-after: avoid !important;
+      page-break-inside: avoid !important;
+      break-before: avoid !important;
+      break-after: avoid !important;
+      break-inside: avoid !important;
     }
-
-    /* FIX BUG 2: Tiket terakhir tanpa margin bawah */
-    .ticket-card:last-child {
-        margin-bottom: 0 !important;
-        padding-bottom: 2mm !important;
-    }
-
-    /* QR CODE */
+  
+    /* ===========================
+       QR CODE & TEXT
+    ============================ */
     .qr-section {
-        margin: 0 auto;
-        padding: 0;
+      margin: 0 auto !important;
+      padding: 0 !important;
     }
-
+  
     .qr-section svg,
     .qr-section img {
-        width: 180px !important;
-        height: 180px !important;
-        display: block;
-        margin: 0 auto 4mm auto !important; /* FIX: Margin dalam mm */
+      width: 160px !important;
+      height: 160px !important;
+      display: block !important;
+      margin: 0 auto 1mm auto !important;
     }
-
-    /* ===========================
-       TEKS & DETAIL TIKET
-    ============================ */
+  
     .ticket-title {
-        font-size: 15px;
-        font-weight: bold;
-        margin-bottom: 2mm !important;
-        margin-top: 0 !important;
+      font-size: 15px !important;
+      font-weight: bold !important;
+      margin: 0.5mm 0 0.5mm 0 !important;
     }
-
+  
     .ticket-subtitle {
-        font-size: 13px;
-        margin-bottom: 2mm !important;
-        margin-top: 0 !important;
-        color: #333;
-        display: block;
+      font-size: 11px !important;
+      color: #333 !important;
+      margin: 0 0 0.5mm 0 !important;
     }
-
-    .ticket-desc {
-        font-size: 13px;
-        margin-bottom: 2mm !important;
-        margin-top: 0 !important;
-        color: #444;
-        display: none; /* Optional, tampilkan jika butuh */
-    }
-
+  
     .ticket-price {
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 2mm !important;
-        margin-bottom: 0 !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      margin: 0 0 0.5mm 0 !important;
     }
-
+  
     /* ===========================
-       GARIS PUTUS-PUTUS PEMISAH
+       FIXING & CHROME-SPECIFIC
     ============================ */
-    .ticket-card:not(:last-child)::after {
-        content: "";
-        display: block;
-        width: 70%;
-        margin: 4mm auto 0 auto !important;
-        border-bottom: 1px dashed #ccc;
-    }
-
-    /* FIX: Hilangkan garis pada tiket terakhir */
-    .ticket-card:last-child::after {
-        content: none !important;
-        display: none !important;
-    }
-
-    /* ===========================
-       OPTIMISASI CETAK FINAL
-    ============================ */
-    .print_content {
-        transform: none !important;
-    }
-
     * {
-        max-height: none !important;
+      max-height: none !important;
     }
-}
+  
+    /* ✅ Chrome-specific hack untuk hilangkan jeda antar halaman */
+    @supports (-webkit-touch-callout: none) {
+      @page {
+        size: 80mm auto;
+        margin: 0 !important;
+      }
+  
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+      }
+  
+      .ticket-card {
+        margin-bottom: -1px !important; /* Hilangkan jeda putih antar tiket */
+        page-break-before: avoid !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  }
 
 /* Simple Alert Animation */
 .alert-slide {

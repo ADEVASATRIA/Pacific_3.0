@@ -149,12 +149,17 @@
         width: 100%;
         padding: 0;
         margin: 0;
+        margin-right: 20px !important;
+        margin-left: 10px !important;
+        padding-left: 10px !important;
+        padding-right: 35px !important;
     }
 
     /* Header Section */
     .receipt-header {
         text-align: center;
         margin-bottom: 8px;
+        margin-top: 15px;
     }
 
     .main-logo {

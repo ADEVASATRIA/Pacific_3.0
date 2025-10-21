@@ -118,7 +118,7 @@
     }
 
     body {
-        background: #fff !important;
+        /* background: #fff !important; */
         margin: 0 !important;
         padding: 0 !important;
         -webkit-print-color-adjust: exact;
@@ -176,22 +176,22 @@
     /* QR */
     .qr-section svg,
     .qr-section img {
-        width: 160px !important;
-        height: 160px !important;
+        width: 180px !important;
+        height: 180px !important;
         margin: 0 auto 6px auto;
         display: block;
     }
 
     /* Kode tiket */
     .ticket-title {
-        font-size: 16px;
+        font-size: 1.5em;
         font-weight: bold;
         margin-bottom: 2px;
     }
 
     /* Subjudul */
     .ticket-subtitle {
-        font-size: 11px;
+        font-size: 1em;
         color: #333;
         margin-bottom: 8px;
     }
@@ -202,7 +202,7 @@
         display: block;
         width: 60%;
         margin: 10px auto 0 auto;
-        border-bottom: 1px dashed #ccc;
+        /* border-bottom: 1px dashed #ccc; */
     }
 
     .ticket-card:last-child::after {

@@ -50,7 +50,7 @@
 
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} -
+                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
                                 {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
                         </div>

@@ -41,17 +41,34 @@
                             <h2 class="ticket-title">{{ $ticket->code }}</h2>
 
                             {{-- Versi front office --}}
-                            <p class="ticket-desc screen-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai Tanggal
-                                <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
-                            </p>
+                            @if($entry->type == 1)
+                                <p class="ticket-desc screen-only">
+                                    {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
+                                    Berlaku Sampai Tanggal
+                                    <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                </p>
+                            @elseif($entry->type == 2)
+                                <p class="ticket-desc screen-only">
+                                    Tiket Pengantar Tambahan Gratis <br>
+                                    Berlaku Sampai Tanggal
+                                    <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                </p>
+                            @endif
+
 
                             {{-- Versi print --}}
-                            <p class="ticket-subtitle print-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} -
-                                {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
-                            </p>
+                            @if($entry->type == 1)
+                                <p class="ticket-subtitle print-only">
+                                    {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
+                                    {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                </p>
+                            @elseif($entry->type == 2)
+                                <p class="ticket-subtitle print-only">
+                                    Tiket Pengantar Tambahan Gratis <br>
+                                    {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                </p>
+                            @endif
+                            
 
                             <p class="ticket-price">
                                 @if ($entry->type == 2)

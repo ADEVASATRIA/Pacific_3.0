@@ -30,6 +30,8 @@ use App\Http\Controllers\Front\View\CheckoutViewController;
 use App\Http\Controllers\Front\View\CustomerController;
 use App\Http\Controllers\Front\View\HomeController;
 use App\Http\Controllers\Front\View\TiketController;
+
+use App\Http\Controllers\Front\Checkout\PromoController as FrontPromoController;
 use Illuminate\Support\Facades\Route;
 
 // Controller Back
@@ -60,6 +62,10 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/index-ticket', [TiketController::class, 'indexViewTicket'])->name('index_ticket');
     Route::get('/checkout-ticket', [CheckoutViewController::class, 'checkoutView'])->name('checkout_ticket');
     Route::post('/submitFormTicket', [CheckoutController::class, 'submitFormTicket'])->name('submit_form_ticket');
+
+    // Promo validation
+    Route::post('/checkout/validate-promo', [FrontPromoController::class, 'validatePromo'])->name('validate_promo');
+
 
     // Payment
     Route::post('/do-checkout', [CheckoutController::class, 'doCheckout'])->name('do_checkout');

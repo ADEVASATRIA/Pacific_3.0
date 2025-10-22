@@ -80,6 +80,17 @@
                     <input type="hidden" name="discount" value="{{ $discount ?? 0 }}">
                     <input type="hidden" name="total" value="{{ $total }}">
 
+                    {{-- Promo Code --}}
+                    <div class="promo-section">
+                        <h2 class="section-title">🎟️ Gunakan Kode Promo</h2>
+                        <div class="promo-box">
+                            <input type="text" id="promo_code" name="promo_code" placeholder="Masukkan kode promo">
+                            <button type="button" id="applyPromo" class="apply-btn">Terapkan</button>
+                        </div>
+                        <div id="promoMessage" class="promo-message"></div>
+                    </div>
+
+
                     {{-- Payment Method --}}
                     <div class="payment-method">
                         <h2 class="section-title">💰 Pilih Metode Pembayaran</h2>
@@ -153,6 +164,78 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            // === HANDLE PROMO ===
+            const applyPromoBtn = document.getElementById('applyPromo');
+            const promoCodeInput = document.getElementById('promo_code');
+            const promoMessage = document.getElementById('promoMessage');
+
+            applyPromoBtn.addEventListener('click', function() {
+                const code = promoCodeInput.value.trim();
+                if (!code) {
+                    showAlert('error', 'Silakan masukkan kode promo terlebih dahulu.');
+                    return;
+                }
+
+                fetch('{{ route('validate_promo') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            promo_code: code,
+                            items: @json($items),
+                            sub_total: {{ $subTotal }},
+                            total: {{ $total }}
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        promoMessage.innerHTML = '';
+                        if (data.success) {
+                            showAlert('success', data.message);
+                            promoMessage.innerHTML =
+                                `<div class="promo-success">🎉 ${data.message}</div>`;
+
+                            // Update hidden inputs
+                            const promoIdInput = document.querySelector('input[name="promo_id"]');
+                            const discountInput = document.querySelector('input[name="discount"]');
+                            const totalInput = document.querySelector('input[name="total"]');
+
+                            if (promoIdInput) promoIdInput.value = data.promo_id;
+                            if (discountInput) discountInput.value = data.discount;
+                            if (totalInput) totalInput.value = data.new_total;
+
+                            // Update tampilan subtotal/total
+                            const totalsSection = document.querySelector('.totals-section');
+                            if (totalsSection) {
+                                totalsSection.innerHTML = `
+                        <div class="total-box"><span>Sub Total</span><strong>Rp ${data.formatted_subtotal}</strong></div>
+                        <div class="total-box"><span>Diskon</span><strong>- Rp ${data.formatted_discount}</strong></div>
+                        <div class="total-box highlight"><span>Total Bayar</span><strong>Rp ${data.formatted_total}</strong></div>
+                    `;
+                            }
+
+                            // 🔹 Pastikan DOM selesai di-update sebelum hitung ulang
+                            setTimeout(() => {
+                                console.log('%c=== Recalculate After Promo ===',
+                                    'color:green; font-weight:bold');
+                                hitungKembalian();
+                            }, 50);
+
+                        } else {
+                            showAlert('error', data.message);
+                            promoMessage.innerHTML =
+                            `<div class="promo-error">⚠️ ${data.message}</div>`;
+                            document.querySelector('input[name="promo_id"]').value = '';
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showAlert('error', 'Terjadi kesalahan saat memproses promo.');
+                    });
+            });
+
             // === ALERT FUNCTION ===
             function showAlert(type, message) {
                 const existing = document.querySelector('.alert-slide');
@@ -161,10 +244,10 @@
                 const alertDiv = document.createElement('div');
                 alertDiv.className = `alert-slide ${type}`;
                 alertDiv.innerHTML = `
-                <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
-                <div style="flex:1;">${message}</div>
-                <button class="alert-close" aria-label="close">&times;</button>
-            `;
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
                 document.body.appendChild(alertDiv);
 
                 alertDiv.querySelector('.alert-close').addEventListener('click', () => {
@@ -187,7 +270,7 @@
                 showAlert('success', @json(session('success')));
             @endif
 
-            // === DOM ELEMENTS ===
+            // === HANDLE PEMBAYARAN ===
             const paymentInput = document.getElementById('payment-method');
             const approvalBox = document.getElementById('approval-code-box');
             const cardBox = document.getElementById('card-box');
@@ -195,31 +278,21 @@
             const selected = document.querySelector('.custom-select .selected');
             const options = document.querySelectorAll('.custom-select .options div');
 
-            // === HANDLE PILIHAN PEMBAYARAN ===
             options.forEach(opt => {
                 opt.addEventListener('click', function() {
                     const value = this.getAttribute('data-value');
                     const text = this.textContent.trim();
 
-                    // Update tampilan dan nilai input hidden
                     selected.textContent = text;
                     paymentInput.value = value;
 
-                    // Reset semua box
                     approvalBox.classList.add('hidden');
                     cardBox.classList.add('hidden');
                     moneyBox.classList.add('hidden');
 
-                    // Cash → tampilkan uang diterima
                     if (value === '1') {
                         moneyBox.classList.remove('hidden');
-                    }
-                    // Transfer → tidak butuh approval
-                    else if (value === '6') {
-                        // tidak menampilkan apa-apa
-                    }
-                    // Selain Cash & Transfer (QRIS / Debit) → tampilkan approval + kartu
-                    else if (['2', '3', '4', '5', '7', '8'].includes(value)) {
+                    } else if (['2', '3', '4', '5', '7', '8'].includes(value)) {
                         approvalBox.classList.remove('hidden');
                         cardBox.classList.remove('hidden');
                     }
@@ -232,21 +305,18 @@
                 const payment = paymentInput.value;
                 const staffPin = document.getElementById('staff_pin').value.trim();
 
-                // Jika belum pilih metode pembayaran
                 if (!payment) {
                     e.preventDefault();
                     showAlert('error', 'Silakan pilih metode pembayaran terlebih dahulu.');
                     return;
                 }
 
-                // Jika PIN staff kosong
                 if (!staffPin) {
                     e.preventDefault();
                     showAlert('error', 'PIN staff wajib diisi.');
                     return;
                 }
 
-                // Jika pembayaran cash tapi uang diterima masih 0
                 if (payment === '1') {
                     const uangDiterima = parseFloat(document.getElementById('uangDiterima_hidden').value);
                     if (!uangDiterima || uangDiterima <= 0) {
@@ -256,7 +326,6 @@
                     }
                 }
 
-                // Jika non-cash tapi approval code kosong
                 if (['2', '3', '4', '5', '7', '8'].includes(payment)) {
                     const approval = document.getElementById('approval_code').value.trim();
                     if (!approval) {
@@ -265,6 +334,53 @@
                         return;
                     }
                 }
+            });
+
+            // === HITUNG KEMBALIAN OTOMATIS + FORMAT UANG ===
+            const uangDiterimaInput = document.getElementById('uangDiterima');
+            const uangDiterimaHidden = document.getElementById('uangDiterima_hidden');
+            const kembalianInput = document.getElementById('kembalian');
+            const kembalianHidden = document.getElementById('kembalian_hidden');
+
+            function cleanNumber(str) {
+                return parseFloat(str.replace(/[^\d]/g, '')) || 0;
+            }
+
+            function formatRupiah(num) {
+                return 'Rp ' + num.toLocaleString('id-ID');
+            }
+
+            function hitungKembalian() {
+                const uang = cleanNumber(uangDiterimaInput.value);
+                const totalInput = document.querySelector('input[name="total"]');
+                const total = totalInput ? parseFloat(totalInput.value) || 0 : 0;
+                const kembali = uang - total;
+
+                uangDiterimaHidden.value = uang;
+                kembalianHidden.value = kembali > 0 ? kembali : 0;
+                kembalianInput.value = formatRupiah(kembalianHidden.value);
+
+                console.log('=== DEBUG KEMBALIAN ===');
+                console.log('Total Input:', total);
+                console.log('Uang Diterima:', uang);
+                console.log('Kembalian:', kembali);
+                console.log('Kembalian Hidden:', kembalianHidden.value);
+            }
+
+            uangDiterimaInput.addEventListener('input', () => {
+                let raw = uangDiterimaInput.value.replace(/[^\d]/g, '');
+                if (raw === '') {
+                    uangDiterimaInput.value = '';
+                    uangDiterimaHidden.value = 0;
+                    kembalianHidden.value = 0;
+                    kembalianInput.value = 'Rp 0';
+                    return;
+                }
+
+                const num = parseInt(raw);
+                uangDiterimaInput.value = formatRupiah(num);
+                uangDiterimaHidden.value = num;
+                hitungKembalian();
             });
         });
     </script>

@@ -196,23 +196,30 @@ class CheckoutService
                 $invoice = date('Ymd') . time();
             } while (Purchase::where('invoice_no', $invoice)->exists());
 
-            // 🛒 Buat Purchase
-            $purchase = Purchase::create([
-                'customer_id' => $request->input('customer_id'),
-                'promo_id' => $request->input('promo_id') ?? null,
-                'staff_id' => $staff->id,
-                'invoice_no' => $invoice,
-                'sub_total' => $request->input('sub_total'),
-                'tax' => $request->input('tax'),
-                'discount' => $request->input('discount') ?? 0,
-                'total' => $request->input('total'),
-                'kembalian' => $request->input('kembalian') ?? 0,
-                'uangDiterima' => $request->input('uangDiterima') ?? 0,
-                'payment' => $request->input('payment'),
-                'payment_info' => $request->input('payment_info'),
-                'approval_code' => $request->input('approval_code'),
-                'status' => Purchase::STATUS_PAID, // default → langsung paid
-            ]);
+            // dd($request->input('uangDiterima'));
+            $purchase = new Purchase();
+            $purchase->customer_id = $request->input('customer_id');
+            $purchase->promo_id = $request->input('promo_id') ?? null;
+            $purchase->staff_id = $staff->id;
+            $purchase->invoice_no = $invoice;
+            $purchase->sub_total = $request->input('sub_total');
+            $purchase->tax = $request->input('tax');
+            $purchase->discount = $request->input('discount') ?? 0;
+            $purchase->total = $request->input('total');
+            $purchase->kembalian = $request->input('kembalian') ?? 0;
+            $purchase->uangDiterima = $request->input('uangDiterima') ?? 0;
+
+            // dd(
+            //     $request->input('uangDiterima'),
+            //     $request->input('kembalian'),
+            //     $purchase->uangDiterima, 
+            //     'masuk sini'
+            // );
+            $purchase->payment = $request->input('payment');
+            $purchase->payment_info = $request->input('payment_info');
+            $purchase->approval_code = $request->input('approval_code');
+            $purchase->status = Purchase::STATUS_PAID; // default → langsung paid
+            $purchase->save();
 
             // dd($purchase);
 

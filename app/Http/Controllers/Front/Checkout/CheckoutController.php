@@ -79,7 +79,7 @@ class CheckoutController extends Controller
             'customer_id' => 'required|exists:customers,id',
 
             // Promo Validate if data promo is valid
-            'promo_id' => 'nullable|exists:promos,id',
+            'promo_id' => 'nullable|integer',
 
             // Validate the staff that doing purchase complete
             'staff_pin' => 'required|string',
@@ -99,7 +99,7 @@ class CheckoutController extends Controller
             'discount' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
         ]);
-
+        // dd($request->all());
 
         try {
             $purchase = $this->checkoutService->processCheckout($request);

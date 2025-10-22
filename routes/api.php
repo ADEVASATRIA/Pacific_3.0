@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Bug\MemberController as APIMemberController;
+use App\Http\Controllers\API\Front\Customer\CustomerApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,3 +15,7 @@ Route::post('/repair-active-member', [APIMemberController::class, 'repairActiveM
 Route::post('/repair-all-active-member', [APIMemberController::class, 'repairAllActiveMembers']);
 
 
+Route::prefix('customer')->group(function () {
+    Route::get('/all', [CustomerApiController::class, 'getAllCustomers']);
+    Route::get('/search-by-phone', [CustomerApiController::class, 'searchByPhone']);
+});

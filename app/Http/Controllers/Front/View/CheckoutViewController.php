@@ -17,19 +17,17 @@ class CheckoutViewController extends Controller
 {
     public function checkoutView(Request $request)
     {
-
         $items = session("items");
         $customerId = session('customer_id');
         $token = session('checkout_token');
 
         if (empty($items) || empty($customerId) || empty($token)) {
-            return redirect()
-                ->route("main")
-                ->with("error", "Akses tidak valid.");
+            return redirect()->route("main")->with("error", "Akses tidak valid.");
         }
 
         $customer = Customer::find($customerId);
-        $sponsor = Sponsor::where('status', 1)->where('deleted_at', null)->get();
+        $sponsor = Sponsor::where('status', 1)->whereNull('deleted_at')->where('status', 1)->get();
+
         return view("front.buy_ticket.checkout_view", [
             "items" => $items,
             "subTotal" => session("subTotal"),

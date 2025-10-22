@@ -28,16 +28,23 @@ class CheckoutController extends Controller
             $token = bin2hex(random_bytes(16));
             $data['checkout_token'] = $token;
 
-            session(['checkout_token' => $token]);
+            // Simpan semua data di session permanen
+            session([
+                'checkout_token' => $token,
+                'items' => $data['items'],
+                'subTotal' => $data['subTotal'],
+                'tax' => $data['tax'],
+                'total' => $data['total'],
+                'customer_id' => $data['customer_id'],
+            ]);
 
-
-            return redirect()->route('checkout_ticket')->with($data);
+            return redirect()->route('checkout_ticket');
 
         } catch (\Throwable $e) {
-            // kembali dengan input dan flash error
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
+
 
     public function submitFormMember(Request $request)
     {
@@ -47,16 +54,22 @@ class CheckoutController extends Controller
             $token = bin2hex(random_bytes(16));
             $data['checkout_token'] = $token;
 
-            session(['checkout_token' => $token]);
+            session([
+                'checkout_token' => $token,
+                'items' => $data['items'],
+                'subTotal' => $data['subTotal'],
+                'tax' => $data['tax'],
+                'total' => $data['total'],
+                'customer_id' => $data['customer_id'],
+            ]);
 
-
-            return redirect()->route('checkout_ticket')->with($data);
+            return redirect()->route('checkout_ticket');
 
         } catch (\Throwable $e) {
-            // kembali dengan input dan flash error
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
+
 
     public function doCheckout(Request $request)
     {
@@ -91,8 +104,10 @@ class CheckoutController extends Controller
         try {
             $purchase = $this->checkoutService->processCheckout($request);
 
+            session()->forget(['checkout_token', 'items', 'subTotal', 'tax', 'total', 'customer_id']);
             return redirect()->route('checkout_success', $purchase->id)
                 ->with('success', 'Order berhasil dibuat. Nomor Invoice: ' . $purchase->invoice);
+
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal membuat purchase: ' . $e->getMessage());

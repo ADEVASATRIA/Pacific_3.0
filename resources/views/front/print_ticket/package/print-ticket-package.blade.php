@@ -42,7 +42,11 @@
                         </div>
 
                         <div class="ticket-info">
-                            <h2 class="ticket-title">{{ $ticket->packageComboRedeemDetail->name ?? 'Tiket' }}</h2>
+                            @if ($entry->type == 1)
+                                <h2 class="ticket-title">{{ $ticket->packageComboRedeemDetail->name ?? 'Tiket' }}</h2>
+                            @elseif($entry->type == 2)
+                                <h2 class="ticket-title">Tiket Pengantar Tambahan Gratis</h2>
+                            @endif
                             <p class="ticket-desc screen-only">
                                 Berlaku sampai
                                 <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>

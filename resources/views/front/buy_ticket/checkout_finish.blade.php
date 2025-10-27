@@ -71,7 +71,7 @@
 
             @if($purchase->promo)
                 <div class="receipt-row">
-                    <span>Diskon:</span>
+                    <span>Diskon ( {{ $purchase->promo->code }} ):</span>
                     <span>- Rp.{{ number_format($purchase->discount,0,',','.') }}</span>
                 </div>
             @endif
@@ -153,7 +153,7 @@
 
             @if($purchase->promo)
                 <div class="receipt-row">
-                    <span>Diskon:</span>
+                    <span>Diskon ( {{ $purchase->promo->code }} ):</span>
                     <span>- Rp.{{ number_format($purchase->discount,0,',','.') }}</span>
                 </div>
             @endif

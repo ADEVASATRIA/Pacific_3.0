@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front\View;
 
 use App\Http\Controllers\Controller;
+use App\Models\Clubhouse;
 use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use App\Models\Customer;
@@ -12,6 +13,7 @@ use App\Models\PurchaseDetail;
 use App\Models\DetailPayment;
 use App\Models\Ticket;
 use App\Models\TicketEntry;
+use App\Models\TicketType;
 
 class CheckoutViewController extends Controller
 {
@@ -26,7 +28,22 @@ class CheckoutViewController extends Controller
         }
 
         $customer = Customer::find($customerId);
-        $sponsor = Sponsor::where('status', 1)->whereNull('deleted_at')->where('status', 1)->get();
+        $sponsor = Sponsor::where('status', 1)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $items = collect($items)->map(function ($item) {
+            $ticketType = TicketType::find($item['id']);
+            $item['is_coach_club_require'] = $ticketType?->is_coach_club_require ?? 0;
+            return $item;
+        });
+        
+        $clubhouses = Clubhouse::whereNull('deleted_at')
+            ->get(['id', 'name']);
+
+        $coaches = Customer::where('is_pelatih', 1)
+            ->whereNull('deleted_at')
+            ->get(['id', 'name']);
 
         return view("front.buy_ticket.checkout_view", [
             "items" => $items,
@@ -37,8 +54,11 @@ class CheckoutViewController extends Controller
             "customerId" => $customerId,
             "checkoutToken" => $token,
             "sponsor" => $sponsor,
+            "clubhouses" => $clubhouses,
+            "coaches" => $coaches
         ]);
     }
+
 
     public function printTickets($purchaseId)
     {

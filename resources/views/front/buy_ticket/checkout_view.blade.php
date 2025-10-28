@@ -45,12 +45,64 @@
                             <tbody>
                                 @foreach ($items as $i => $it)
                                     <tr>
-                                        <td>{{ $it['name'] }}</td>
+                                        <td>
+                                            <div class="item-with-dropdowns-inline">
+                                                {{-- Nama Item --}}
+                                                <span class="item-name">{{ $it['name'] }}</span>
+
+                                                {{-- Jika item butuh pilihan Clubhouse & Coach --}}
+                                                @if (!empty($it['is_coach_club_require']) && $it['is_coach_club_require'] == 1)
+                                                    <div class="dropdown-group-inline">
+                                                        {{-- Dropdown Clubhouse --}}
+                                                        <div class="clubhouse-select">
+                                                            <select name="items[{{ $i }}][clubhouse_select]"
+                                                                class="clubhouse-dropdown" data-index="{{ $i }}"
+                                                                data-type="clubhouse">
+                                                                <option value="">Pilih Clubhouse</option>
+                                                                @foreach ($clubhouses as $club)
+                                                                    <option value="{{ $club->id }}"
+                                                                        {{ isset($it['clubhouse_id']) && $it['clubhouse_id'] == $club->id ? 'selected' : '' }}>
+                                                                        {{ $club->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <input type="hidden"
+                                                                name="items[{{ $i }}][clubhouse_id]"
+                                                                id="clubhouse_hidden_{{ $i }}"
+                                                                value="{{ $it['clubhouse_id'] ?? '' }}">
+                                                        </div>
+
+                                                        {{-- Dropdown Coach --}}
+                                                        <div class="coach-select">
+                                                            <select name="items[{{ $i }}][coach_select]"
+                                                                class="coach-dropdown" data-index="{{ $i }}"
+                                                                data-type="coach">
+                                                                <option value="">Pilih Coach</option>
+                                                                @foreach ($coaches as $coach)
+                                                                    <option value="{{ $coach->id }}"
+                                                                        {{ isset($it['coach_id']) && $it['coach_id'] == $coach->id ? 'selected' : '' }}>
+                                                                        {{ $coach->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <input type="hidden"
+                                                                name="items[{{ $i }}][coach_id]"
+                                                                id="coach_hidden_{{ $i }}"
+                                                                value="{{ $it['coach_id'] ?? '' }}">
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </td>
                                         <td>{{ $it['qty'] }}</td>
                                         <td>Rp {{ number_format($it['price'], 0, ',', '.') }}</td>
                                         <td>Rp {{ number_format($it['qty'] * $it['price'], 0, ',', '.') }}</td>
                                     </tr>
-                                    <input type="hidden" name="items[{{ $i }}][id]" value="{{ $it['id'] }}">
+
+
+                                    {{-- Hidden inputs --}}
+                                    <input type="hidden" name="items[{{ $i }}][id]"
+                                        value="{{ $it['id'] }}">
                                     <input type="hidden" name="items[{{ $i }}][name]"
                                         value="{{ $it['name'] }}">
                                     <input type="hidden" name="items[{{ $i }}][price]"
@@ -60,11 +112,13 @@
                                     <input type="hidden" name="items[{{ $i }}][type_purchase]"
                                         value="{{ $it['type_purchase'] }}">
                                 @endforeach
+
                                 <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                                 <input type="hidden" name="promo_id" value="{{ $promoId ?? '' }}">
                             </tbody>
                         </table>
                     </div>
+
 
                     {{-- Totals --}}
                     <div class="totals-section">
@@ -100,7 +154,8 @@
                             <div class="options">
                                 <div data-value="1"><span>💵</span> Cash</div>
                                 <div data-value="2"><img src="/aset/img/logo-bca.png" alt="BCA"> QRIS BCA</div>
-                                <div data-value="3"><img src="/aset/img/logo-mandiri.png" alt="Mandiri"> QRIS Mandiri</div>
+                                <div data-value="3"><img src="/aset/img/logo-mandiri.png" alt="Mandiri"> QRIS Mandiri
+                                </div>
                                 <div data-value="4"><img src="/aset/img/logo-bca.png" alt="BCA"> Debit BCA</div>
                                 <div data-value="5"><img src="/aset/img/logo-mandiri.png" alt="Mandiri"> Debit Mandiri
                                 </div>
@@ -164,6 +219,52 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            // === HANDLE CLUBHOUSE ID & COACH ID SELECTION ===
+            const clubhouseSelects = document.querySelectorAll('.clubhouse-dropdown');
+            const coachSelects = document.querySelectorAll('.coach-dropdown');
+
+            clubhouseSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = this.dataset.index;
+                    const coachSelect = document.querySelector(
+                        `.coach-dropdown[data-index="${index}"]`);
+                    const hiddenClub = document.querySelector(`#clubhouse_hidden_${index}`);
+
+                    hiddenClub.value = this.value;
+
+                    if (this.value) {
+                        // Kalau clubhouse dipilih → disable coach
+                        coachSelect.value = '';
+                        coachSelect.disabled = true;
+                        document.querySelector(`#coach_hidden_${index}`).value = '';
+                    } else {
+                        // Kalau clubhouse dikosongkan → enable coach
+                        coachSelect.disabled = false;
+                    }
+                });
+            });
+
+            coachSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = this.dataset.index;
+                    const clubhouseSelect = document.querySelector(
+                        `.clubhouse-dropdown[data-index="${index}"]`);
+                    const hiddenCoach = document.querySelector(`#coach_hidden_${index}`);
+
+                    hiddenCoach.value = this.value;
+
+                    if (this.value) {
+                        // Kalau coach dipilih → disable clubhouse
+                        clubhouseSelect.value = '';
+                        clubhouseSelect.disabled = true;
+                        document.querySelector(`#clubhouse_hidden_${index}`).value = '';
+                    } else {
+                        // Kalau coach dikosongkan → enable clubhouse
+                        clubhouseSelect.disabled = false;
+                    }
+                });
+            });
+
             // === HANDLE PROMO ===
             const applyPromoBtn = document.getElementById('applyPromo');
             const promoCodeInput = document.getElementById('promo_code');
@@ -226,7 +327,7 @@
                         } else {
                             showAlert('error', data.message);
                             promoMessage.innerHTML =
-                            `<div class="promo-error">⚠️ ${data.message}</div>`;
+                                `<div class="promo-error">⚠️ ${data.message}</div>`;
                             document.querySelector('input[name="promo_id"]').value = '';
                         }
                     })

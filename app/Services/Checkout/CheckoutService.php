@@ -129,13 +129,12 @@ class CheckoutService
             $id = intval($it['id'] ?? 0);
             $qty = intval($it['qty'] ?? 0);
 
-            $row = null;
             $price = intval($it['price'] ?? 0);
             $name = $it['name'] ?? '';
-
             $qty_extra = 0;
             $ticket_kode_ref = null;
 
+            // 🔹 Ambil data dasar dari tipe item
             if ($type === 1) {
                 $row = TicketType::find($id);
                 if (!$row) {
@@ -156,18 +155,27 @@ class CheckoutService
                 $qty_extra = $packageComboDetail->qty_extra ?? 0;
             }
 
-            // dd(
-            //     $type,
-            //     $id,
-            //     $name,
-            //     $qty,
-            //     $price,
-            //     $type === 1 ? $id : null,
-            //     $type === 3 ? $id : null,
-            //     $type === 2 ? $id : null,
-            //     $qty_extra,
-            //     $ticket_kode_ref,
-            // );
+            // 🔹 Jika ada clubhouse_id 
+            $clubhouseName = null;
+            $coachName = null;
+
+            if (!empty($it['clubhouse_id'])) {
+                $clubhouse = \App\Models\Clubhouse::find($it['clubhouse_id']);
+                $clubhouseName = $clubhouse ? $clubhouse->name : null;
+            }
+            if(!empty($it['coach_id'])) {
+                $coach = Customer::find($it['coach_id']);
+                $coachName = $coach ? $coach->name : null;
+            }
+
+
+            $suffix = collect([$clubhouseName , $coachName])
+                ->filter()
+                ->join(', ');
+
+            if (!empty($suffix)) {
+                $name .= " ({$suffix})";
+            }
 
             return [
                 'type_purchase' => $type,
@@ -185,18 +193,18 @@ class CheckoutService
 
         DB::beginTransaction();
         try {
-            // 🔑 Cari staff dari PIN
+            // 🔑 Validasi PIN staff
             $staff = Admin::where('pin', $request->input('staff_pin'))->first();
             if (!$staff) {
                 throw new \Exception('PIN Staff salah.');
             }
 
-            // 🔢 Generate invoice berdasarkan tanggal + time (unik)
+            // 🔢 Generate invoice unik
             do {
                 $invoice = date('Ymd') . time();
             } while (Purchase::where('invoice_no', $invoice)->exists());
 
-            // dd($request->input('uangDiterima'));
+            // 🧾 Simpan data purchase utama
             $purchase = new Purchase();
             $purchase->customer_id = $request->input('customer_id');
             $purchase->promo_id = $request->input('promo_id') ?? null;
@@ -208,25 +216,15 @@ class CheckoutService
             $purchase->total = $request->input('total');
             $purchase->kembalian = $request->input('kembalian') ?? 0;
             $purchase->uangDiterima = $request->input('uangDiterima') ?? 0;
-
-            // dd(
-            //     $request->input('uangDiterima'),
-            //     $request->input('kembalian'),
-            //     $purchase->uangDiterima, 
-            //     'masuk sini'
-            // );
             $purchase->payment = $request->input('payment');
             $purchase->payment_info = $request->input('payment_info');
             $purchase->approval_code = $request->input('approval_code');
-            $purchase->status = Purchase::STATUS_PAID; // default → langsung paid
+            $purchase->status = Purchase::STATUS_PAID;
             $purchase->save();
 
-            // dd($purchase);
-
-            // 📝 Buat Purchase Detail
-            $purchaseDetails = [];
+            // 💾 Simpan purchase detail
             foreach ($preparedItems as $pi) {
-                $purchaseDetail = PurchaseDetail::create([
+                PurchaseDetail::create([
                     'purchase_id' => $purchase->id,
                     'type' => $pi['type_purchase'],
                     'purchase_item_id' => $pi['ticket_type_id'] ?: ($pi['package_id'] ?: $pi['item_id']),
@@ -236,10 +234,9 @@ class CheckoutService
                     'price' => $pi['price'],
                     'ticket_kode_ref' => $pi['ticket_kode_ref'],
                 ]);
-                $purchaseDetails[] = $purchaseDetail;
             }
 
-            // // 🎟️ Generate ticket (kalau diaktifkan)
+            // 🎟️ Generate tiket
             $ticketService = new CreateTickets();
             $purchase->load('purchaseDetails.ticketType', 'purchaseDetails.packageCombo');
 
@@ -255,15 +252,11 @@ class CheckoutService
                 }
             }
 
-
-
             DB::commit();
             return $purchase;
-
         } catch (\Throwable $e) {
             DB::rollBack();
             throw $e;
         }
     }
-
 }

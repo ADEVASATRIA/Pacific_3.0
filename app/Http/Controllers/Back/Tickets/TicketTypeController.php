@@ -33,6 +33,7 @@ class TicketTypeController extends Controller
             'is_phone_mandatory' => 'required|integer',
             'is_active' => 'required|integer',
             'can_buy_tiket_pengantar' => 'required|integer',
+            'is_coach_club_require' => 'required|integer',
             'tipe_khusus' => 'required|integer',
             'ticket_kode_ref' => 'required|string|max:255'
         ]);
@@ -48,6 +49,7 @@ class TicketTypeController extends Controller
         $ticketType->is_phone_mandatory = $request->is_phone_mandatory;
         $ticketType->is_active = $request->is_active;
         $ticketType->can_buy_tiket_pengantar = $request->can_buy_tiket_pengantar;
+        $ticketType->is_coach_club_require = $request->is_coach_club_require;
         $ticketType->tipe_khusus = $request->tipe_khusus;
         $ticketType->ticket_kode_ref = $request->ticket_kode_ref;
         $ticketType->save();
@@ -88,11 +90,26 @@ class TicketTypeController extends Controller
             'is_phone_mandatory' => 'required|integer',
             'is_active' => 'required|integer',
             'can_buy_tiket_pengantar' => 'required|integer',
+            'is_coach_club_require' => 'required|integer',
             'tipe_khusus' => 'required|integer',
             'ticket_kode_ref' => 'required|string|max:255'
         ]);
 
-        $ticketType->update($validatedFields);
+        // $ticketType->update($validatedFields);
+        $ticketType->name = $validatedFields['name'];
+        $ticketType->price = $validatedFields['price'];
+        $ticketType->duration = $validatedFields['duration'];
+        $ticketType->qty_extra = $validatedFields['qty_extra'];
+        $ticketType->weight = $validatedFields['weight'];
+        $ticketType->is_dob_mandatory = $validatedFields['is_dob_mandatory'];
+        $ticketType->is_phone_mandatory = $validatedFields['is_phone_mandatory'];
+        $ticketType->is_active = $validatedFields['is_active'];
+        $ticketType->can_buy_tiket_pengantar = $validatedFields['can_buy_tiket_pengantar'];
+        $ticketType->is_coach_club_require = $validatedFields['is_coach_club_require'];
+        $ticketType->tipe_khusus = $validatedFields['tipe_khusus'];
+        $ticketType->ticket_kode_ref = $validatedFields['ticket_kode_ref'];
+
+        $ticketType->save();
 
         return redirect()->route('ticket-types')->with([
             'success' => true,

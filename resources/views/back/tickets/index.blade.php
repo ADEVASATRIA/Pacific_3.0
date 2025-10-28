@@ -46,6 +46,7 @@
                         <th>Butuh Telephone</th>
                         <th>Aktif</th>
                         <th>Bisa Beli <br>Tiket Pengantar</th>
+                        <th>Bisa Input Coach <br> / Clubhouse</th>
                         <th>Tipe Khusus</th>
                         <th>Tiket Kode REF</th>
                         <th>Aksi</th>
@@ -64,6 +65,7 @@
                             <td class="text-center">{!! $item->getBadgeHtml($item->is_phone_mandatory) !!}</td>
                             <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
                             <td class="text-center">{!! $item->getBadgeHtml($item->can_buy_tiket_pengantar) !!}</td>
+                            <td class="text-center">{!! $item->getBadgeHtml($item->is_coach_club_require) !!}</td>
 
                             <td class="text-center">
                                 @switch($item->tipe_khusus)
@@ -222,6 +224,16 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-md-6">
+                                        <label for="is_coach_club_require" class="form-label fw-semibold">Bisa Bisa input coach / 
+                                            clubhouse</label>
+                                        <select name="is_coach_club_require" id="is_coach_club_require"
+                                            class="form-select shadow-sm" required>
+                                            <option value="1">Iya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+
                                     {{-- Tipe Khusus --}}
                                     <div class="col-md-6" id="tipeKhusus">
                                         <label for="tipe_khusus" class="form-label fw-semibold">Tipe Khusus</label>
@@ -358,6 +370,16 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-md-6">
+                                        <label for="edit_is_coach_club_require" class="form-label fw-semibold">Bisa Bisa input coach / 
+                                            clubhouse</label>
+                                        <select name="is_coach_club_require" id="edit_is_coach_club_require"
+                                            class="form-select shadow-sm" required>
+                                            <option value="1">Iya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+
                                     {{-- Tipe Khusus --}}
                                     <div class="col-md-6" id="edit_tipeKhusus">
                                         <label for="edit_tipeKhusus" class="form-label fw-semibold">Tipe Khusus</label>
@@ -486,6 +508,7 @@
                     document.getElementById('edit_is_phone_mandatory').value = data.is_phone_mandatory ?? 0;
                     document.getElementById('edit_is_active').value = data.is_active ?? 1;
                     document.getElementById('edit_can_buy_tiket_pengantar').value = data.can_buy_tiket_pengantar ?? 0;
+                    document.getElementById('edit_is_coach_club_require').value = data.is_coach_club_require ?? 0;
                     document.getElementById('edit_tipeKhusus').value = data.tipe_khusus ?? 1;
 
                     // Tampilkan modal edit

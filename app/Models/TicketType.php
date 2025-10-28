@@ -16,6 +16,7 @@ class TicketType extends Model
         'is_phone_mandatory',
         'is_active',
         'can_buy_tiket_pengantar', // ✅ diperbaiki di sini
+        'is_coach_club_require',
         'tipe_khusus',
         'ticket_kode_ref',
     ];

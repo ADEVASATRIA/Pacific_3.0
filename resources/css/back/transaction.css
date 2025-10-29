@@ -119,12 +119,41 @@
     overflow: hidden;
 }
 
+/* ===== Table Wrapper with Horizontal Scroll ===== */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Custom Scrollbar Styling */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
 /* ===== Table Styling ===== */
 .table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
     color: #374151;
+    min-width: 1000px; /* Pastikan tabel memiliki min-width */
 }
 
 .table thead {
@@ -141,12 +170,17 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+    z-index: 10;
 }
 
 .table td {
     padding: 1rem 1.25rem;
     border-bottom: 1px solid #f3f4f6;
     vertical-align: middle;
+    white-space: nowrap; /* Mencegah text wrapping */
 }
 
 .table tbody tr {
@@ -190,6 +224,69 @@
     color: #9ca3af;
     font-style: italic;
     font-size: 0.95rem;
+    white-space: normal; /* Allow wrapping for empty state */
+}
+
+/* ===== Sticky First Column (Optional - Uncomment if needed) ===== */
+/*
+.table th:first-child,
+.table td:first-child {
+    position: sticky;
+    left: 0;
+    background: #ffffff;
+    z-index: 5;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.table th:first-child {
+    z-index: 15;
+    background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+}
+*/
+
+/* ===== Action Buttons in Last Column ===== */
+.table td:last-child {
+    white-space: nowrap;
+}
+
+.table .btn {
+    white-space: nowrap;
+    margin: 0 2px;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media screen and (max-width: 768px) {
+    .table {
+        font-size: 0.85rem;
+        min-width: 1200px; /* Lebih lebar untuk mobile agar scroll lebih jelas */
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.75rem 1rem;
+    }
+    
+    .table-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+}
+
+/* ===== Scroll Indicator (Optional) ===== */
+.table-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(to left, rgba(255,255,255,0.9), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.table-section.has-scroll::after {
+    opacity: 1;
 }
 
 /* ===== Payment Method Badge Styling (Optional Enhancement) ===== */

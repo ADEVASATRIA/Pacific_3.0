@@ -30,9 +30,13 @@ class TiketController extends Controller
         // Ticket Member
         $ticketMember = $filterType == 4 || $filterType == null
             ? TicketType::where('tipe_khusus', 4)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
+
+        // Ticket Pelatih
+        $ticketBiayaPelatih = $filterType == 5 || $filterType == null
+            ? TicketType::where('tipe_khusus', 5)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
         
         // Ticket Package 
-        $ticketPackage = $filterType == 5 || $filterType == null
+        $ticketPackage = $filterType == 6 || $filterType == null
             ? PackageCombo::where('is_active', 1)->where('deleted_at', null)->get() : collect();
         
         $customer = $customerId ? Customer::find($customerId) : null;
@@ -42,6 +46,7 @@ class TiketController extends Controller
             'ticketPengantar',
             'ticketPelatih',
             'ticketMember',
+            'ticketBiayaPelatih',
             'ticketPackage',
             'customer',
             'customerId',

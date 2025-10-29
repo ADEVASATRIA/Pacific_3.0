@@ -41,8 +41,12 @@
                             onchange="this.form.submit()" {{ $filterType == 4 ? 'checked' : '' }}>
                         <label for="tiketMember">Tiket Member</label>
 
-                        <input type="radio" id="tiketPackage" name="filter_type" value="5"
+                        <input type="radio" id="tiketBiayaPelatih" name="filter_type" value="5"
                             onchange="this.form.submit()" {{ $filterType == 5 ? 'checked' : '' }}>
+                        <label for="tiketBiayaPelatih">Tiket Biaya Pelatih</label>
+
+                        <input type="radio" id="tiketPackage" name="filter_type" value="6"
+                            onchange="this.form.submit()" {{ $filterType == 6 ? 'checked' : '' }}>
                         <label for="tiketPackage">Tiket Package</label>
                     </div>
                 </form>
@@ -55,7 +59,7 @@
                 {{-- Tiket Regular --}}
                 @if ($ticketRegular->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Tiket 1x Pakai</h3>
+                        <h3 class="section-title">Tiket Satuan</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketRegular as $ticket)
                                 <div class="ticket-item">
@@ -159,6 +163,39 @@
                         <h3 class="section-title">Member</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketMember as $ticket)
+                                <div class="ticket-item">
+                                    <h4>{{ $ticket->name }}</h4>
+                                    <p class="price">Rp {{ number_format($ticket->price, 0, ',', '.') }}</p>
+                                    <div class="qty-control">
+                                        <button type="button" class="btn-minus"
+                                            data-target="qty-{{ $ticket->id }}">-</button>
+                                        <input type="number" name="tickets[{{ $ticket->id }}][qty]"
+                                            id="qty-{{ $ticket->id }}" value="0" min="0"
+                                            class="qty-input">
+                                        <button type="button" class="btn-plus"
+                                            data-target="qty-{{ $ticket->id }}">+</button>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
+                                    value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
+                                    value="{{ $ticket->name }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
+                                    value="{{ $ticket->price }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][type_purchase]" value="1">
+                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Biaya Pelatih --}}
+                @if ($ticketBiayaPelatih->count())
+                    <div class="ticket-section">
+                        <h3 class="section-title">Biaya Pelatih</h3>
+                        <div class="ticket-grid">
+                            @foreach ($ticketBiayaPelatih as $ticket)
                                 <div class="ticket-item">
                                     <h4>{{ $ticket->name }}</h4>
                                     <p class="price">Rp {{ number_format($ticket->price, 0, ',', '.') }}</p>

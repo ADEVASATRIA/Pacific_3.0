@@ -242,7 +242,7 @@ class CheckoutService
 
             foreach ($purchase->purchaseDetails as $pd) {
                 if ($pd->type == 1 && $pd->ticketType) {
-                    if ($pd->ticketType->tipe_khusus == 1) {
+                    if ($pd->ticketType->tipe_khusus == 1 || $pd->ticketType->tipe_khusus == 5  || $pd->ticketType->tipe_khusus == 2) {
                         $ticketService->createTicketRegular($pd);
                     } elseif ($pd->ticketType->tipe_khusus == 4) {
                         $ticketService->createTicketMember($pd);

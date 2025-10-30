@@ -22,7 +22,7 @@
         </a>
     </nav>
 
-    <div class="header-section">
+    {{-- <div class="header-section">
         <div class="logo-container">
             <i class="fas fa-water turtle-icon"></i>
         </div>
@@ -30,7 +30,7 @@
             <h1 class="welcome-title">Welcome to Pacific Pool</h1>
             <p class="subtitle">Selamat Datang di Kolam Renang Pacific Pool</p>
         </div>
-    </div>
+    </div> --}}
 
     {{-- <h2 class="main-title">Welcome To Pacific Pool</h2> --}}
 

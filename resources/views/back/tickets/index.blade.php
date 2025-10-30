@@ -43,8 +43,8 @@
                             <th>Durasi</th>
                             <th>Extra Ticket</th>
                             <th>Urutan</th>
-                            <th>Butuh DOB</th>
-                            <th>Butuh Telephone</th>
+                            {{-- <th>Butuh DOB</th>
+                            <th>Butuh Telephone</th> --}}
                             <th>Aktif</th>
                             <th>Bisa Beli <br>Tiket Pengantar</th>
                             <th>Bisa Input Coach <br>/ Clubhouse</th>
@@ -61,8 +61,8 @@
                                 <td class="text-center">{{ $item->duration }}</td>
                                 <td class="text-center">{{ $item->qty_extra }}</td>
                                 <td class="text-center">{{ $item->weight }}</td>
-                                <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
-                                <td class="text-center">{!! $item->getBadgeHtml($item->is_phone_mandatory) !!}</td>
+                                {{-- <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
+                                <td class="text-center">{!! $item->getBadgeHtml($item->is_phone_mandatory) !!}</td> --}}
                                 <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
                                 <td class="text-center">{!! $item->getBadgeHtml($item->can_buy_tiket_pengantar) !!}</td>
                                 <td class="text-center">{!! $item->getBadgeHtml($item->is_coach_club_require) !!}</td>

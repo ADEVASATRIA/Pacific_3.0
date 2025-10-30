@@ -165,7 +165,7 @@
                     <li class="menu-divider"></li>
 
                     <!-- Management Report Group -->
-                    <li class="menu-group {{ request()->is('customer') ? 'open' : '' }}">
+                    {{-- <li class="menu-group {{ request()->is('customer') ? 'open' : '' }}">
                         <div class="menu-group-header">
                             <div class="menu-group-title">
                                 <i data-feather="book" class="menu-icon"></i>
@@ -181,7 +181,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
 
                 </ul>
             </nav>

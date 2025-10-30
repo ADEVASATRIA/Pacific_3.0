@@ -63,8 +63,14 @@
 
 .dropdown-group-inline {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    /* Perubahan utama: membuat item berjejer dari atas ke bawah */
+    /*  */
+    flex-direction: column;
+    
+    /* gap sekarang akan mengatur jarak vertikal antar dropdown */
+    gap: 0.5rem; 
+    
+    /* align-items: flex-start; /* Opsional: untuk meratakan semua ke kiri */
 }
 
 .clubhouse-select select,

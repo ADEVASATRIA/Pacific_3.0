@@ -44,7 +44,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($items as $i => $it)
-                                    <tr>
+                                    <tr data-item-id="{{ $it['id'] }}">
                                         <td>
                                             <div class="item-with-dropdowns-inline">
                                                 {{-- Nama Item --}}
@@ -286,48 +286,69 @@
                         body: JSON.stringify({
                             promo_code: code,
                             items: @json($items),
-                            sub_total: {{ $subTotal }},
-                            total: {{ $total }}
+                            sub_total: {{ $subTotal }}
                         })
                     })
                     .then(res => res.json())
                     .then(data => {
                         promoMessage.innerHTML = '';
+
                         if (data.success) {
                             showAlert('success', data.message);
-                            promoMessage.innerHTML =
-                                `<div class="promo-success">🎉 ${data.message}</div>`;
+                            document.querySelector('input[name="promo_id"]').value = data.promo_id ||
+                            '';
 
-                            // Update hidden inputs
-                            const promoIdInput = document.querySelector('input[name="promo_id"]');
-                            const discountInput = document.querySelector('input[name="discount"]');
-                            const totalInput = document.querySelector('input[name="total"]');
+                            // === UPDATE HARGA ITEM YANG KENA PROMO ===
+                            if (data.discounted_items && Array.isArray(data.discounted_items)) {
+                                data.discounted_items.forEach(disc => {
+                                    const row = document.querySelector(
+                                        `tr[data-item-id="${disc.id}"]`);
+                                    if (row) {
+                                        const priceCell = row.querySelector('td:nth-child(3)');
+                                        const totalCell = row.querySelector('td:nth-child(4)');
 
-                            if (promoIdInput) promoIdInput.value = data.promo_id;
-                            if (discountInput) discountInput.value = data.discount;
-                            if (totalInput) totalInput.value = data.new_total;
+                                        row.classList.add('discounted');
 
-                            // Update tampilan subtotal/total
-                            const totalsSection = document.querySelector('.totals-section');
-                            if (totalsSection) {
-                                totalsSection.innerHTML = `
-                        <div class="total-box"><span>Sub Total</span><strong>Rp ${data.formatted_subtotal}</strong></div>
-                        <div class="total-box"><span>Diskon</span><strong>- Rp ${data.formatted_discount}</strong></div>
-                        <div class="total-box highlight"><span>Total Bayar</span><strong>Rp ${data.formatted_total}</strong></div>
-                    `;
+                                        if (priceCell && totalCell) {
+                                            priceCell.innerHTML = `
+                                    <span class="price-original">Rp ${disc.old_price.toLocaleString('id-ID')}</span>
+                                    <span class="price-discount">Rp ${disc.new_price.toLocaleString('id-ID')}</span>
+                                `;
+                                            totalCell.innerHTML = `
+                                    <span class="price-original">Rp ${disc.old_total.toLocaleString('id-ID')}</span>
+                                    <span class="price-discount">Rp ${disc.new_total.toLocaleString('id-ID')}</span>
+                                `;
+
+                                            setTimeout(() => {
+                                                priceCell.querySelector(
+                                                        '.price-discount').classList
+                                                    .add('show');
+                                                totalCell.querySelector(
+                                                        '.price-discount').classList
+                                                    .add('show');
+                                            }, 100);
+                                        }
+                                    }
+                                });
                             }
 
-                            // 🔹 Pastikan DOM selesai di-update sebelum hitung ulang
-                            setTimeout(() => {
-                                console.log('%c=== Recalculate After Promo ===',
-                                    'color:green; font-weight:bold');
-                                hitungKembalian();
-                            }, 50);
+                            // === UPDATE TOTAL KESELURUHAN DI UI ===
+                            const totalBox = document.querySelector(
+                            '.totals-section .highlight strong');
+                            if (totalBox && data.formatted_total) {
+                                totalBox.textContent = `Rp ${data.formatted_total}`;
+                            }
 
+                            // Update hidden input agar ikut tersubmit
+                            document.querySelector('input[name="discount"]').value = data.discount;
+                            document.querySelector('input[name="total"]').value = data.new_total;
+
+                            // Recalculate kembalian
+                            setTimeout(() => hitungKembalian(), 50);
                         } else {
                             showAlert('error', data.message);
                             promoMessage.innerHTML =
-                                `<div class="promo-error">⚠️ ${data.message}</div>`;
+                            `<div class="promo-error">⚠️ ${data.message}</div>`;
                             document.querySelector('input[name="promo_id"]').value = '';
                         }
                     })

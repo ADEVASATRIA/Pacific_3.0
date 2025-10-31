@@ -127,7 +127,7 @@
 
                         {{-- Header --}}
                         <div class="modal-header bg-gradient-primary text-white py-3 px-4">
-                            <h5 class="modal-title fw-semibold" id="modalTambahTicketTypesLabel">
+                            <h5 class="modal-title fw-semibold text-black" id="modalTambahTicketTypesLabel">
                                 <i class="fas fa-tags me-2"></i>Tambah Ticket Type Baru
                             </h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

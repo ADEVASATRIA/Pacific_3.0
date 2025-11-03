@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchaseDetail extends Model
 {
+    public const TYPE_TICKET = 1;
+	public const TYPE_ITEM = 2;
+    public const TYPE_PACKAGE_COMBO = 3;
+    
     protected $fillable = [
         'purchase_id',
         'type',

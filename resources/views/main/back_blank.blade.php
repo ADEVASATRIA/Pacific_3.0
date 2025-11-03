@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    @vite(['resources/css/back/back_blank.css', 'resources/css/back/transaction.css', 'resources/js/back/transaction-filter.js'])
+    @vite(['resources/css/back/back_blank.css', 'resources/css/back/partial.css', 'resources/js/back/transaction-filter.js'])
 </head>
 
 <body>
@@ -165,19 +165,19 @@
                     <li class="menu-divider"></li>
 
                     <!-- Management Report Group -->
-                    <li class="menu-group {{ request()->is('customer') ? 'open' : '' }}">
+                    <li class="menu-group {{ request()->is('report.customer') ? 'open' : '' }}">
                         <div class="menu-group-header">
                             <div class="menu-group-title">
-                                <i data-feather="book" class="menu-icon"></i>
+                                <i data-feather="user-check" class="menu-icon"></i>
                                 <span class="menu-text">Management Report</span>
                             </div>
                             <i data-feather="chevron-down" class="arrow-icon"></i>
                         </div>
                         <ul class="submenu">
-                            <li class="submenu-item {{ request()->is('customer') ? 'active' : '' }}">
-                                <a href="{{ route('customer') }}" class="menu-link">
+                            <li class="submenu-item {{ request()->is('report.customer') ? 'active' : '' }}">
+                                <a href="{{ route('report.customer') }}" class="menu-link">
                                     <span class="submenu-dot"></span>
-                                    <span class="menu-text">Report daily</span>
+                                    <span class="menu-text">Report Customer</span>
                                 </a>
                             </li>
                         </ul>
@@ -312,6 +312,16 @@
                 }
             });
         });
+    </script>
+    <script>
+        function redirectWithLoading(url, pageName) {
+            // Tampilkan loading page dengan parameter
+            const loadingUrl = '{{ route('loading') }}' +
+                '?to=' + encodeURIComponent(url) +
+                '&name=' + encodeURIComponent(pageName);
+
+            window.location.href = loadingUrl;
+        }
     </script>
 
 </body>

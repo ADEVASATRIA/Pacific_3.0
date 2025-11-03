@@ -11,6 +11,8 @@ use App\Http\Controllers\Back\Transaction\TransactionController;
 use App\Http\Controllers\Back\View\DashboardController;
 use App\Http\Controllers\Back\Member\MemberController as BackMemberController;
 use App\Http\Controllers\Back\Customer\CustomerController as BackCustomerController;
+use App\Http\Controllers\Back\Report\HomeController as BackReportHomeController;
+use App\Http\Controllers\Back\Report\Customer\CustomerReportController;
 
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
@@ -180,6 +182,14 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-customer', [BackCustomerController::class, 'add'])->name('add.customer');
     Route::post('/edit-customer/{id}', [BackCustomerController::class, 'edit'])->name('edit.customer');
     Route::delete('/delete-customer/{id}', [BackCustomerController::class, 'delete'])->name('delete.customer');
+
+    //Route halaman report
+    Route::get('/report', [BackReportHomeController::class, 'index'])->name('report');
+    Route::get('/loading', function () {
+        return view('partials.loading');
+    })->name('loading');
+
+    Route::get('/report/customer', [CustomerReportController::class, 'index'])->name('report.customer');
 
 
 

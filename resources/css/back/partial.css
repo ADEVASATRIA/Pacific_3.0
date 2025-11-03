@@ -1,9 +1,3 @@
-/* =========================================================
- TRANSACTION PAGE STYLES - ENHANCED VERSION
- ---------------------------------------------------------
- Modern & Clean Design dengan Visual Hierarchy yang Jelas
- ========================================================= */
-
 /* ===== Page Title ===== */
 .transaction-page .page-title {
     font-size: 1.75rem;
@@ -111,11 +105,17 @@
 
 /* ===== Table Section ===== */
 .table-section {
+    position: relative; /* penting agar gradient scroll terlihat */
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     padding: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
+    overflow: visible; /* jangan hidden agar scrollbar terlihat */
+}
+/* Pembungkus tambahan untuk aman dari layout parent overflow */
+.table-scroll-container {
+    width: 100%;
     overflow: hidden;
 }
 
@@ -123,26 +123,27 @@
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
-    overflow-y: visible;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-color: #d1d5db #f3f4f6;
+    scrollbar-width: thin;
+    border-radius: 12px;
 }
+
 
 /* Custom Scrollbar Styling */
 .table-wrapper::-webkit-scrollbar {
     height: 8px;
 }
-
 .table-wrapper::-webkit-scrollbar-track {
     background: #f3f4f6;
     border-radius: 4px;
 }
-
 .table-wrapper::-webkit-scrollbar-thumb {
     background: #d1d5db;
     border-radius: 4px;
     transition: background 0.3s ease;
 }
-
 .table-wrapper::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
 }
@@ -153,7 +154,7 @@
     border-collapse: collapse;
     font-size: 0.9rem;
     color: #374151;
-    min-width: 1000px; /* Pastikan tabel memiliki min-width */
+    min-width: 1200px; /* pastikan tabel lebih lebar dari container */
 }
 
 .table thead {
@@ -180,18 +181,16 @@
     padding: 1rem 1.25rem;
     border-bottom: 1px solid #f3f4f6;
     vertical-align: middle;
-    white-space: nowrap; /* Mencegah text wrapping */
+    white-space: nowrap;
 }
 
 .table tbody tr {
     transition: all 0.2s ease;
 }
-
 .table tbody tr:hover {
     background-color: #f9fafb;
     transform: scale(1.001);
 }
-
 .table tbody tr:last-child td {
     border-bottom: none;
 }
@@ -201,16 +200,13 @@
     font-weight: 600;
     color: #6b7280;
 }
-
 .table td:nth-child(2) {
     color: #4b5563;
     font-weight: 500;
 }
-
 .table td:nth-child(4) {
     font-weight: 600;
 }
-
 .table td:last-child {
     font-weight: 700;
     color: #059669;
@@ -224,7 +220,7 @@
     color: #9ca3af;
     font-style: italic;
     font-size: 0.95rem;
-    white-space: normal; /* Allow wrapping for empty state */
+    white-space: normal;
 }
 
 /* ===== Sticky First Column (Optional - Uncomment if needed) ===== */
@@ -244,46 +240,41 @@
 }
 */
 
-/* ===== Action Buttons in Last Column ===== */
-.table td:last-child {
-    white-space: nowrap;
-}
-
+/* ===== Action Buttons ===== */
 .table .btn {
     white-space: nowrap;
     margin: 0 2px;
 }
 
-/* ===== Responsive Adjustments ===== */
+/* ===== Responsive ===== */
 @media screen and (max-width: 768px) {
     .table {
         font-size: 0.85rem;
-        min-width: 1200px; /* Lebih lebar untuk mobile agar scroll lebih jelas */
+        min-width: 1300px; /* lebih lebar agar bisa di-scroll */
     }
-    
     .table th,
     .table td {
         padding: 0.75rem 1rem;
     }
-    
     .table-wrapper::-webkit-scrollbar {
         height: 6px;
     }
 }
 
-/* ===== Scroll Indicator (Optional) ===== */
+/* ===== Scroll Gradient Indicator ===== */
 .table-section::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 30px;
-    background: linear-gradient(to left, rgba(255,255,255,0.9), transparent);
+    width: 40px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+
 
 .table-section.has-scroll::after {
     opacity: 1;

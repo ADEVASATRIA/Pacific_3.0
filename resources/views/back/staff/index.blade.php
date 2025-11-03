@@ -91,7 +91,7 @@
 
                 {{-- Header --}}
                 <div class="modal-header bg-gradient-primary text-white py-3 px-4">
-                    <h5 class="modal-title fw-semibold" id="modalTambahStaffLabel">
+                    <h5 class="modal-title fw-semibold text-black" id="modalTambahStaffLabel">
                         <i class="fas fa-user-plus me-2"></i>Tambah Staff Baru
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

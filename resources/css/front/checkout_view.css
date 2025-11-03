@@ -641,3 +641,38 @@
     margin-top: 0.5rem;
     font-size: 0.9rem;
 }
+/* Efek coret harga asli */
+.price-original {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+    margin-right: 6px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* Harga setelah diskon muncul smooth */
+.price-discount {
+    color: #27ae60;
+    font-weight: 600;
+    font-size: 1em;
+    opacity: 0;
+    transform: scale(0.9);
+    display: inline-block;
+    transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+.price-discount.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Efek animasi kecil saat harga update */
+@keyframes priceUpdate {
+    0% { background-color: rgba(39, 174, 96, 0.1); }
+    100% { background-color: transparent; }
+}
+
+tr.discounted td {
+    animation: priceUpdate 1s ease;
+}

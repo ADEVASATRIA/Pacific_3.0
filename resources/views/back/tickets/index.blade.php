@@ -3,7 +3,7 @@
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
-    <div class="promo-page">
+    <div class="ticket-types-page">
         <h2 class="page-title">Data Tickets Types</h2>
 
         {{-- Filter --}}
@@ -18,6 +18,7 @@
                         <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <div class="flex items-center gap-2">
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
@@ -33,80 +34,84 @@
         </div>
 
         {{-- Table Section --}}
-        <div class="table-section mt-4">
-            <div class="table-wrapper">
-                <table class="table w-full border-collapse border border-gray-200 min-w-[1000px]">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th>Nama</th>
-                            <th>Harga</th>
-                            <th>Durasi</th>
-                            <th>Extra Ticket</th>
-                            <th>Urutan</th>
-                            {{-- <th>Butuh DOB</th>
-                            <th>Butuh Telephone</th> --}}
-                            <th>Aktif</th>
-                            <th>Bisa Beli <br>Tiket Pengantar</th>
-                            <th>Bisa Input Coach <br>/ Clubhouse</th>
-                            <th>Tipe Khusus</th>
-                            <th>Tiket Kode REF</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($ticketTypes as $item)
+        <div class="table-section mt-2 relative"> {{-- tambahkan relative agar gradient scroll bisa muncul --}}
+            <div class="table-wrapper"> {{-- tambahan pembungkus untuk memastikan scroll tidak terpotong --}}
+                <div class="table-scroll-container">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>{{ $item->name }}</td>
-                                <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                <td class="text-center">{{ $item->duration }}</td>
-                                <td class="text-center">{{ $item->qty_extra }}</td>
-                                <td class="text-center">{{ $item->weight }}</td>
-                                {{-- <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
-                                <td class="text-center">{!! $item->getBadgeHtml($item->is_phone_mandatory) !!}</td> --}}
-                                <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
-                                <td class="text-center">{!! $item->getBadgeHtml($item->can_buy_tiket_pengantar) !!}</td>
-                                <td class="text-center">{!! $item->getBadgeHtml($item->is_coach_club_require) !!}</td>
-                                <td class="text-center">
-                                    @switch($item->tipe_khusus)
-                                        @case(1)
-                                            <span class="badge bg-info text-dark">Normal</span>
-                                        @break
-
-                                        @case(2)
-                                            <span class="badge bg-warning">Pengantar</span>
-                                        @break
-
-                                        @case(3)
-                                            <span class="badge bg-primary">Pelatih</span>
-                                        @break
-
-                                        @case(4)
-                                            <span class="badge bg-dark">Member</span>
-                                        @break
-
-                                        @case(5)
-                                            <span class="badge bg-warning text-dark">Biaya Pelatih</span>
-                                        @break
-                                    @endswitch
-                                </td>
-                                <td class="text-center">{{ $item->ticket_kode_ref }}</td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-danger btn-sm"
-                                        onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
-                                        Delete
-                                    </button>
-                                </td>
+                                <th>Nama</th>
+                                <th>Harga</th>
+                                <th>Durasi</th>
+                                <th>Extra Ticket</th>
+                                <th>Urutan</th>
+                                {{-- <th>Butuh DOB</th>
+                                <th>Butuh Telephone</th> --}}
+                                <th>Aktif</th>
+                                <th>Bisa Beli <br>Tiket Pengantar</th>
+                                <th>Bisa Input Coach <br>/ Clubhouse</th>
+                                <th>Tipe Khusus</th>
+                                <th>Tiket Kode REF</th>
+                                <th>Aksi</th>
                             </tr>
-                            @empty
+                        </thead>
+                        <tbody>
+                            @forelse ($ticketTypes as $item)
                                 <tr>
-                                    <td colspan="13" class="text-center text-gray-500 py-3">Tidak ada data tiket</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                    <td class="text-center">{{ $item->duration }}</td>
+                                    <td class="text-center">{{ $item->qty_extra }}</td>
+                                    <td class="text-center">{{ $item->weight }}</td>
+                                    {{-- <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
+                                    <td class="text-center">{!! $item->getBadgeHtml($item->is_phone_mandatory) !!}</td> --}}
+                                    <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
+                                    <td class="text-center">{!! $item->getBadgeHtml($item->can_buy_tiket_pengantar) !!}</td>
+                                    <td class="text-center">{!! $item->getBadgeHtml($item->is_coach_club_require) !!}</td>
+                                    <td class="text-center">
+                                        @switch($item->tipe_khusus)
+                                            @case(1)
+                                                <span class="badge bg-info text-dark">Normal</span>
+                                            @break
+
+                                            @case(2)
+                                                <span class="badge bg-warning">Pengantar</span>
+                                            @break
+
+                                            @case(3)
+                                                <span class="badge bg-primary">Pelatih</span>
+                                            @break
+
+                                            @case(4)
+                                                <span class="badge bg-dark">Member</span>
+                                            @break
+
+                                            @case(5)
+                                                <span class="badge bg-warning text-dark">Biaya Pelatih</span>
+                                            @break
+                                        @endswitch
+                                    </td>
+                                    <td class="text-center">{{ $item->ticket_kode_ref }}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                @empty
+                                    <tr>
+                                        <td colspan="13" class="text-center text-gray-500 py-3">
+                                            Tidak ada data tiket
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {{-- Pagination --}}
@@ -117,8 +122,6 @@
                 @endif
             </div>
 
-
-
             {{-- Modal Tambah data Ticket Types --}}
             <div class="modal fade" id="modalTambahTicketTypes" tabindex="-1" aria-labelledby="modalTambahTicketTypesLabel"
                 aria-hidden="true">
@@ -127,7 +130,7 @@
 
                         {{-- Header --}}
                         <div class="modal-header bg-gradient-primary text-white py-3 px-4">
-                            <h5 class="modal-title fw-semibold" id="modalTambahTicketTypesLabel">
+                            <h5 class="modal-title fw-semibold text-black" id="modalTambahTicketTypesLabel">
                                 <i class="fas fa-tags me-2"></i>Tambah Ticket Type Baru
                             </h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

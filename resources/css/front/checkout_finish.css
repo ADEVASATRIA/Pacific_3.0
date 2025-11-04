@@ -177,7 +177,7 @@
     }
 
     .receipt-address {
-        font-size: 9pt;
+        font-size: 0.7em;
         margin: 0 0 8px 0;
         text-align: center;
         line-height: 1.3;
@@ -306,7 +306,7 @@
         font-size: 10pt;
         font-weight: bold;
         margin: 10px 0;
-        text-align: left;
+        text-align: right;
     }
 
     /* Thank You */

@@ -73,7 +73,7 @@
                                                         </div>
 
                                                         {{-- Dropdown Coach --}}
-                                                        <div class="coach-select">
+                                                        {{-- <div class="coach-select">
                                                             <select name="items[{{ $i }}][coach_select]"
                                                                 class="coach-dropdown" data-index="{{ $i }}"
                                                                 data-type="coach">
@@ -89,7 +89,7 @@
                                                                 name="items[{{ $i }}][coach_id]"
                                                                 id="coach_hidden_{{ $i }}"
                                                                 value="{{ $it['coach_id'] ?? '' }}">
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 @endif
                                             </div>

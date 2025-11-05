@@ -21,7 +21,7 @@ export default defineConfig({
                 
                 // === Old Back Office Assets (from previous list) ===
                 'resources/css/back/back_blank.css',
-                'resources/css/back/transaction.css',
+                'resources/css/back/partial.css',
                 'resources/js/back/transaction-filter.js',
 
                 // === Front Office Assets ===

@@ -7,6 +7,9 @@ use App\Models\CashSession;
 use App\Models\Customer;
 use App\Models\PackageComboRedeem;
 use App\Models\Purchase;
+
+use App\Models\LogQtyPacketTicket;
+use App\Models\LogRedeemPacketTicket;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,4 +110,78 @@ class PackageViewController extends Controller
             'staff'
         ));
     }
+
+    public function logHistoryRedeemCustomerPackage(Request $request)
+    {
+        $staff = Auth::guard('fo')->user();
+        $customerPhone = $request->query('phone');
+        $customer = null;
+        $viewData = collect();
+
+        $today = Carbon::today();
+
+        // Ambil cash session aktif
+        $cashSession = null;
+        if ($staff) {
+            $cashSession = CashSession::where('staff_id', $staff->id)
+                ->whereDate('waktu_buka', $today->toDateString())
+                ->where('status', 1)
+                ->latest()
+                ->first();
+        }
+
+        if (!$cashSession) {
+            $cashSession = new CashSession([
+                'saldo_awal' => 0,
+                'waktu_buka' => null,
+                'status' => 0,
+            ]);
+        }
+
+        // Jika nomor telepon diisi
+        if ($customerPhone) {
+            $customer = Customer::where('phone', $customerPhone)
+                ->whereNull('deleted_at')
+                ->first();
+
+            if ($customer) {
+                $logQtyPacket = LogQtyPacketTicket::whereHas('log_redeem_packet_tickets', function ($query) use ($customer) {
+                    $query->where('customer_id', $customer->id);
+                })
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                $viewData = $logQtyPacket->map(function ($ticket) {
+                    return [
+                        'purchase_date' => optional($ticket->package_combo_redeem)->created_at
+                            ? Carbon::parse($ticket->package_combo_redeem->created_at)->format('d F Y')
+                            : '-',
+                        'package_name' => optional($ticket->package_combo_redeem)->name ?? '-',
+                        'print_date' => $ticket->created_at
+                            ? $ticket->created_at->format('d F Y H:i')
+                            : '-',
+                    ];
+                });
+            }
+        }
+
+        // Jika request AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'customer' => $customer ? [
+                    'name' => $customer->name,
+                    'phone' => $customer->phone,
+                ] : null,
+                'data' => $viewData,
+            ]);
+        }
+
+        // Jika akses langsung non-AJAX
+        return view('front.admin.package', compact('customerPhone', 'customer', 'cashSession', 'staff'));
+    }
+
+
+
+
+
 }

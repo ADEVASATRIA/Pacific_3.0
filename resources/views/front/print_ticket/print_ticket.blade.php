@@ -2,8 +2,6 @@
 
 @section('content')
     @vite('resources/css/front/print_ticket.css')
-
-    ```
     <div class="notice-info">
         <p>
             <strong>Catatan:</strong> Tiket paket <u>tidak dapat dicetak</u> di halaman ini.
@@ -91,5 +89,4 @@
             @endforeach
         </div>
     </div>
-    ```
 @endsection

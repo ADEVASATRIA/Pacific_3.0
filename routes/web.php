@@ -85,6 +85,8 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/admin/close', [CashSessionController::class, 'close'])->name('admin.close');
 
     Route::get('/admin/package', [PackageViewController::class, 'index'])->name('admin.package');
+    Route::get('/admin/log-history-redeem-customer-package', [PackageViewController::class, 'logHistoryRedeemCustomerPackage'])->name('admin.logHistoryRedeemCustomerPackage');
+
 
     // Alur management sponsor pada admin
     Route::prefix('admin')->group(function () {

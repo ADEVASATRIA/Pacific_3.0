@@ -18,6 +18,7 @@ use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
 use App\Http\Controllers\Front\Admin\PackageViewController;
+use App\Http\Controllers\Front\Admin\PrintReceiptController;
 use App\Http\Controllers\Front\Admin\ShiftViewController;
 use App\Http\Controllers\Front\Admin\SponsorController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
@@ -86,6 +87,9 @@ Route::middleware('fo.auth')->group(function () {
 
     Route::get('/admin/package', [PackageViewController::class, 'index'])->name('admin.package');
     Route::get('/admin/log-history-redeem-customer-package', [PackageViewController::class, 'logHistoryRedeemCustomerPackage'])->name('admin.logHistoryRedeemCustomerPackage');
+
+    // Alur print receipt di Admin
+    Route::get('/admin/print-receipt/{id}' , [PrintReceiptController::class, 'printReceipt'])->name('admin.print_receipt');
 
 
     // Alur management sponsor pada admin

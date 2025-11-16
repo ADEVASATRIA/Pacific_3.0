@@ -29,3 +29,38 @@
 .checkbox-inline:hover {
     background: #f1f1f1;
 }
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn-print {
+    display: inline-block;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    transition: 0.2s;
+}
+
+.btn-print.receipt {
+    background: #28a745;
+}
+
+.btn-print.receipt:hover {
+    background: #218838;
+}
+
+.btn-print.ticket {
+    background: #007bff;
+}
+
+.btn-print.ticket:hover {
+    background: #0069d9;
+}
+

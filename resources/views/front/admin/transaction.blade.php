@@ -2,7 +2,7 @@
 
 @section('title', 'Data Transaksi Hari ini')
 @section('page-title', 'Daftar Transaksi Hari ini')
-@vite('resources/css/admin/transaction.css')
+@vite(['resources/css/admin/transaction.css', 'resources/css/front/checkout_finish.css'])
 
 
 @section('top-controls')
@@ -59,11 +59,13 @@
                 <tr>
                     <th>ID</th>
                     <th>Customer</th>
+                    <th>Phone</th>
                     <th>Tanggal</th>
                     <th>Items</th>
                     <th>Total</th>
                     <th>Payment</th>
                     <th>Status</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,6 +73,7 @@
                     <tr>
                         <td><strong>{{ $tx->id }}</strong></td>
                         <td>{{ $tx->customer?->name ?? '-' }}</td>
+                        <td>{{ $tx->customer?->phone ?? '-' }}</td>
                         <td class="small">{{ \Carbon\Carbon::parse($tx->created_at)->format('d M Y | H:i') }}</td>
                         <td>
                             <ul>
@@ -90,10 +93,20 @@
                                 <span class="status paid">Paid</span>
                             @endif
                         </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a class="btn-print receipt" href="{{ route('admin.print_receipt', ['id' => $tx->id]) }}">
+                                    Print Struk
+                                </a>
+                                <a class="btn-print ticket" href="{{ route('print_ticket', ['purchaseID' => $tx->id]) }}">
+                                    Print Tiket
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="small">Belum ada transaksi hari ini</td>
+                        <td colspan="9" class="small">Belum ada transaksi hari ini</td>
                     </tr>
                 @endforelse
             </tbody>

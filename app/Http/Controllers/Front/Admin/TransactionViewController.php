@@ -10,6 +10,7 @@ use App\Models\CashSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Milon\Barcode\DNS1D;
 
 class TransactionViewController extends Controller
 {
@@ -79,6 +80,10 @@ class TransactionViewController extends Controller
                 'status' => 0,
             ]);
         }
+
+        // // Buat instance DNS1D
+        // $barcodeGenerator = new DNS1D();
+        // $barcode = $barcodeGenerator->getBarcodePNG($transactions->invoice_no, 'C39'); // Code39
 
         return view('front.admin.transaction', compact(
             'transactions',

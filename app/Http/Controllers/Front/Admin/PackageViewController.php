@@ -180,8 +180,63 @@ class PackageViewController extends Controller
         return view('front.admin.package', compact('customerPhone', 'customer', 'cashSession', 'staff'));
     }
 
+    public function logHistoryRedeemCustomerPackageDetail(Request $request)
+    {
+        $staff = Auth::guard('fo')->user();
+        $customerPhone = $request->query('phone');
+        $viewData = collect();
+        $id = $request->query('id');
+
+        $today = Carbon::today();
+        // Ambil cash session aktif
+        $cashSession = null;
+        if ($staff) {
+            $cashSession = CashSession::where('staff_id', $staff->id)
+                ->whereDate('waktu_buka', $today->toDateString())
+                ->where('status', 1)
+                ->latest()
+                ->first();
+        }
+
+        if (!$cashSession) {
+            $cashSession = new CashSession([
+                'saldo_awal' => 0,
+                'waktu_buka' => null,
+                'status' => 0,
+            ]);
+        }
+        if ($id != null) {
+            $logQtyPackage = LogQtyPacketTicket::where('package_combo_redeem_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            if ($logQtyPackage->isEmpty()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data log redeem tidak ditemukan.'
+                ], 404);
+            }
 
 
+            $viewData = $logQtyPackage->map(function ($ticket) {
+                return [
+                    'purchase_date' => optional($ticket->package_combo_redeem)->created_at
+                        ? Carbon::parse($ticket->package_combo_redeem->created_at)->format('d F Y')
+                        : '-',
+                    'package_name' => optional($ticket->package_combo_redeem)->name ?? '-',
+                    'print_date' => $ticket->created_at
+                        ? $ticket->created_at->format('d F Y H:i')
+                        : '-',
+                ];
+            });
+        }
 
+        if ($request->ajax()) {
+            return response()->json([
+                'data' => $viewData
+            ]);
+        }
 
+        return view('front.admin.package', compact('cashSession', 'staff'));
+    }
 }

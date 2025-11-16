@@ -55,43 +55,53 @@
                         <th>Total Redeem</th>
                         <th>Sisa Qty Redeem</th>
                         <th>Tanggal Kedaluwarsa</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($purchases ?? [] as $purchase)
                         @foreach ($purchase->purchaseDetails as $detail)
                             @php
-                                $redeem = $detail->packageComboRedeem ?? null;
-                                $expiredDate = $redeem ? $redeem->expired_date : null;
+                                $redeem = $detail->packageComboRedeem;
                             @endphp
                             <tr>
-                                <td>{{ $purchase->created_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}</td>
-                                <td>{{ $purchase->invoice_no ?? '-' }}</td>
-                                <td>{{ $purchase->customer->name ?? '-' }}</td>
-                                <td>{{ $purchase->customer->phone ?? '-' }}</td>
-                                <td class="text-end">Rp {{ number_format($purchase->total ?? 0, 0, ',', '.') }}</td>
-                                <td>{{ $redeem->name ?? '-' }}</td>
-                                <td>{{ $redeem?->details->sum('qty_printed') ?? 0 }}</td>
-                                <td>{{ $redeem?->details->sum('qty_redeemed') ?? 0 }}</td>
-                                <td>{{ $expiredDate ? \Carbon\Carbon::parse($expiredDate)->locale('id')->translatedFormat('d F Y') : '-' }}</td>
+                                <td>{{ $purchase->created_at?->locale('id')->translatedFormat('d F Y') }}</td>
+                                <td>{{ $purchase->invoice_no }}</td>
+                                <td>{{ $purchase->customer->name }}</td>
+                                <td>{{ $purchase->customer->phone }}</td>
+                                <td class="text-end">Rp {{ number_format($purchase->total, 0, ',', '.') }}</td>
+                                <td>{{ $redeem->name }}</td>
+                                <td>{{ $redeem->details->sum('qty_printed') }}</td>
+                                <td>{{ $redeem->details->sum('qty_redeemed') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($redeem->expired_date)->locale('id')->translatedFormat('d F Y') }}</td>
+                                <td>
+                                    <button class="btn-history btnDetailHistory" data-id="{{ $redeem->id }}">
+                                        <i data-lucide="book"></i>
+                                        History Redeem
+                                    </button>
+                                </td>
                             </tr>
                         @endforeach
                     @empty
-                        <tr><td colspan="9" class="text-center text-muted">Tidak ada data pembelian paket ditemukan.</td></tr>
+                        <tr>
+                            <td colspan="11" class="text-center text-muted">Tidak ada data pembelian paket ditemukan.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
         @else
-            <div class="no-data"><p>Masukkan nomor telepon untuk melihat data paket pelanggan.</p></div>
+            <div class="no-data">
+                <p>Masukkan nomor telepon untuk melihat data paket pelanggan.</p>
+            </div>
         @endif
     </div>
 @endsection
 
 
-{{-- MODAL --}}
+{{-- ========================== MODAL LIST REDEEM ========================== --}}
 <div id="logHistoryRedeemModal" class="modal">
     <div class="modal-content">
-        <h2 id="modalTitle">Log History Redeem</h2>
+        <h2>Log History Redeem</h2>
         <div style="overflow-x: auto;">
             <table class="log-table">
                 <thead>
@@ -106,69 +116,113 @@
                 </tbody>
             </table>
         </div>
-        <button id="closeModal" class="btn-secondary mt-4">Tutup</button>
+        <button id="closeModalRedeem" class="btn-secondary mt-4">Tutup</button>
+    </div>
+</div>
+
+
+{{-- ====================== MODAL DETAIL REDEEM PER PACKAGE ====================== --}}
+<div id="logHistoryRedeemDetail" class="modal">
+    <div class="modal-content">
+        <h2>Log History Redeem Detail</h2>
+        <div style="overflow-x: auto;">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>Tanggal Pembelian</th>
+                        <th>Nama Paket</th>
+                        <th>Tanggal Cetak</th>
+                    </tr>
+                </thead>
+                <tbody id="logHistoryDetailBody">
+                    <tr><td colspan="3" class="text-center text-muted">Belum ada data</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <button id="closeModalDetail" class="btn-secondary mt-4">Tutup</button>
     </div>
 </div>
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+
+    // =================== HISTORY REDEEM (by phone) ===================
     const btnHistory = document.getElementById('btnHistoryRedeem');
-    const modal = document.getElementById('logHistoryRedeemModal');
-    const tbody = document.getElementById('logHistoryBody');
-    const closeModal = document.getElementById('closeModal');
+    const modalHistory = document.getElementById('logHistoryRedeemModal');
+    const closeHistory = document.getElementById('closeModalRedeem');
+    const tbodyHistory = document.getElementById('logHistoryBody');
 
     if (btnHistory) {
-        btnHistory.addEventListener('click', async function() {
-            const phone = "{{ $customerPhone ?? '' }}";
-            if (!phone) return alert('Nomor telepon belum diisi.');
+        btnHistory.addEventListener('click', async () => {
+            const phone = "{{ $customerPhone }}";
+            if (!phone) return alert("Nomor telepon belum diisi.");
 
-            try {
-                const res = await fetch(`{{ route('admin.logHistoryRedeemCustomerPackage') }}?phone=${phone}`, {
-                    headers: { 
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!res.ok) throw new Error('Network response was not ok');
-                
-                const data = await res.json();
+            const res = await fetch(`{{ route('admin.logHistoryRedeemCustomerPackage') }}?phone=${phone}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
 
-                tbody.innerHTML = '';
-                if (data.data && data.data.length > 0) {
-                    data.data.forEach(item => {
-                        const row = `<tr>
+            const data = await res.json();
+            tbodyHistory.innerHTML = '';
+
+            if (data.data?.length > 0) {
+                data.data.forEach(item => {
+                    tbodyHistory.insertAdjacentHTML('beforeend', `
+                        <tr>
                             <td>${item.purchase_date}</td>
                             <td>${item.package_name}</td>
                             <td>${item.print_date}</td>
-                        </tr>`;
-                        tbody.insertAdjacentHTML('beforeend', row);
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">Tidak ada log redeem.</td></tr>`;
-                }
-
-                modal.style.display = 'flex';
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengambil data.');
+                        </tr>
+                    `);
+                });
+            } else {
+                tbodyHistory.innerHTML = `<tr><td colspan="3" class="text-center text-muted">Tidak ada log redeem.</td></tr>`;
             }
+
+            modalHistory.style.display = "flex";
         });
     }
 
-    if (closeModal) {
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-    }
+    closeHistory.addEventListener('click', () => modalHistory.style.display = "none");
 
-    // Close modal when clicking outside
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
+
+    // =================== HISTORY DETAIL PER PACKAGE ===================
+    const detailButtons = document.querySelectorAll('.btnDetailHistory');
+    const modalDetail = document.getElementById('logHistoryRedeemDetail');
+    const closeDetail = document.getElementById('closeModalDetail');
+    const tbodyDetail = document.getElementById('logHistoryDetailBody');
+
+    detailButtons.forEach(btn => {
+        btn.addEventListener('click', async function () {
+            const id = this.dataset.id;
+
+            const res = await fetch(`{{ route('admin.logHistoryRedeemCustomerPackageDetail') }}?id=${id}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            const data = await res.json();
+            tbodyDetail.innerHTML = '';
+
+            if (data.data?.length > 0) {
+                data.data.forEach(item => {
+                    tbodyDetail.insertAdjacentHTML('beforeend', `
+                        <tr>
+                            <td>${item.purchase_date}</td>
+                            <td>${item.package_name}</td>
+                            <td>${item.print_date}</td>
+                        </tr>
+                    `);
+                });
+            } else {
+                tbodyDetail.innerHTML = `<tr><td colspan="3" class="text-center text-muted">Tidak ada log redeem.</td></tr>`;
+            }
+
+            modalDetail.style.display = "flex";
+        });
     });
+
+    closeDetail.addEventListener('click', () => modalDetail.style.display = "none");
+
 });
 </script>
 @endpush

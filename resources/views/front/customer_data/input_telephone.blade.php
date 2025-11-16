@@ -3,7 +3,7 @@
     @vite('resources/css/front/beli_ticket.css')
     <div class="form-wrapper">
         <div class="form-card">
-            <h2 class="form-title">Beli Tiket</h2>
+            <h2 class="form-title text-center">Beli Tiket</h2>
             <form action="{{ route('check_customer') }}" method="POST" class="ticket-form">
                 @csrf
                 <div class="form-group">

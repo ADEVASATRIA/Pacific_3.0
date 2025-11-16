@@ -38,7 +38,7 @@
         <div class="service-card" style="--delay: 0.1s;" onclick="handleBuyTicket()">
             <i class="fas fa-ticket-alt card-icon"></i>
             <h3 class="card-title">Beli Tiket</h3>
-            <p class="card-description">Menambah Customer baru untuk customer yang ingin membeli Tiket</p>
+            <p class="card-description">Masukkan nama dan Telephone untuk pembelian tiket yang akan di beli</p>
         </div>
 
         <div class="service-card" style="--delay: 0.2s;" onclick="handlePrintPackage()">

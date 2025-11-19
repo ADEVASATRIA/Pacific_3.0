@@ -4,7 +4,7 @@
 
     <div class="form-wrapper">
         <div class="form-card">
-            <h2 class="form-title text-center">Cetak Paket</h2>
+            <h2 class="form-title text-center">Cetak Tiket Paket</h2>
 
             <form action="{{ route('check_package') }}" method="POST" class="ticket-form">
                 @csrf

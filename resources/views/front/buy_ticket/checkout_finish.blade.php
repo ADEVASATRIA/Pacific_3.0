@@ -129,10 +129,10 @@
                     <span class="info-label">Pelanggan</span>
                     <span class="info-value">: {{ $purchase->customer->name ?? '-' }}</span>
                 </div>
-                <div class="info-row">
+                {{-- <div class="info-row">
                     <span class="info-label">Clubhouse</span>
                     <span class="info-value">{{ $purchase->customer->clubhouse->name ?? '-' }}</span>
-                </div>
+                </div> --}}
             </div>
 
             <hr class="receipt-divider">

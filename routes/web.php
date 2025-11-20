@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\Clubhouse\ClubhouseController;
 use App\Http\Controllers\Back\Coach\BackCoachController;
+use App\Http\Controllers\Back\ManagementPackage\ManagementPackageCustomerController;
 use App\Http\Controllers\Back\Promo\PromoController;
 use App\Http\Controllers\Back\Staff\StaffController;
 use App\Http\Controllers\Back\Tickets\PackageComboController;
@@ -198,7 +199,9 @@ Route::middleware('bo.auth')->group(function () {
 
     Route::get('/report/customer', [CustomerReportController::class, 'index'])->name('report.customer');
 
-
+    // Alur Management Package Customer
+    Route::get('/package-active-customer', [ManagementPackageCustomerController::class, 'index'])->name('package.active.customer');
+ 
 
 });
 

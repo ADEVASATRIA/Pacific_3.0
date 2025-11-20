@@ -110,6 +110,33 @@
                         </ul>
                     </li>
 
+                    {{-- <li
+                        class="menu-group {{ request()->is('package.active.customer') || request()->is('package.active.customer') ? 'open' : '' }}">
+                        <div class="menu-group-header">
+                            <div class="menu-group-title">
+                                <i data-feather="package" class="menu-icon"></i>
+                                <span class="menu-text">Management Package</span>
+                            </div>
+                            <i data-feather="chevron-down" class="arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li class="submenu-item {{ request()->is('package.active.customer') ? 'active' : '' }}">
+                                <a href="{{ route('package.active.customer') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">View Customer Active</span>
+                                </a>
+                            </li>
+                            <li class="submenu-item {{ request()->is('package.detail.customer') ? 'active' : '' }}">
+                                <a href="{{ route('package.detail.customer') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Edit Package</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li> --}}
+
+
+
                     <!-- Management Member, Coach & Clubhouse Group -->
                     <li
                         class="menu-group {{ request()->is('member') || request()->is('coach') || request()->is('clubhouse') ? 'open' : '' }}">

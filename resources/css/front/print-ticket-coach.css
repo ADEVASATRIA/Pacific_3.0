@@ -2,7 +2,7 @@
    COMMON STYLES
 ======================= */
 .section-title {
-    font-size: 18px;
+    font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
     color: #000;
@@ -11,8 +11,8 @@
 .info-row {
     display: flex;
     justify-content: space-between;
-    font-size: 15px;
-    margin-bottom: 8px;
+    font-size: 25px;
+    margin-bottom: 1px;
     color: #333;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .ticket-title {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
     margin-bottom: 6px;
 }
@@ -59,7 +59,7 @@
 }
 
 .ticket-desc {
-    font-size: 14px;
+    font-size: 25px;
     margin-bottom: 6px;
     line-height: 1.4;
 }
@@ -76,13 +76,19 @@
 }
 
 .print-btn button {
+
+    width: 90%; /* Ubah dari 100% menjadi lebar yang lebih kecil */
+    margin: 0px auto; /* Tambahkan properti ini untuk menengahkan tombol */
+
     background: #007aff;
     color: #fff;
     border: none;
     padding: 10px 22px;
-    font-size: 15px;
+    font-size: 25px;
     border-radius: 10px;
     cursor: pointer;
+    width: 200px;
+    height: 60px;
     transition: all 0.3s ease;
 }
 

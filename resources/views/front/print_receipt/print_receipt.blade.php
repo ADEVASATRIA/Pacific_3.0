@@ -140,10 +140,10 @@
                     <span class="info-label">Pelanggan</span>
                     <span class="info-value">: {{ $purchase->customer->name ?? '-' }}</span>
                 </div>
-                <div class="info-row">
+                {{-- <div class="info-row">
                     <span class="info-label">Clubhouse</span>
                     <span class="info-value">{{ $purchase->customer->clubhouse->name ?? '-' }}</span>
-                </div>
+                </div> --}}
             </div>
 
             <hr class="receipt-divider">
@@ -215,7 +215,7 @@
                 @endswitch
             </div>
 
-            <p class="thank-you">Thank You For Coming</p>
+            <p class="thank-you" style="paddin-bottom: -100px; margin-bottom:-100px">Thank You For Coming</p>
         </div>
     </div>
     <script>

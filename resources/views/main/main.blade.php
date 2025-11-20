@@ -43,7 +43,7 @@
 
         <div class="service-card" style="--delay: 0.2s;" onclick="handlePrintPackage()">
             <i class="fas fa-print card-icon"></i>
-            <h3 class="card-title">Cetak Paket</h3>
+            <h3 class="card-title">Cetak Tiket Paket</h3>
             <p class="card-description">Masukkan nomor telepon anda untuk cetak tiket. Khusus Paket Tiket yang masih
                 tersedia</p>
         </div>

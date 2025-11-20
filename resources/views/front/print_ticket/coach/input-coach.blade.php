@@ -3,7 +3,7 @@
     @vite('resources/css/front/input-package.css')
     <div class="form-wrapper">
         <div class="form-card">
-            <h2 class="form-title text-center">Cetak Pelatih</h2>
+            <h2 class="form-title text-center">Cetak Tiket Pelatih</h2>
 
             <form action="{{ route('check_coach') }}" method="POST" class="ticket-form">
                 @csrf

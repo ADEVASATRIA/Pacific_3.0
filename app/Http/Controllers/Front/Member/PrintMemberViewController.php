@@ -20,6 +20,10 @@ class PrintMemberViewController extends Controller
     public function printMember($customerID)
     {
         $customer = Customer::with(['tiketTerbaru.entries'])->findOrFail($customerID);
+        if (!$customerID) {
+            return redirect()->route('member.input')
+                ->with('error', 'Customer ID tidak ditemukan.');
+        }
 
         $ticket = $customer->tiketTerbaru;
 

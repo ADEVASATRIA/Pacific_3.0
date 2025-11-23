@@ -54,7 +54,13 @@ class MemberController extends Controller
 
 
                 // masih aktif dan lebih dari 7 hari → langsung ke print member
-                return redirect()->route('member.print_member', ['customerID' => $customer->id]);
+                // return redirect()->route('member.print_member', ['customerID' => $customer->id]);
+                return redirect()
+                    ->back()
+                    ->with('confirm_member', true)
+                    ->with('customer_name', $customer->name)
+                    ->with('customer_id', $customer->id);
+
             }
         }
 

@@ -52,6 +52,38 @@
         </div>
     </div>
 
+    <!-- Modal Konfirmasi Nama -->
+    <div id="confirmNameModal" class="member-modal" style="display:none;">
+        <div class="member-modal-content">
+            <h3>Konfirmasi Member</h3>
+            <p>Apakah nama berikut benar?</p>
+
+            <h2 style="margin-top:10px; font-weight:700;">
+                {{ session('customer_name') }}
+            </h2>
+
+            <div class="member-modal-actions" style="margin-top:20px;">
+
+                @if (session('customer_id'))
+                    <a href="{{ route('member.print_member', ['customerID' => session('customer_id')]) }}"
+                        class="member-btn member-btn-primary">
+                        Ya, Benar
+                    </a>
+                @else
+                    <a href="#" onclick="event.preventDefault();" class="member-btn member-btn-primary disabled">
+                        Ya, Benar
+                    </a>
+                @endif
+
+                <!-- Tombol batal -->
+                <a href="{{ route('input_member') }}" class="member-btn member-btn-secondary">
+                    Batal
+                </a>
+            </div>
+        </div>
+    </div>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -80,6 +112,10 @@
                 }, 4000);
             }
 
+
+
+
+
             @if (session('error'))
                 showAlert('error', @json(session('error')));
             @endif
@@ -96,18 +132,20 @@
                 document.getElementById('memberRenewalModal').style.display = 'flex';
             @endif
 
+            @if (session('confirm_member'))
+                document.getElementById('confirmNameModal').style.display = 'flex';
+            @endif
+
+
             @if (session('customer_id'))
                 const laterBtn = document.getElementById('memberRenewLaterBtn');
                 if (laterBtn) {
-                    laterBtn.setAttribute('href',
-                        "{{ route('member.print_member', ['customerID' => session('customer_id')]) }}");
+                    laterBtn.href = "{{ route('member.print_member', ['customerID' => session('customer_id')]) }}";
                 }
             @else
                 const laterBtn = document.getElementById('memberRenewLaterBtn');
                 if (laterBtn) {
-                    laterBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                    });
+                    laterBtn.addEventListener('click', e => e.preventDefault());
                 }
             @endif
         });

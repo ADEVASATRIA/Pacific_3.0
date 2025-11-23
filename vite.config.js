@@ -18,6 +18,7 @@ export default defineConfig({
                 'resources/css/admin/member.css',
                 'resources/css/admin/package.css',
                 'resources/js/admin/index.js',
+                'resources/css/admin/viewHistoryTickets.css',
                 
                 // === Old Back Office Assets (from previous list) ===
                 'resources/css/back/back_blank.css',

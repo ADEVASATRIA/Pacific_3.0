@@ -23,6 +23,7 @@ use App\Http\Controllers\Front\Admin\PrintReceiptController;
 use App\Http\Controllers\Front\Admin\ShiftViewController;
 use App\Http\Controllers\Front\Admin\SponsorController;
 use App\Http\Controllers\Front\Admin\TransactionViewController;
+use App\Http\Controllers\Front\Admin\ViewHistoryTicketsController;
 use App\Http\Controllers\Front\Checkout\CheckoutController;
 use App\Http\Controllers\Front\Coach\CoachController;
 use App\Http\Controllers\Front\Customer\CheckCustomerController;
@@ -92,6 +93,9 @@ Route::middleware('fo.auth')->group(function () {
 
     // Alur print receipt di Admin
     Route::get('/admin/print-receipt/{id}' , [PrintReceiptController::class, 'printReceipt'])->name('admin.print_receipt');
+
+    //Alur View Hitory Tickets di admin
+    Route::get('/admin/viewHistoryTickets', [ViewHistoryTicketsController::class, 'viewHistoryTickets'])->name('admin.viewHistoryTickets');
 
 
     // Alur management sponsor pada admin

@@ -2,6 +2,8 @@
 
 namespace App\Services\Tickets;
 
+use App\Models\Customer;
+use App\Models\LogPrintMemberPelatih;
 use App\Models\PackageCombo;
 use App\Models\PackageComboDetail;
 use App\Models\PackageComboRedeem;
@@ -13,10 +15,62 @@ use Carbon\Carbon;
 use App\Models\TicketEntry;
 use App\Helpers\TicketHelper;
 use App\Models\MemberPass;
-
+use App\Models\LogPrintSingles;
 
 class CreateTickets
 {
+    // public function createTicketRegular(PurchaseDetail $purchaseDetail)
+    // {
+    //     $purchase = $purchaseDetail->purchase;
+    //     $ticketType = TicketType::find($purchaseDetail->purchase_item_id);
+
+    //     if (!$purchase || !$ticketType) {
+    //         throw new \Exception("Purchase atau TicketType tidak ditemukan.");
+    //     }
+
+    //     $createdTickets = [];
+    //     $qty = (int) $purchaseDetail->qty;
+
+    //     for ($i = 0; $i < $qty; $i++) {
+    //         $ticketkodeRef = $ticketType->ticket_kode_ref;
+
+    //         $ticket = new Ticket();
+    //         $ticket->purchase_detail_id = $purchaseDetail->id;
+    //         $ticket->customer_id = $purchase->customer_id;
+    //         $ticket->code = $ticketkodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+    //         $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
+    //         $ticket->date_start = now();
+    //         $ticket->date_end = now()->addDays($ticketType->duration);
+    //         $ticket->is_active = true;
+    //         $ticket->save();
+
+    //         $entries = [];
+
+    //         // ✅ Entry original
+    //         $entries[] = $this->createEntry($ticket, 1);
+
+    //         // ✅ Entry extra jika ada
+    //         if ($ticketType->qty_extra > 0) {
+    //             for ($j = 0; $j < $ticketType->qty_extra; $j++) {
+    //                 $entries[] = $this->createEntry($ticket, 2);
+    //             }
+    //         }
+
+    //         $ticket->entries = $entries;
+    //         $createdTickets[] = $ticket;
+    //     }
+    //     // dd([
+    //     //    'purchaseDetail' => $purchaseDetail->toArray(),
+    //     //    'ticketType' => $ticketType->toArray(),
+    //     //    'createdTickets' => $createdTickets,
+    //     // ]);
+
+
+    //     return $createdTickets;
+    // }
+
+
+
     public function createTicketRegular(PurchaseDetail $purchaseDetail)
     {
         $purchase = $purchaseDetail->purchase;
@@ -30,6 +84,8 @@ class CreateTickets
         $qty = (int) $purchaseDetail->qty;
 
         for ($i = 0; $i < $qty; $i++) {
+
+            // ===== CREATE TICKET =====
             $ticketkodeRef = $ticketType->ticket_kode_ref;
 
             $ticket = new Ticket();
@@ -42,12 +98,10 @@ class CreateTickets
             $ticket->is_active = true;
             $ticket->save();
 
+            // ===== CREATE ENTRIES =====
             $entries = [];
-
-            // ✅ Entry original
             $entries[] = $this->createEntry($ticket, 1);
 
-            // ✅ Entry extra jika ada
             if ($ticketType->qty_extra > 0) {
                 for ($j = 0; $j < $ticketType->qty_extra; $j++) {
                     $entries[] = $this->createEntry($ticket, 2);
@@ -55,17 +109,39 @@ class CreateTickets
             }
 
             $ticket->entries = $entries;
+
+
+
+            // ============================================================
+            // 🔥 ADDING LOGIC: LogPrintSingles (HISTORY CETAK TIKET)
+            // ============================================================
+            try {
+                $customer = $purchase->customer; // customer langsung dari purchase
+
+                $log = new LogPrintSingles();
+                $log->customer_id = $customer?->id;
+                $log->ticket_id = $ticket->id;
+                $log->ticket_code = $ticket->code;
+                $log->customer_name = $customer?->name;
+                $log->phone = $customer?->phone;
+                $log->status = 1;
+                $log->name_tickets = $purchaseDetail->name ?? 'Single Ticket';
+                $log->save();
+
+            } catch (\Exception $e) {
+                \Log::error('Error creating print single log: ' . $e->getMessage());
+                throw $e;
+            }
+            // ============================================================
+
+
+
             $createdTickets[] = $ticket;
         }
-        // dd([
-        //    'purchaseDetail' => $purchaseDetail->toArray(),
-        //    'ticketType' => $ticketType->toArray(),
-        //    'createdTickets' => $createdTickets,
-        // ]);
-
 
         return $createdTickets;
     }
+
 
     private function createEntry(Ticket $ticket, int $type): TicketEntry
     {
@@ -91,16 +167,16 @@ class CreateTickets
             throw new \Exception("Purchase atau TicketType tidak ditemukan.");
         }
 
+        $customer = $purchase->customer;
+
         $createdTickets = [];
         $qty = (int) $purchaseDetail->qty;
 
         for ($i = 0; $i < $qty; $i++) {
-            $ticketkodeRef = $ticketType->ticket_kode_ref;
-
             $ticket = new Ticket();
             $ticket->purchase_detail_id = $purchaseDetail->id;
-            $ticket->customer_id = $purchase->customer_id;
-            $ticket->code = $ticketkodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            $ticket->customer_id = $customer->id;
+            $ticket->code = $ticketType->ticket_kode_ref . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
             $ticket->date_start = now();
             $ticket->date_end = now()->addDays($ticketType->duration);
@@ -108,11 +184,8 @@ class CreateTickets
             $ticket->save();
 
             $entries = [];
-
-            // ✅ Entry original
             $entries[] = $this->createEntry($ticket, 1);
 
-            // ✅ Entry extra jika ada
             if ($ticketType->qty_extra > 0) {
                 for ($j = 0; $j < $ticketType->qty_extra; $j++) {
                     $entries[] = $this->createEntry($ticket, 2);
@@ -120,14 +193,17 @@ class CreateTickets
             }
 
             $ticket->entries = $entries;
+
+            // --- buat log print member sesuai format ---
+            $this->createLogPrintMember($ticket, $customer);
+
             $createdTickets[] = $ticket;
         }
 
-        $customer = $purchase->customer;
-        $customer->awal_masa_berlaku = Carbon::now();
-        $customer->akhir_masa_berlaku = Carbon::now()->addDays($ticketType->duration);
+        // Update membership period dan member_id seperti semula
+        $customer->awal_masa_berlaku = now();
+        $customer->akhir_masa_berlaku = now()->addDays($ticketType->duration);
 
-        // ✅ generate member_id kalau masih kosong
         if (empty($customer->member_id)) {
             $customer->member_id = $customer->generateMemberId();
         }
@@ -136,6 +212,23 @@ class CreateTickets
 
         return $createdTickets;
     }
+
+
+    public function createLogPrintMember(Ticket $ticket, Customer $customer)
+    {
+        $log = new LogPrintMemberPelatih();
+        $log->customer_id = $customer->id;
+        $log->ticket_id = $ticket->id;
+        $log->ticket_code = $ticket->code;
+        $log->customer_name = $customer->name;
+        $log->phone = $customer->phone;
+        $log->status = 1;
+        $log->type = 1;  
+        $log->save();
+
+        return $log;
+    }
+
 
 
     public function createTicketPelatih(PurchaseDetail $purchaseDetail)
@@ -147,40 +240,64 @@ class CreateTickets
             throw new \Exception("Purchase atau TicketType tidak ditemukan.");
         }
 
+        $pelatih = Customer::find($purchase->customer_id);
+
         $createdTickets = [];
         $qty = (int) $purchaseDetail->qty;
 
         for ($i = 0; $i < $qty; $i++) {
-            $ticketkodeRef = $ticketType->ticket_kode_ref;
 
+            // ----- Generate Ticket -----
             $ticket = new Ticket();
             $ticket->purchase_detail_id = $purchaseDetail->id;
-            $ticket->customer_id = $purchase->customer_id;
-            $ticket->code = $ticketkodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            $ticket->customer_id = $pelatih->id;
+            $ticket->code = $ticketType->ticket_kode_ref . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
             $ticket->date_start = now();
             $ticket->date_end = now()->addDays($ticketType->duration);
             $ticket->is_active = true;
             $ticket->save();
 
+            // ----- Generate Ticket Entries -----
             $entries = [];
+            $entries[] = $this->createEntry($ticket, 1); // Original
 
-            // ✅ Entry original
-            $entries[] = $this->createEntry($ticket, 1);
-
-            // ✅ Entry extra jika ada
             if ($ticketType->qty_extra > 0) {
                 for ($j = 0; $j < $ticketType->qty_extra; $j++) {
-                    $entries[] = $this->createEntry($ticket, 2);
+                    $entries[] = $this->createEntry($ticket, 2); // Extra entry
                 }
             }
 
             $ticket->entries = $entries;
+
+            // ----- Log Print Pelatih -----
+            $this->createLogPrintPelatih($ticket, $pelatih);
+
+            // Simpan ticket yg selesai dibuat
             $createdTickets[] = $ticket;
         }
 
         return $createdTickets;
     }
+
+
+
+
+    private function createLogPrintPelatih(Ticket $ticket, Customer $pelatih)
+    {
+        $log = new LogPrintMemberPelatih();
+        $log->customer_id = $pelatih->id;
+        $log->ticket_id = $ticket->id;
+        $log->ticket_code = $ticket->code;
+        $log->customer_name = $pelatih->name;
+        $log->phone = $pelatih->phone;
+        $log->status = 1; // default success / printed
+        $log->type = 2;   // tipe 2 sesuai logic lama
+        $log->save();
+
+        return $log;
+    }
+
 
 
     public function createTicketPackage(PurchaseDetail $purchaseDetail)
@@ -254,8 +371,4 @@ class CreateTickets
 
         return $createdTickets;
     }
-
-
-
-
 }

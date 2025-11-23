@@ -43,6 +43,8 @@ body {
   border-right: 1px solid #e5e7eb;
   min-height: 100vh;
   width: 220px;
+  z-index: 2 !important;
+  position: relative;
 }
 
 .brand {
@@ -140,12 +142,12 @@ nav {
 .main {
   padding: 20px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.85); /* semi transparan */
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  position: relative;
+  z-index: 5; /* Tambahkan z-index yang lebih rendah dari tabs */
 }
+
 
 .topbar {
   display: flex;
@@ -351,3 +353,33 @@ tbody td {
 .btn.reset:hover {
   background: #e5e7eb;
 }
+/* Layer untuk memperbaiki klik Swiper */
+.content-layer {
+    position: relative;
+    z-index: 99; /* lebih tinggi dari sidebar (2) dan main (5) */
+}
+
+.content-layer * {
+    position: relative;
+    z-index: 100;
+}
+
+/* FIX FINAL: Pastikan konten dapat diklik dan tidak tertutup header */
+.topbar {
+    position: relative;
+    z-index: 5 !important;
+}
+
+.content-layer {
+    position: relative;
+    z-index: 50 !important;
+}
+
+.history-tabs,
+.history-tabs li,
+.tabs-content,
+.tab-pane {
+    position: relative;
+    z-index: 60 !important;
+}
+

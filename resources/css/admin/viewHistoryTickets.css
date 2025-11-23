@@ -1,0 +1,219 @@
+/* ============================
+   FILTER FORM
+============================ */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.filter-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ============================
+   SUMMARY CARDS
+============================ */
+.cards {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.card {
+    flex: 1;
+    padding: 14px;
+    border-radius: 10px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.card p {
+    margin: 8px 0 0;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* ============================
+   TABS MENU - REDESIGNED
+============================ */
+.history-tabs {
+    display: flex;
+    gap: 0;
+    margin: 30px 0 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 2px solid #e5e7eb;
+    background: transparent;
+    position: relative;
+    z-index: 100;
+}
+
+.history-tabs li {
+    list-style: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #6b7280;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    user-select: none;
+    position: relative;
+    z-index: 101;
+    background: transparent;
+}
+
+/* Hover effect */
+.history-tabs li:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+/* Active state */
+.history-tabs li.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+    background-color: #eff6ff;
+}
+
+/* Pastikan pointer events berfungsi */
+.history-tabs,
+.history-tabs li {
+    pointer-events: auto !important;
+}
+
+/* ============================
+   TAB CONTENT CONTAINER
+============================ */
+.tabs-content {
+    margin-top: 20px;
+    position: relative;
+    z-index: 50;
+}
+
+/* ============================
+   TAB PANES
+============================ */
+.tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.tab-pane.active {
+    display: block;
+    opacity: 1;
+    animation: fadeInUp 0.4s ease-in-out;
+}
+
+/* Animasi smooth */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================
+   TABLE STYLE
+============================ */
+.tab-pane table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tab-pane thead th {
+    padding: 12px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    background: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+    text-align: left;
+}
+
+.tab-pane tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #1f2937;
+}
+
+.tab-pane tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.tab-pane tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alert info style */
+.alert-info {
+    padding: 16px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    color: #1e40af;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* ============================
+   Z-INDEX HIERARCHY FIX
+============================ */
+.sidebar {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.main {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+    }
+    
+    .history-tabs {
+        overflow-x: auto;
+        gap: 0;
+    }
+    
+    .history-tabs li {
+        padding: 10px 16px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    
+    .tab-pane table {
+        font-size: 12px;
+    }
+    
+    .tab-pane thead th,
+    .tab-pane tbody td {
+        padding: 8px 6px;
+    }
+}

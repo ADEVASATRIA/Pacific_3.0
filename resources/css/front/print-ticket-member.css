@@ -121,6 +121,57 @@
 }
 
 @media print {
+
+    /* ===========================================
+       FIX BACKGROUND HITAM (WAJIB)
+       Mencegah thermal print jadi hitam semua
+    ============================================ */
+    * {
+        background: transparent !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        background-image: none !important;
+    }
+
+    img {
+        background: transparent !important;
+    }
+
+    body::before,
+    body::after {
+        content: none !important;
+        display: none !important;
+        background: none !important;
+    }
+
+    .navbar,
+    .footer,
+    .service-card,
+    .cards-grid,
+    .header-section,
+    .payment-section,
+    .contact-section,
+    .contact-item,
+    .payment-logo,
+    .modal,
+    .modal-pin,
+    .checkout-card,
+    .checkout-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+
+
+    /* ===========================================
+       CSS ASLI KAMU (TIDAK DIUBAH SAMA SEKALI)
+    ============================================ */
+
     .screen-only {
         display: none !important;
     }
@@ -185,12 +236,10 @@
         font-family: "Montserrat", sans-serif;
         line-height: 1.3;
         page-break-inside: avoid;
-        /* Hilangkan always */
         page-break-after: auto;
     }
 
-
-    /* Tiket terakhir tanpa break tambahan */
+    /* Tiket terakhir */
     .ticket-card:last-child {
         page-break-after: auto;
         margin-bottom: 0;
@@ -204,31 +253,27 @@
         height: 180px !important;
         display: block;
         margin: 0 auto 8px auto;
-        /* ✅ QR menempel atas, jarak bawah kecil */
         transform: scale(1.05);
         visibility: visible !important;
     }
 
-    /* Teks utama kode tiket */
+    /* Kode tiket */
     .ticket-title {
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 2px;
     }
 
-    /* Teks deskripsi di bawah kode */
+    /* Subjudul */
     .ticket-subtitle {
         font-size: 12px;
-        /* ✅ sedikit lebih kecil */
         margin-bottom: 12px;
-        /* ✅ jarak bawah sebelum tiket berikutnya */
         color: #333;
     }
 
-    /* Jarak antar tiket agar mudah digunting */
-    .ticket-card+.ticket-card {
+    /* Jarak antar tiket */
+    .ticket-card + .ticket-card {
         margin-top: 18px;
-        /* ✅ pas untuk gunting */
     }
 
     .ticket-price {

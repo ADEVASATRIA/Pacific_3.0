@@ -22,10 +22,9 @@
                 </div>
             </div>
 
-            <nav class="sidebar">
+            <nav class="menu">
 
-                <a href="{{ route('admin.shift') }}"
-                    class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
+                <a href="{{ route('admin.shift') }}" class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
                     <i data-lucide="shirt"></i>
                     <span>Shift Hari ini</span>
                 </a>
@@ -35,6 +34,13 @@
                     <i data-lucide="credit-card"></i>
                     <span>Transaksi</span>
                 </a>
+
+                <a href="{{ route('admin.viewHistoryTickets') }}"
+                    class="nav-item @if (request()->routeIs('admin.viewHistoryTickets')) active @endif">
+                    <i data-lucide="ticket"></i>
+                    <span>History Tiket Keluar</span>
+                </a>
+
                 <a href="{{ route('admin.member') }}" class="nav-item @if (request()->routeIs('admin.member')) active @endif">
                     <i data-lucide="users"></i>
                     <span>Member</span>
@@ -67,16 +73,19 @@
 
         <!-- Main -->
         <main class="main" role="main">
-            <div class="topbar">
-                <h2>@yield('page-title')</h2>
-                <div class="controls">
-                    @yield('top-controls')
+            <div class="content-layer">
+                <div class="topbar">
+                    <h2>@yield('page-title')</h2>
+                    <div class="controls">
+                        @yield('top-controls')
+                    </div>
                 </div>
-            </div>
 
-            {{-- Konten halaman --}}
-            @yield('content')
+                {{-- Konten halaman --}}
+                @yield('content')
+            </div>
         </main>
+
     </div>
 
     <!-- 🔹 Modal Tutup Kasir -->
@@ -97,18 +106,21 @@
                 <div class="closecashier-form">
                     <label for="saldo_akhir">Saldo Akhir (Total Fisik Kas):</label>
                     <!-- Saldo Akhir (formatted Rp) -->
-                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0"
+                        value="Rp. 0">
                     <!-- Hidden real value for server -->
                     <input type="hidden" id="saldo_akhir" value="0">
 
                     <!-- Input baru: FNB Balance -->
                     <label for="fnb_balance">Saldo F&B (Uang F&B):</label>
-                    <input type="text" id="fnb_balance_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="text" id="fnb_balance_display" class="closecashier-input" placeholder="Rp. 0"
+                        value="Rp. 0">
                     <input type="hidden" id="fnb_balance" value="0">
 
                     <!-- Input baru: Minus Balance -->
                     <label for="minus_balance">Minus Balance (Kekurangan Kas):</label>
-                    <input type="text" id="minus_balance_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="text" id="minus_balance_display" class="closecashier-input" placeholder="Rp. 0"
+                        value="Rp. 0">
                     <input type="hidden" id="minus_balance" value="0">
                 </div>
 

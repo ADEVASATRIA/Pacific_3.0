@@ -12,7 +12,7 @@
             </button>
         </div>
 
-
+        {{-- {{ dd($customer) }} --}}
         <!-- Informasi Customer -->
         <div class="ticket-card customer-info">
             <h3 class="section-title">Informasi Customer</h3>

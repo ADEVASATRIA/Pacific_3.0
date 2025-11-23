@@ -109,6 +109,59 @@
 }
 
 @media print {
+
+    /* ============================
+       FIX BACKGROUND HITAM THERMAL
+       (SAMA SEPERTI STRUK)
+    ============================ */
+    * {
+        background: transparent !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        background-image: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    img {
+        background: transparent !important;
+    }
+
+    body::before,
+    body::after {
+        display: none !important;
+        background: none !important;
+        content: none !important;
+    }
+
+    .navbar,
+    .footer,
+    .service-card,
+    .cards-grid,
+    .header-section,
+    .payment-section,
+    .contact-section,
+    .contact-item,
+    .payment-logo,
+    .modal,
+    .modal-pin,
+    .checkout-card,
+    .checkout-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+
+
+    /* ============================
+       CSS ASLI KAMU (TIDAK DIUBAH)
+    ============================ */
+
     .screen-only {
         display: none !important;
     }
@@ -124,7 +177,6 @@
     }
 
     body {
-        /* background: #fff !important; */
         margin: 0 !important;
         padding: 0 !important;
         -webkit-print-color-adjust: exact;
@@ -208,7 +260,6 @@
         display: block;
         width: 60%;
         margin: 10px auto 0 auto;
-        /* border-bottom: 1px dashed #ccc; */
     }
 
     .ticket-card:last-child::after {
@@ -216,6 +267,7 @@
     }
 
 }
+
 
 
 /* =======================

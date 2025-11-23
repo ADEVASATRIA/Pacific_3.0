@@ -106,6 +106,55 @@
 
 /* Print view */
 @media print {
+
+    /* ===========================================
+       FIX BACKGROUND HITAM (WAJIB UNTUK THERMAL)
+    ============================================ */
+    * {
+        background: transparent !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        background-image: none !important;
+    }
+
+    img {
+        background: transparent !important;
+    }
+
+    body::before,
+    body::after {
+        content: none !important;
+        display: none !important;
+        background: none !important;
+    }
+
+    .navbar,
+    .footer,
+    .service-card,
+    .cards-grid,
+    .header-section,
+    .payment-section,
+    .contact-section,
+    .contact-item,
+    .payment-logo,
+    .modal,
+    .modal-pin,
+    .checkout-card,
+    .checkout-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+
+    /* ===========================================
+       CSS ASLI TIKET PAKET (TIDAK DIRUBAH)
+    ============================================ */
+
     /* ===========================
        GLOBAL SETTINGS
     ============================ */
@@ -118,15 +167,12 @@
     }
   
     html, body {
-      background: #fff !important;
       margin: 0 !important;
       padding: 0 !important;
       width: 80mm !important;
       height: auto !important;
       overflow: visible !important;
       font-family: "Montserrat", sans-serif;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
     }
   
     #navbar, #footer, .print-btn, .customer-info {
@@ -163,8 +209,8 @@
     ============================ */
     .ticket-card {
       width: 78mm !important;
-      margin: 0 auto -1px auto !important;   /* ✅ Hilangkan gap antar tiket */
-      padding: 2mm 0 1mm 0 !important;      /* ✅ Rapat antar tiket */
+      margin: 0 auto -1px auto !important;
+      padding: 2mm 0 1mm 0 !important;
       background: #fff !important;
       border: none !important;
       border-radius: 0 !important;
@@ -172,13 +218,9 @@
       text-align: center !important;
       line-height: 1.2;
   
-      /* ✅ Hindari pemotongan antar halaman */
       page-break-before: avoid !important;
       page-break-after: avoid !important;
       page-break-inside: avoid !important;
-      break-before: avoid !important;
-      break-after: avoid !important;
-      break-inside: avoid !important;
     }
   
     /* ===========================
@@ -200,7 +242,7 @@
     .ticket-title {
       font-size: 15px !important;
       font-weight: bold !important;
-      margin: 0.5mm 0 0.5mm 0 !important;
+      margin: 0.5mm 0 !important;
     }
   
     .ticket-subtitle {
@@ -222,7 +264,6 @@
       max-height: none !important;
     }
   
-    /* ✅ Chrome-specific hack untuk hilangkan jeda antar halaman */
     @supports (-webkit-touch-callout: none) {
       @page {
         size: 80mm auto;
@@ -236,13 +277,14 @@
       }
   
       .ticket-card {
-        margin-bottom: -1px !important; /* Hilangkan jeda putih antar tiket */
+        margin-bottom: -1px !important;
         page-break-before: avoid !important;
         page-break-after: avoid !important;
         page-break-inside: avoid !important;
       }
     }
-  }
+}
+
 
 /* Simple Alert Animation */
 .alert-slide {

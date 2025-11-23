@@ -24,9 +24,9 @@
 
             <nav class="menu">
 
-                <a href="{{ route('admin.shift') }}" class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
-                    <i data-lucide="shirt"></i>
-                    <span>Shift Hari ini</span>
+                <a href="{{ route('main') }}" class="nav-item">
+                    <i data-lucide="home"></i>
+                    <span>Home</span>
                 </a>
 
                 <a href="{{ route('admin.transaksi') }}"
@@ -35,10 +35,9 @@
                     <span>Transaksi</span>
                 </a>
 
-                <a href="{{ route('admin.viewHistoryTickets') }}"
-                    class="nav-item @if (request()->routeIs('admin.viewHistoryTickets')) active @endif">
-                    <i data-lucide="ticket"></i>
-                    <span>History Tiket Keluar</span>
+                <a href="{{ route('admin.package') }}" class="nav-item @if (request()->routeIs('admin.package')) active @endif">
+                    <i data-lucide="package"></i>
+                    <span>Package</span>
                 </a>
 
                 <a href="{{ route('admin.member') }}" class="nav-item @if (request()->routeIs('admin.member')) active @endif">
@@ -46,19 +45,20 @@
                     <span>Member</span>
                 </a>
 
-                <a href="{{ route('admin.package') }}" class="nav-item @if (request()->routeIs('admin.package')) active @endif">
-                    <i data-lucide="package"></i>
-                    <span>Package</span>
-                </a>
-
                 <a href="{{ route('admin.sponsor') }}" class="nav-item @if (request()->routeIs('admin.sponsor')) active @endif">
                     <i data-lucide="ticket-slash"></i>
                     <span>Sponsor</span>
                 </a>
 
-                <a href="{{ route('main') }}" class="nav-item">
-                    <i data-lucide="home"></i>
-                    <span>Home</span>
+                <a href="{{ route('admin.viewHistoryTickets') }}"
+                    class="nav-item @if (request()->routeIs('admin.viewHistoryTickets')) active @endif">
+                    <i data-lucide="ticket"></i>
+                    <span>History Tiket Keluar</span>
+                </a>
+
+                <a href="{{ route('admin.shift') }}" class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
+                    <i data-lucide="shirt"></i>
+                    <span>Shift Hari ini</span>
                 </a>
 
                 <!-- Tombol Tutup Kasir -->

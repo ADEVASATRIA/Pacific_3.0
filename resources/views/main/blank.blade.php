@@ -26,23 +26,9 @@
 
     <footer class="footer" id="footer">
         <div class="footer-content">
-            <!-- Payment Section - Left Side -->
-            <div class="payment-section">
-                <p class="payment-title">Menerima pembayaran secara tunai dan non tunai</p>
-                <div class="payment-logos">
-                    <img src="/aset/img/logo-qris.png" alt="QRIS" class="payment-logo">
-                    <img src="/aset/img/logo-bca.png" alt="BCA" class="payment-logo">
-                    <img src="/aset/img/logo-mandiri.png" alt="MANDIRI" class="payment-logo">
-                    <img src="/aset/img/logo-bni.png" alt="BNI" class="payment-logo">
-                    <img src="/aset/img/logo-bri.png" alt="BRI" class="payment-logo">
-                </div>
-            </div>
-
-            <!-- Contact Information Section - Right Side -->
             <div class="contact-section">
                 <h3 class="contact-title">For More Information about us :</h3>
                 <div class="contact-grid">
-                    <!-- Phone Numbers -->
                     <div class="contact-item">
                         <i class="fab fa-whatsapp contact-icon whatsapp-icon"></i>
                         <div class="contact-info">
@@ -51,7 +37,6 @@
                         </div>
                     </div>
 
-                    <!-- Social Media -->
                     <div class="contact-item">
                         <div class="social-icons">
                             <div class="social-item">
@@ -65,7 +50,6 @@
                         </div>
                     </div>
 
-                    <!-- Address -->
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt contact-icon location-icon"></i>
                         <div class="contact-info">

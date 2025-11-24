@@ -48,18 +48,18 @@
 
                         <!-- Detail Tiket -->
                         <div class="ticket-info">
-                            <h2 class="ticket-title">{{ $ticket->ticket_kode_ref }}</h2>
+                            {{-- <h2 class="ticket-title">{{ $ticket->ticket_kode_ref }}</h2> --}}
 
                             {{-- Versi web --}}
                             <p class="ticket-desc screen-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
+                               Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
                                 Berlaku Sampai
                                 <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                             </p>
 
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
-                                {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
+                                Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
                                 {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                             </p>
                         </div>

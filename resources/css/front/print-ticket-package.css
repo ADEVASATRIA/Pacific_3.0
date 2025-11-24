@@ -1,16 +1,16 @@
 .section-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #000;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
 }
 
 .info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 15px;
-  margin-bottom: 8px;
-  color: #333;
+    display: flex;
+    justify-content: space-between;
+    font-size: 25px;
+    margin-bottom: 1px;
+    color: #333;
 }
 
 .divider {
@@ -27,18 +27,17 @@
   margin: 20px auto;
 }
 
-/* FIX BUG 1: Shadow Ungu - Ganti rgba & kurangi opacity */
+/* FIX BUG 1: Shadow Ungu */
 .ticket-card,
 .customer-info {
-  background: #ffffff;
-  /* FIX: Ganti rgba jadi #ffffff murni */
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* FIX: Opacity dikurangi dari 0.15 jadi 0.08 */
-  padding: 20px;
-  width: 600px;
-  text-align: center;
-  margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    width: 700px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .qr-section {
@@ -54,7 +53,7 @@
 }
 
 .ticket-title {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 6px;
 }
@@ -65,7 +64,7 @@
 }
 
 .ticket-desc {
-  font-size: 14px;
+  font-size: 25px;
   margin-bottom: 6px;
   line-height: 1.4;
 }
@@ -78,52 +77,42 @@
 }
 
 .print-btn {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .print-btn button {
-  background: #007aff;
-  color: #fff;
-  border: none;
-  padding: 10px 22px;
-  font-size: 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+
+    width: 90%; /* Ubah dari 100% menjadi lebar yang lebih kecil */
+    margin: 0px auto; /* Tambahkan properti ini untuk menengahkan tombol */
+
+    background: #007aff;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    font-size: 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 200px;
+    height: 60px;
+    transition: all 0.3s ease;
 }
 
 .print-btn button:hover {
-  background: #005bb5;
-  transform: scale(1.05);
+    background: #005bb5;
+    transform: scale(1.05);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
+/* Web */
+.screen-only { display: block; }
+.print-only { display: none; }
 
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
-/* Web view */
-.screen-only {
-  display: block;
-}
-
-.print-only {
-  display: none;
-}
-
-/* Print view */
+/* ===========================================
+   PRINT MODE
+=========================================== */
 @media print {
 
-  /* ===========================================
-       FIX BACKGROUND HITAM (WAJIB UNTUK THERMAL)
-    ============================================ */
+  /* Fix thermal background */
   * {
     background: transparent !important;
     box-shadow: none !important;
@@ -131,10 +120,15 @@
     print-color-adjust: exact !important;
   }
 
-  html,
-  body {
+  html, body {
     background: #ffffff !important;
     background-image: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 80mm !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-family: "Montserrat", sans-serif;
   }
 
   img {
@@ -145,38 +139,18 @@
   body::after {
     content: none !important;
     display: none !important;
-    background: none !important;
   }
 
+  /* Hide non-print elements */
   .navbar,
   .footer,
-  .service-card,
-  .cards-grid,
-  .header-section,
-  .payment-section,
-  .contact-section,
-  .contact-item,
-  .payment-logo,
-  .modal,
-  .modal-pin,
-  .checkout-card,
-  .checkout-container {
-    background: transparent !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-  }
-
-  /* ===========================================
-       CSS ASLI TIKET PAKET (TIDAK DIRUBAH)
-    ============================================ */
-
-  /* ===========================
-       GLOBAL SETTINGS
-    ============================ */
+  .print-btn,
+  .customer-info,
   .screen-only {
     display: none !important;
   }
 
+  /* Print-only content */
   .print-only {
     display: block !important;
   }
@@ -186,36 +160,7 @@
     margin: 0 !important;
   }
 
-  html,
-  body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 80mm !important;
-    height: auto !important;
-    overflow: visible !important;
-    font-family: "Montserrat", sans-serif;
-  }
-
-  #navbar,
-  #footer,
-  .print-btn,
-  .customer-info {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  body * {
-    visibility: hidden !important;
-  }
-
-  .print_content,
-  .print_content * {
-    visibility: visible !important;
-  }
-
-  /* ===========================
-       STRUKTUR DASAR
-    ============================ */
+  /* ====== Struktur ====== */
   .ticket-wrapper {
     display: block !important;
     width: 80mm !important;
@@ -232,9 +177,7 @@
     overflow: visible !important;
   }
 
-  /* ===========================
-       TIKET INDIVIDUAL (TIGHT MODE)
-    ============================ */
+  /* ====== Tiket ====== */
   .ticket-card {
     width: 78mm !important;
     margin: 0 auto -1px auto !important;
@@ -246,21 +189,12 @@
     text-align: center !important;
     line-height: 1.2;
 
-    page-break-before: avoid !important;
-    page-break-after: avoid !important;
     page-break-inside: avoid !important;
   }
 
-  /* ===========================
-       QR CODE & TEXT
-    ============================ */
-  .qr-section {
-    margin: 0 auto !important;
-    padding: 0 !important;
-  }
-
-  .qr-section svg,
-  .qr-section img {
+  /* ====== QR ====== */
+  .qr-section img,
+  .qr-section svg {
     width: 160px !important;
     height: 160px !important;
     display: block !important;
@@ -269,14 +203,13 @@
 
   .ticket-title {
     font-size: 15px !important;
-    font-weight: bold !important;
     margin: 0.5mm 0 !important;
   }
 
   .ticket-subtitle {
     font-size: 11px !important;
-    color: #333 !important;
     margin: 0 0 0.5mm 0 !important;
+    color: #333 !important;
   }
 
   .ticket-price {
@@ -285,37 +218,22 @@
     margin: 0 0 0.5mm 0 !important;
   }
 
-  /* ===========================
-       FIXING & CHROME-SPECIFIC
-    ============================ */
-  * {
-    max-height: none !important;
-  }
+  /* Chrome fix */
+  * { max-height: none !important; }
 
   @supports (-webkit-touch-callout: none) {
     @page {
       size: 80mm auto;
       margin: 0 !important;
     }
-
-    html,
-    body {
-      margin: 0 !important;
-      padding: 0 !important;
-      height: auto !important;
-    }
-
     .ticket-card {
       margin-bottom: -1px !important;
-      page-break-before: avoid !important;
-      page-break-after: avoid !important;
       page-break-inside: avoid !important;
     }
   }
 }
 
-
-/* Simple Alert Animation */
+/* Alerts */
 .alert-slide {
   position: fixed;
   top: 20px;
@@ -332,23 +250,17 @@
   align-items: center;
   gap: 8px;
 }
-
-.alert-slide.show {
-  right: 20px;
-}
-
+.alert-slide.show { right: 20px; }
 .alert-slide.error {
   background: #fee;
   border-left: 4px solid #e53e3e;
   color: #c53030;
 }
-
 .alert-slide.success {
   background: #f0fff4;
   border-left: 4px solid #38a169;
   color: #2f855a;
 }
-
 .alert-close {
   margin-left: auto;
   background: none;

@@ -18,8 +18,8 @@
         {{-- Customer Info hanya untuk web --}}
         <div class="ticket-card customer-info screen-only mb-3">
             <h3 class="section-title">Informasi Customer</h3>
-            <div class="info-row"><span>Nama Customer</span><span>{{ $customer->name }}</span></div>
-            <div class="info-row"><span>No Telepon</span><span>{{ $customer->phone }}</span></div>
+            <div class="info-row"><span>Customer</span><span>{{ $customer->name }}</span></div>
+            <div class="info-row"><span>Telephone</span><span>{{ $customer->phone }}</span></div>
             <div class="info-row"><span>Tiket Redeem Hari Ini</span><span>{{ $redeemCount }} Tiket</span></div>
 
             <hr class="divider">

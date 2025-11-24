@@ -302,6 +302,8 @@ class PackageController extends Controller
         $totalRemaining = $packageComboRedeems->sum(fn($p) => $p->details->sum('qty_redeemed'));
         $expiredDate = $packageComboRedeems->min('expired_date');
 
+        // dd($tickets, $ticketEntries);
+
         return view('front.print_ticket.package.print-ticket-package', [
             'customer' => $customer,
             'tickets' => $tickets,

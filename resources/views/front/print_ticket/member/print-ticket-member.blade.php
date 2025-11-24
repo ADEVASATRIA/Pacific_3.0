@@ -39,12 +39,12 @@
 
                         <!-- Detail Tiket -->
                         <div class="ticket-info">
-                            <h2 class="ticket-title">{{ $ticket->code }}</h2>
+                            {{-- <h2 class="ticket-title">{{ $ticket->code }}</h2> --}}
 
                             {{-- Versi front office --}}
                             @if($entry->type == 1)
                                 <p class="ticket-desc screen-only">
-                                    {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
+                                    Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
                                     Berlaku Sampai Tanggal
                                     <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                                 </p>
@@ -60,7 +60,7 @@
                             {{-- Versi print --}}
                             @if($entry->type == 1)
                                 <p class="ticket-subtitle print-only">
-                                    {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
+                                    Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
                                     {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
                                 </p>
                             @elseif($entry->type == 2)

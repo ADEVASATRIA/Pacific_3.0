@@ -39,6 +39,17 @@
             <i class="fas fa-ticket-alt card-icon"></i>
             <h3 class="card-title">Beli Tiket</h3>
             <p class="card-description">Masukkan nama dan Telephone untuk pembelian tiket yang akan di beli</p>
+
+            <div class="payment-section">
+                <p class="payment-title">Menerima pembayaran secara tunai dan non tunai</p>
+                <div class="payment-logos">
+                    <img src="aset/img/logo-qris.png" alt="QRIS" class="payment-logo">
+                    <img src="aset/img/logo-bca.png" alt="BCA" class="payment-logo">
+                    <img src="aset/img/logo-mandiri.png" alt="MANDIRI" class="payment-logo">
+                    <img src="aset/img/logo-bni.png" alt="BNI" class="payment-logo">
+                    <img src="aset/img/logo-bri.png" alt="BRI" class="payment-logo">
+                </div>
+            </div>
         </div>
 
         <div class="service-card" style="--delay: 0.2s;" onclick="handlePrintPackage()">
@@ -60,32 +71,8 @@
             <p class="card-description">Masukkan Nomor Telephone anda untuk cetak tiket pelatih</p>
         </div>
     </div>
-
-    <div style="display: flex; justify-content: center; margin-top: -10px; margin-bottom: 30px;">
-        <div class="service-card admin-card" onclick="handleAdminLogin()"
-            style="max-width: 300px; /* Batasi lebar tombol */
-                    margin: 0; /* Pastikan tidak ada margin tambahan */
-                    cursor: pointer;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambah shadow agar menonjol */
-                    border: 2px solid #3b82f6;">
-            {{-- <i class="fas fa-user-shield card-icon" style="color: #3b82f6;"></i> --}}
-            <h3 class="card-title" style="color: #3b82f6; font-size: 1.25rem;">Admin Pacific</h3>
-            <p class="card-description">Akses ke Dashboard & Management Tiket oleh Staff</p>
-        </div>
-    </div>
     <footer class="footer">
         <div class="footer-content">
-            <div class="payment-section">
-                <p class="payment-title">Menerima pembayaran secara tunai dan non tunai</p>
-                <div class="payment-logos">
-                    <img src="aset/img/logo-qris.png" alt="QRIS" class="payment-logo">
-                    <img src="aset/img/logo-bca.png" alt="BCA" class="payment-logo">
-                    <img src="aset/img/logo-mandiri.png" alt="MANDIRI" class="payment-logo">
-                    <img src="aset/img/logo-bni.png" alt="BNI" class="payment-logo">
-                    <img src="aset/img/logo-bri.png" alt="BRI" class="payment-logo">
-                </div>
-            </div>
-
             <div class="contact-section">
                 <h3 class="contact-title">For More Information about us :</h3>
                 <div class="contact-grid">
@@ -120,6 +107,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="admin-wrapper">
+                <div class="service-card admin-card" onclick="handleAdminLogin()"
+                    style="max-width: 300px; /* Batasi lebar tombol */
+                    margin: 0; /* Pastikan tidak ada margin tambahan */
+                    cursor: pointer;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambah shadow agar menonjol */
+                    border: 2px solid #3b82f6;">
+                    {{-- <i class="fas fa-user-shield card-icon" style="color: #3b82f6;"></i> --}}
+                    <h3 class="card-title" style="color: #3b82f6; font-size: 1.25rem;">Admin Pacific</h3>
+                    <p class="card-description">Akses ke Dashboard & Management Tiket oleh Staff</p>
+                </div>
+            </div>
+
         </div>
     </footer>
     <div id="adminPinModal" class="modal modal-pin hidden">

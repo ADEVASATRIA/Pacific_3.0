@@ -330,6 +330,11 @@ body::before {
     align-items: start;
 }
 
+.admin-wrapper {
+    justify-self: end; /* Geser ke pojok kanan grid */
+}
+
+
 /* Payment Section - Left Side */
 .payment-section {
     display: flex;

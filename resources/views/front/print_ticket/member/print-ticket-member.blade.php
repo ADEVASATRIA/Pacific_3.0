@@ -30,6 +30,7 @@
         <div class="print_content">
             @if ($ticket)
                 @foreach ($ticketEntries as $entry)
+                    {{-- {{ dd($entry) }} --}}
                     <div class="ticket-card">
                         <!-- QR Code -->
                         <div class="qr-section mt-5">

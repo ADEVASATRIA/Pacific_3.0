@@ -1,5 +1,5 @@
 .section-title {
-    font-size: 18px;
+    font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
     color: #000;
@@ -8,8 +8,8 @@
 .info-row {
     display: flex;
     justify-content: space-between;
-    font-size: 15px;
-    margin-bottom: 8px;
+    font-size: 25px;
+    margin-bottom: 1px;
     color: #333;
 }
 
@@ -25,6 +25,7 @@
     align-items: center;
     min-height: 100vh;
     flex-direction: column;
+    margin-top: -120px;
 }
 
 .ticket-card,
@@ -33,9 +34,10 @@
     border-radius: 16px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
     padding: 20px;
-    width: 500px;
+    width: 600px;
     text-align: center;
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .qr-section {
@@ -44,56 +46,61 @@
     align-items: center;
 }
 
-.qr-section img {
+.qr-section img,
+.qr-section svg {
     width: 180px;
     height: 180px;
-    margin-bottom: 20px;
+    margin: 0 auto 12px auto;
 }
 
 .ticket-title {
-    font-size: 18px;
+    font-size: 30px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .ticket-subtitle {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 10px;
+    font-size: 15px;
+    margin-bottom: 6px;
 }
 
 .ticket-desc {
-    font-size: 13px;
-    color: #333;
-    margin-bottom: 15px;
-    line-height: 1.4em;
+    font-size: 25px;
+    margin-bottom: 6px;
+    line-height: 1.4;
 }
 
 .ticket-price {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
+    margin-top: 8px;
     color: #000;
 }
 
 .print-btn {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .print-btn button {
-    padding: 10px 18px;
+
+    width: 90%; /* Ubah dari 100% menjadi lebar yang lebih kecil */
+    margin: 0px auto; /* Tambahkan properti ini untuk menengahkan tombol */
+
+    background: #007aff;
+    color: #fff;
     border: none;
-    border-radius: 8px;
-    background: limegreen;
-    color: black;
+    padding: 10px 22px;
+    font-size: 25px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s ease;
-    font-weight: bolder;
+    width: 200px;
+    height: 60px;
+    transition: all 0.3s ease;
 }
 
 .print-btn button:hover {
-    background: limegreen;
+    background: #005bb5;
+    transform: scale(1.05);
 }
 
 /* Animasi */
@@ -255,6 +262,7 @@
         margin: 0 auto 8px auto;
         transform: scale(1.05);
         visibility: visible !important;
+        margin-top: 150px;
     }
 
     /* Kode tiket */

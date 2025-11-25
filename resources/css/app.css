@@ -25,17 +25,15 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
     background: var(--theme-bg-app) top no-repeat;
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-
-    min-height: auto;
+    min-height: 100vh; /* Ubah dari auto ke 100vh */
     position: relative;
     overflow-x: hidden;
     margin-bottom: 0px;
-    padding-bottom: 0px
+    padding-bottom: 0px; /* Hapus padding bottom yang 280px */
 }
 
 /* Animated background elements */
@@ -165,56 +163,68 @@ body::before {
 /* Cards Grid - Modified for 2x2 layout */
 .cards-grid {
     max-width: 1500px;
-    margin: 0 auto;
+    margin: 0 auto 40px; /* Tambahkan margin-bottom */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    /* Changed: Always 2 columns */
     grid-template-rows: repeat(2, auto);
-    /* Added: 2 rows */
     gap: 30px;
-    padding: 0 30px 10px;
+    padding: 0 30px 40px; /* Padding normal */
     animation: fadeInUp 1s ease-out 0.6s both;
 }
 
 /* Responsive Design - Updated */
 @media (max-width: 768px) {
+    body {
+        padding-bottom: 0px; /* Pastikan tidak ada padding */
+    }
+
     .cards-grid {
         grid-template-columns: 1fr;
-        /* Mobile: single column */
-        grid-template-rows: auto;
-        /* Mobile: auto rows */
         padding: 0 20px 40px;
         gap: 20px;
-    }
-
-    .header-section {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .welcome-title {
-        font-size: 2rem;
-    }
-
-    .main-title {
-        font-size: 1.5rem;
-        padding: 0 20px;
-    }
-
-    .navbar {
-        margin: 10px;
+        margin-bottom: 30px;
     }
 
     .footer {
-        margin: 20px 10px 0px;
+        margin: 30px 10px 20px 10px !important; /* Margin normal untuk mobile */
+        padding: 20px;
+        width: calc(100% - 20px);
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .contact-title {
+        font-size: 1.1rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .contact-item {
+        padding: 10px;
+    }
+
+    .contact-icon {
+        font-size: 18px;
+    }
+
+    .contact-text {
+        font-size: 0.8rem;
     }
 
     .payment-logos {
-        gap: 15px;
+        gap: 12px;
     }
 
     .payment-logo {
-        height: 35px;
+        height: 32px;
     }
 }
 
@@ -320,25 +330,18 @@ body::before {
 
 /* Footer */
 .footer {
-    position: fixed;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-
-    margin: 0 !important;
+    position: relative; /* Ubah dari fixed ke relative */
+    bottom: auto; /* Remove bottom positioning */
+    left: auto;
+    right: auto;
+    margin: 40px 20px 20px 20px !important; /* Normal margin */
     border-radius: 20px;
-    
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-
     padding: 30px;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
     animation: fadeInUp 1s ease-out 0.8s both;
-
-    width: calc(100% - 40px); /* ganti dari margin: 20px */
-    margin-left: 20px !important;
-    margin-right: 20px !important;
-
+    width: calc(100% - 40px);
     z-index: 999;
 }
 

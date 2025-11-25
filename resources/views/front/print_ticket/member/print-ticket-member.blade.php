@@ -45,13 +45,13 @@
                             @if($entry->type == 1)
                                 <p class="ticket-desc screen-only">
                                     Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                    Berlaku Sampai Tanggal
+                                    Berlaku Tanggal
                                     <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                                 </p>
                             @elseif($entry->type == 2)
                                 <p class="ticket-desc screen-only">
                                     Tiket Pengantar Tambahan Gratis <br>
-                                    Berlaku Sampai Tanggal
+                                    Berlaku Tanggal
                                     <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                                 </p>
                             @endif

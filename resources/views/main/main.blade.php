@@ -124,7 +124,6 @@
                     cursor: pointer;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambah shadow agar menonjol */
                     border: 2px solid #3b82f6;">
-                    {{-- <i class="fas fa-user-shield card-icon" style="color: #3b82f6;"></i> --}}
                     <h3 class="card-title" style="color: #3b82f6; font-size: 1.25rem;">Admin Pacific</h3>
                     <p class="card-description">Akses ke Dashboard & Management Tiket oleh Staff</p>
                 </div>

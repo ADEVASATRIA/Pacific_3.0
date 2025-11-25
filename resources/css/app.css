@@ -28,9 +28,14 @@ body {
     /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
     background: var(--theme-bg-app) top no-repeat;
     background-size: cover;
-    min-height: 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    min-height: auto;
     position: relative;
     overflow-x: hidden;
+    margin-bottom: 0px;
+    padding-bottom: 0px
 }
 
 /* Animated background elements */
@@ -201,7 +206,7 @@ body::before {
     }
 
     .footer {
-        margin: 20px 10px 10px;
+        margin: 20px 10px 0px;
     }
 
     .payment-logos {
@@ -239,6 +244,8 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
+    margin-bottom: 20px;
+    padding-bottom: 20px
 }
 
 .service-card::before {
@@ -312,14 +319,28 @@ body::before {
 
 /* Footer */
 .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: 0 !important;
+    border-radius: 20px;
+    
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    margin: 40px 20px 20px;
-    border-radius: 20px;
+
     padding: 30px;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
     animation: fadeInUp 1s ease-out 0.8s both;
+
+    width: calc(100% - 40px); /* ganti dari margin: 20px */
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+
+    z-index: 999;
 }
+
 
 /* Footer Content Container */
 .footer-content {

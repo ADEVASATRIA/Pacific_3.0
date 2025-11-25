@@ -244,8 +244,9 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
-    margin-bottom: 20px;
-    padding-bottom: 20px
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    height: 100%;
 }
 
 .service-card::before {
@@ -320,7 +321,7 @@ body::before {
 /* Footer */
 .footer {
     position: fixed;
-    bottom: 0;
+    bottom: 20px;
     left: 0;
     right: 0;
 

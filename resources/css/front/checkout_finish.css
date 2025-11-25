@@ -375,6 +375,14 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
+
+    /* Garis titik-titik pemisah antara 2 struk */
+    .receipt-card + .receipt-card {
+        border-top: 1px dashed #000 !important;
+        margin-top: 18px !important;
+        padding-top: 18px !important;
+    }
+
 }
 
 

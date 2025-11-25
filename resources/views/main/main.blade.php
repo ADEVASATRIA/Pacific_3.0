@@ -36,8 +36,10 @@
 
     <div class="cards-grid">
         <div class="service-card" style="--delay: 0.1s;" onclick="handleBuyTicket()">
-            <i class="fas fa-ticket-alt card-icon"></i>
-            <h3 class="card-title">Beli Tiket</h3>
+            <div class="card-header">
+                <i class="fas fa-ticket-alt card-icon"></i>
+                <h3 class="card-title">Beli Tiket</h3>
+            </div>
             <p class="card-description">Masukkan nama dan Telephone untuk pembelian tiket yang akan di beli</p>
 
             <div class="payment-section">
@@ -53,21 +55,28 @@
         </div>
 
         <div class="service-card" style="--delay: 0.2s;" onclick="handlePrintPackage()">
-            <i class="fas fa-print card-icon"></i>
-            <h3 class="card-title">Cetak Tiket Paket</h3>
+            <div class="card-header">
+                <i class="fas fa-print card-icon"></i>
+                <h3 class="card-title">Cetak Tiket Paket</h3>
+            </div>
+
             <p class="card-description">Masukkan nomor telepon anda untuk cetak tiket. Khusus Paket Tiket yang masih
                 tersedia</p>
         </div>
 
         <div class="service-card" style="--delay: 0.3s;" onclick="handlePrintMemberTicket()">
-            <i class="fas fa-id-card card-icon"></i>
-            <h3 class="card-title">Cetak Tiket Member</h3>
+            <div class="card-header">
+                <i class="fas fa-id-card card-icon"></i>
+                <h3 class="card-title">Cetak Tiket Member</h3>
+            </div>
             <p class="card-description">Masukkan Nomor Telephone anda untuk cetak tiket member</p>
         </div>
 
         <div class="service-card" style="--delay: 0.4s;" onclick="handlePrintTrainerTicket()">
-            <i class="fas fa-user-tie card-icon"></i>
-            <h3 class="card-title">Cetak Tiket Pelatih</h3>
+            <div class="card-header">
+                <i class="fas fa-user-tie card-icon"></i>
+                <h3 class="card-title">Cetak Tiket Pelatih</h3>
+            </div>
             <p class="card-description">Masukkan Nomor Telephone anda untuk cetak tiket pelatih</p>
         </div>
     </div>

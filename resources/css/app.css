@@ -159,7 +159,7 @@ body::before {
 /* Cards Grid */
 /* Cards Grid - Modified for 2x2 layout */
 .cards-grid {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -167,7 +167,7 @@ body::before {
     grid-template-rows: repeat(2, auto);
     /* Added: 2 rows */
     gap: 30px;
-    padding: 0 40px 60px;
+    padding: 0 30px 10px;
     animation: fadeInUp 1s ease-out 0.6s both;
 }
 
@@ -733,4 +733,20 @@ body::before {
 @keyframes scaleIn {
   from { transform: scale(0.9); opacity: 0 }
   to { transform: scale(1); opacity: 1 }
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Jarak icon & title */
+    margin-bottom: 20px;
+}
+
+.card-header .card-icon {
+    margin-bottom: 0; /* Karena sekarang horizontal */
+}
+
+.card-header .card-title {
+    margin: 0;
+    line-height: 1.2;
 }

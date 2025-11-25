@@ -1,4 +1,4 @@
-@extends('main.blank')
+@extends('main.second_blank')
 @section('content')
     @vite('resources/css/front/beli_ticket.css')
     <div class="form-wrapper">

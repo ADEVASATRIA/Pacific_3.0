@@ -56,7 +56,7 @@ class PackageViewController extends Controller
             if ($customer) {
                 // Ambil purchases yang valid (type=3, payment ada/tidak kosong, status=2)
                 $purchases = Purchase::whereHas('customer', fn($q) => $q->where('phone', $customerPhone))
-                    ->whereHas('purchaseDetails', fn($q) => $q->where('type', 3))
+                    ->whereHas('purchaseDetails', fn($q) => $q->where('type', 3)->whereHas('packageComboRedeem'))
                     ->whereNotNull('payment')
                     ->where('payment', '!=', '')
                     ->where('status', 2)
@@ -83,6 +83,8 @@ class PackageViewController extends Controller
                         ->whereIn('purchase_detail_id', $validPurchaseDetailIds)
                         ->latest()
                         ->get();
+
+                    // dd($redeems);
                 } else {
                     $redeems = collect();
                 }
@@ -102,6 +104,7 @@ class PackageViewController extends Controller
         return view('front.admin.viewPackage', compact(
             'customerPhone',
             'purchases',
+            'redeems',
             'customer',
             'totalRedeemedTickets',
             'totalQtyRedeemed',

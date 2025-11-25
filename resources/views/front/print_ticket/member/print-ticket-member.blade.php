@@ -17,11 +17,11 @@
         <div class="ticket-card customer-info">
             <h3 class="section-title">Informasi Customer</h3>
             <div class="info-row">
-                <span>Nama Customer</span>
+                <span>Customer</span>
                 <span>{{ $customer->name }}</span>
             </div>
             <div class="info-row">
-                <span>Nama Club House</span>
+                <span>Swimming Club</span>
                 <span>{{ $customer->clubhouse->name ?? ($customer->clubhouse2->name ?? 'Tidak Ada') }}</span>
             </div>
         </div>

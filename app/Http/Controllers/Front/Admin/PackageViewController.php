@@ -104,7 +104,6 @@ class PackageViewController extends Controller
         return view('front.admin.viewPackage', compact(
             'customerPhone',
             'purchases',
-            'redeems',
             'customer',
             'totalRedeemedTickets',
             'totalQtyRedeemed',

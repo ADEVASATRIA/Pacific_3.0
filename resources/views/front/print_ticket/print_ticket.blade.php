@@ -1,7 +1,7 @@
 @extends('main.blank')
 
 @section('content')
-    @vite('resources/css/front/print_ticket.css')
+    @vite(['resources/css/front/print_ticket.css', 'resources/js/qz-print.js'])
     <div class="notice-info">
         <p>
             <strong>Catatan:</strong> Tiket paket <u>tidak dapat dicetak</u> di halaman ini.
@@ -13,6 +13,7 @@
         <!-- Tombol Aksi -->
         <div class="print-btn" style="display: flex; gap: 10px; justify-content: center;">
             <button onclick="window.print()">Print Tiket</button>
+            <button onclick="printWithAutoCut()">Print Tiket</button>
 
             <button onclick="window.location.href='{{ route('main') }}'"
                 style="background-color: #6c757d; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
@@ -34,7 +35,7 @@
         </div>
 
         <!-- Daftar Tiket -->
-        <div class="print_content">
+        <div id="print_area" class="print_content">
             @foreach ($tickets as $ticket)
                 @php
                     $entries = $ticketEntries->where('ticket_id', $ticket->id);

@@ -62,7 +62,12 @@
             </div>
         </div>
     </footer>
-</body>
 
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qz-tray/2.1.0/qz-tray.js"
+        onload="window.dispatchEvent(new Event('qz-loaded'))"></script> --}}
+
+    <script src="{{ asset('vendor/qz/qz-tray.js') }}" onload="window.dispatchEvent(new Event('qz-loaded'))"></script>
+
+</body>
 
 </html>

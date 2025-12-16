@@ -94,8 +94,13 @@
             <h2>Tutup Kasir</h2>
 
             <div class="closecashier-body">
+                <div class="closecashier-report">
+                    <p><strong>Report:</strong></p>
+                    <button id="btnExportReport" class="btn-secondary">Export Laporan Harian</button>
+                </div>
+                <br>
                 <p><strong>Staff:</strong> {{ $staff->name ?? '—' }}</p>
-                <p><strong>Saldo Awal:</strong> Rp{{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
+                
                 <p><strong>Waktu Buka:</strong>
                     {{ isset($cashSession->waktu_buka) ? \Carbon\Carbon::parse($cashSession->waktu_buka)->format('H:i | d M Y') : '—' }}
                 </p>
@@ -103,31 +108,31 @@
                     <span id="closeCashierTime">{{ now()->format('H:i | d M Y') }}</span>
                 </p>
 
+                <p><strong>Saldo Awal:</strong> Rp {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
+                <p><strong>Saldo Penjualan Tiket Tunai: </strong> Rp. {{ number_format($purchaseToday ?? 0, 0, ',', '.') }}</p>
                 <div class="closecashier-form">
-                    <label for="saldo_akhir">Saldo Akhir (Total Fisik Kas):</label>
-                    <!-- Saldo Akhir (formatted Rp) -->
-                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0"
-                        value="Rp. 0">
-                    <!-- Hidden real value for server -->
+                    <label for="penjualan_fnb_kolam">Saldo Penjualan F&B Kolam Tunai :</label>
+                    <input type="text" id="penjualan_fnb_kolam_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="hidden" id="penjualan_fnb_kolam" value="0">
+
+                    <label for="penjualan_fnb_cafe">Saldo penjualan F&B Cafe Tunai :</label>
+                    <input type="text" id="penjualan_fnb_cafe_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
+                    <input type="hidden" id="penjualan_fnb_cafe" value="0">
+
+                    <label>Uang Masuk / Cash In Tunai :</label>
+                    <div id="cashInList" class="cashinout-list"></div>
+                    <button type="button" id="btnAddCashInRow" class="btn-secondary">Tambah Cash In</button>
+
+                    <label>Uang Keluar / Cash Out Tunai :</label>
+                    <div id="cashOutList" class="cashinout-list"></div>
+                    <button type="button" id="btnAddCashOutRow" class="btn-secondary">Tambah Cash Out</button>
+
+                    <label for="saldo_akhir">Saldo Akhir (otomatis):</label>
+                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0" readonly>
                     <input type="hidden" id="saldo_akhir" value="0">
-
-                    <!-- Input baru: FNB Balance -->
-                    <label for="fnb_balance">Saldo F&B (Uang F&B):</label>
-                    <input type="text" id="fnb_balance_display" class="closecashier-input" placeholder="Rp. 0"
-                        value="Rp. 0">
-                    <input type="hidden" id="fnb_balance" value="0">
-
-                    <!-- Input baru: Minus Balance -->
-                    <label for="minus_balance">Minus Balance (Kekurangan Kas):</label>
-                    <input type="text" id="minus_balance_display" class="closecashier-input" placeholder="Rp. 0"
-                        value="Rp. 0">
-                    <input type="hidden" id="minus_balance" value="0">
                 </div>
 
-                <div class="closecashier-report">
-                    <p><strong>Report:</strong></p>
-                    <button id="btnExportReport" class="btn-secondary">Export Laporan Harian</button>
-                </div>
+                
             </div>
 
             <div class="closecashier-footer">
@@ -160,6 +165,10 @@
             exportReport: "{{ route('cashsession.export') }}"
         };
         window.CsrfToken = "{{ csrf_token() }}";
+        window.CashierData = {
+            saldoAwal: {{ (int)($cashSession->saldo_awal ?? 0) }},
+            purchaseToday: {{ (int)($purchaseToday ?? 0) }}
+        };
     </script>
     @stack('scripts')
 </body>

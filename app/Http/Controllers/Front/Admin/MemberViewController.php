@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Carbon\Carbon;
 use App\Models\CashSession;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Purchase;
 
 class MemberViewController extends Controller
 {
@@ -81,6 +82,11 @@ class MemberViewController extends Controller
             ->where('status', 1)
             ->latest();
 
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+
         $cashSession = $cashSessionQuery->first();
 
         if (!$cashSession) {
@@ -98,6 +104,7 @@ class MemberViewController extends Controller
             'totalAll' => $totalAll,
             'cashSession' => $cashSession,
             'staff' => $staff,
+            'purchaseToday' => $purchaseToday,
         ]);
     }
 }

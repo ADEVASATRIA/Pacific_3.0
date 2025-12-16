@@ -73,6 +73,11 @@ class TransactionViewController extends Controller
 
         $cashSession = $cashSessionQuery->first();
 
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+
         if (!$cashSession) {
             $cashSession = new CashSession([
                 'saldo_awal' => 0,
@@ -95,7 +100,8 @@ class TransactionViewController extends Controller
             'staff',
             'paymentOptions',
             'filterPayments',
-            'cashSession'
+            'cashSession',
+            'purchaseToday',
         ));
     }
 

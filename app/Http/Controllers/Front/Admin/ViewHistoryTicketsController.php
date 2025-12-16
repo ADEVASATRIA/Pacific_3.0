@@ -8,12 +8,41 @@ use Illuminate\Http\Request;
 use App\Models\LogQtyPacketTicket;
 use App\Models\LogPrintSingles;
 use App\Models\LogPrintMemberPelatih;
+use App\Models\Purchase;
+use Illuminate\Support\Facades\Auth;
+use App\Models\CashSession;
 
 class ViewHistoryTicketsController extends Controller
 {
     public function viewHistoryTickets(Request $request) {
+		$staff = Auth::guard('fo')->user();
         $today = Carbon::today();
         $phone = $request->input('phone');
+
+		// Alur purchase today
+		 $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+
+		// Alur Cash Session 
+		$cashSession = null;
+        if ($staff) {
+            $cashSession = CashSession::where('staff_id', $staff->id)
+                ->whereDate('waktu_buka', $today->toDateString())
+                ->where('status', 1)
+                ->latest()
+                ->first();
+        }
+
+		// jika tidak ada session aktif, bikin object default agar view tidak error saat mengakses properti
+        if (!$cashSession) {
+            $cashSession = new CashSession([
+                'saldo_awal' => 0,
+                'waktu_buka' => null,
+                'status' => 0,
+            ]);
+        }
 
         // Query untuk package tickets
         // Query for package tickets
@@ -78,6 +107,9 @@ class ViewHistoryTicketsController extends Controller
 			'logPrintPelatih',
 			'todaysSummary',
 			'today',
+			'cashSession',
+            'staff',
+            'purchaseToday'
         ]));
     }
 }

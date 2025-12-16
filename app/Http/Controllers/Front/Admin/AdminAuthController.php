@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use App\Models\CashSession;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use App\Models\Purchase;
 
 use Illuminate\Support\Facades\Log;
 
@@ -21,6 +22,13 @@ class AdminAuthController
         }
 
         $today = Carbon::today();
+        // Kalkulasi total penjualan tiket tunai 
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+        
+        // dd($purchaseToday);
 
         $cashSessionQuery = CashSession::where('staff_id', $staff->id)
             ->whereDate('waktu_buka', $today)
@@ -28,14 +36,6 @@ class AdminAuthController
             ->latest();
 
         $cashSession = $cashSessionQuery->first();
-
-        // Log::info('=== DEBUG CASH SESSION ===', [
-        //     'staff_id' => $staff->id,
-        //     'today' => $today->format('Y-m-d'),
-        //     'query_sql' => $cashSessionQuery->toSql(),
-        //     'bindings' => $cashSessionQuery->getBindings(),
-        //     'found' => $cashSession ? $cashSession->toArray() : null,
-        // ]);
 
         if (!$cashSession) {
             $cashSession = new CashSession([
@@ -45,7 +45,7 @@ class AdminAuthController
             ]);
         }
 
-        return view('front.admin.index', compact('staff', 'cashSession'));
+        return view('front.admin.index', compact('staff', 'cashSession', 'purchaseToday'));
     }
 
 

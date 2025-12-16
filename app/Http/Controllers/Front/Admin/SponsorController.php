@@ -9,6 +9,7 @@ use App\Models\CashSession;
 use App\Models\Sponsor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Purchase;
 
 class SponsorController extends Controller
 {
@@ -19,6 +20,11 @@ class SponsorController extends Controller
     {
         $staff = Auth::guard('fo')->user();
         $today = now()->startOfDay();
+
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
 
         $query = Sponsor::query()->whereNull('deleted_at');
 
@@ -48,7 +54,8 @@ class SponsorController extends Controller
         return view('front.admin.sponsor', [
             'sponsors' => $sponsors,
             'cashSession' => $cashSession,
-            'staff' => $staff
+            'staff' => $staff,
+            'purchaseToday' => $purchaseToday,
         ]);
     }
 

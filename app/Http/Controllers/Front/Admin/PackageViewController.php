@@ -30,6 +30,11 @@ class PackageViewController extends Controller
         // hari ini (dipakai untuk cek expired & cash session)
         $today = Carbon::today();
 
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+
         // --- Inisialisasi cashSession (selalu didefinisikan untuk view) ---
         $cashSession = null;
         if ($staff) {
@@ -107,7 +112,8 @@ class PackageViewController extends Controller
             'totalQtyRedeemed',
             'expiredDatesCount',
             'cashSession',
-            'staff'
+            'staff',
+            'purchaseToday'
         ));
     }
 
@@ -119,6 +125,11 @@ class PackageViewController extends Controller
         $viewData = collect();
 
         $today = Carbon::today();
+
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
 
         // Ambil cash session aktif
         $cashSession = null;
@@ -177,7 +188,7 @@ class PackageViewController extends Controller
         }
 
         // Jika akses langsung non-AJAX
-        return view('front.admin.package', compact('customerPhone', 'customer', 'cashSession', 'staff'));
+        return view('front.admin.package', compact('customerPhone', 'customer', 'cashSession', 'staff', 'purchaseToday'));
     }
 
     public function logHistoryRedeemCustomerPackageDetail(Request $request)
@@ -188,6 +199,12 @@ class PackageViewController extends Controller
         $id = $request->query('id');
 
         $today = Carbon::today();
+
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+
         // Ambil cash session aktif
         $cashSession = null;
         if ($staff) {
@@ -237,6 +254,6 @@ class PackageViewController extends Controller
             ]);
         }
 
-        return view('front.admin.package', compact('cashSession', 'staff'));
+        return view('front.admin.package', compact('cashSession', 'staff', 'purchaseToday'));
     }
 }

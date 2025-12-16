@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CashSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Purchase;
 
 use App\Exports\ShiftExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,6 +18,11 @@ class ShiftViewController extends Controller
     {
         $staff = Auth::guard('fo')->user();
         $today = now()->startOfDay();
+
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
 
         // Ambil kas sesi aktif hari ini
         $cashSession = CashSession::where('staff_id', $staff->id)
@@ -59,6 +65,7 @@ class ShiftViewController extends Controller
             'cashSession' => $cashSession,
             'shift' => $shift,
             'staff' => $staff,
+            'purchaseToday' => $purchaseToday,
         ]);
     }
 

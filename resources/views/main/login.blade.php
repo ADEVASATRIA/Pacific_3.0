@@ -47,6 +47,17 @@
         </div>
     </div>
 
+    <!-- Modal Konfirmasi Sesi Terakhir -->
+    <div id="sessionConfirmModal" class="saldo-modal">
+        <div class="saldo-content">
+            <h3>Session terakhir masih belum tertutup</h3>
+            <p>Apakah ingin memakai session terakhir atau membuat baru?</p>
+            <div class="button-group">
+                <button id="useLatestSession">Pakai Session Terakhir</button>
+                <button id="createNewSession" class="cancel-btn">Buat Session Baru</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const loginForm = document.getElementById('loginForm');
@@ -55,6 +66,9 @@
         const submitSaldo = document.getElementById('submitSaldo');
         const loginError = document.getElementById('loginError');
         const cancelSaldo = document.getElementById('cancelSaldo');
+        const sessionConfirmModal = document.getElementById('sessionConfirmModal');
+        const useLatestBtn = document.getElementById('useLatestSession');
+        const createNewBtn = document.getElementById('createNewSession');
 
         // Saat tombol batalkan diklik
         cancelSaldo.addEventListener('click', () => {
@@ -99,10 +113,35 @@
             }
 
             if (data.role === 'fo') {
-                saldoModal.classList.add('active');
+                try {
+                    const checkResp = await fetch('{{ route('cash.checkLatest') }}', {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    });
+                    const checkData = await checkResp.json();
+                    if (!checkData.success) {
+                        sessionConfirmModal.classList.add('active');
+                    } else {
+                        saldoModal.classList.add('active');
+                    }
+                } catch (err) {
+                    saldoModal.classList.add('active');
+                }
             } else if (data.role === 'bo') {
                 window.location.href = '{{ route('dashboard') }}';
             }
+        });
+
+        useLatestBtn.addEventListener('click', () => {
+            sessionConfirmModal.classList.remove('active');
+            window.location.href = '{{ route('main') }}';
+        });
+
+        createNewBtn.addEventListener('click', () => {
+            sessionConfirmModal.classList.remove('active');
+            saldoModal.classList.add('active');
         });
 
         // Handle submit saldo awal

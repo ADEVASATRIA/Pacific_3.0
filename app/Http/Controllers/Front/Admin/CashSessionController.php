@@ -15,6 +15,28 @@ use App\Exports\TransactionsExport;
 
 class CashSessionController
 {
+    // Alur Cek Session yang masih belum di tutup
+    public function checkLastSession(Request $request){
+        $staff = Auth::guard('fo')->user();
+
+        if (!$staff) {
+            return response()->json(['success' => false, 'message' => 'User belum terautentikasi.']);
+        }
+
+        $lastSession = CashSession::where('staff_id', $staff->id)
+            ->where('status', 1)
+            ->latest()
+            ->first();
+        
+        // dd($lastSession);
+
+        if ($lastSession) {
+            return response()->json(['success' => false, 'message' => 'Session kasir masih terbuka.']);
+        }else{
+            return response()->json(['success' => true, 'message' => 'Session kasir belum terbuka.']);
+        }
+
+    }
     public function store(Request $request)
     {
         $staff = Auth::guard('fo')->user();

@@ -20,33 +20,6 @@
             <!-- Logo Section -->
             <div class="sidebar-header">
                 <div class="logo-container">
-                    <div class="logo-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16 4L4 10L16 16L28 10L16 4Z" fill="url(#gradient1)" />
-                            <path d="M4 16L16 22L28 16" stroke="url(#gradient2)" stroke-width="2"
-                                stroke-linecap="round" />
-                            <path d="M4 22L16 28L28 22" stroke="url(#gradient3)" stroke-width="2"
-                                stroke-linecap="round" />
-                            <defs>
-                                <linearGradient id="gradient1" x1="4" y1="4" x2="28"
-                                    y2="16" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#3B82F6" />
-                                    <stop offset="1" stop-color="#8B5CF6" />
-                                </linearGradient>
-                                <linearGradient id="gradient2" x1="4" y1="16" x2="28"
-                                    y2="22" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#3B82F6" />
-                                    <stop offset="1" stop-color="#8B5CF6" />
-                                </linearGradient>
-                                <linearGradient id="gradient3" x1="4" y1="22" x2="28"
-                                    y2="28" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#3B82F6" />
-                                    <stop offset="1" stop-color="#8B5CF6" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </div>
                     <div class="logo-text">
                         <h2>Pacific Pool</h2>
                         <span>Admin Dashboard</span>

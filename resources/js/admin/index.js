@@ -123,11 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <input type="text" class="cash-amount-display closecashier-input" placeholder="Rp. 0" value="Rp. 0">
             <input type="hidden" class="cash-amount" value="0">
-            <input type="text" class="cash-notes closecashier-input" placeholder="Keterangan Cash In">
-            <button type="button" class="btn-danger cash-remove"><i data-lucide="trash-2"></i></button>
+            <input type="text" class="cash-notes" placeholder="Keterangan Cash In">
+            <button type="button" class="btn-danger cash-remove">Hapus</button>
         `;
         cashInList.appendChild(div);
-        lucide.createIcons(); // Refresh icons
         setupCashRow(div, computeFinalBalance);
     };
 
@@ -137,11 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <input type="text" class="cash-amount-display closecashier-input" placeholder="Rp. 0" value="Rp. 0">
             <input type="hidden" class="cash-amount" value="0">
-            <input type="text" class="cash-notes closecashier-input" placeholder="Keterangan Cash Out">
-            <button type="button" class="btn-danger cash-remove"><i data-lucide="trash-2"></i></button>
+            <input type="text" class="cash-notes" placeholder="Keterangan Cash Out">
+            <button type="button" class="btn-danger cash-remove">Hapus</button>
         `;
         cashOutList.appendChild(div);
-        lucide.createIcons(); // Refresh icons
         setupCashRow(div, computeFinalBalance);
     };
 

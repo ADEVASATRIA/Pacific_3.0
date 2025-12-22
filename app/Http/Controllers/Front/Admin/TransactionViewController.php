@@ -17,13 +17,17 @@ class TransactionViewController extends Controller
     public function transactionIndex(Request $request)
     {
         $today = Carbon::today();
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : $today;
+        $endDate = $request->end_date ? Carbon::parse($request->end_date) : $today;
+
         $staff = Auth::guard('fo')->user();
 
         // Filter berdasarkan jenis pembayaran
         $filterPayments = $request->input('payment', []);
 
         $query = Purchase::with(['purchaseDetails', 'customer'])
-            ->whereDate('created_at', $today);
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate);
 
         if (!empty($filterPayments)) {
             $query->whereIn('payment', $filterPayments);
@@ -33,9 +37,14 @@ class TransactionViewController extends Controller
 
         // Jika user klik tombol Export
         if ($request->has('export')) {
+            $filename = 'Transaksi-' . $startDate->format('d-m-Y');
+            if ($startDate->format('Y-m-d') !== $endDate->format('Y-m-d')) {
+                $filename .= '-sd-' . $endDate->format('d-m-Y');
+            }
+
             return Excel::download(
                 new TransactionsExport($transactions, $staff),
-                'Transaksi-Hari-Ini-' . $today->format('d-m-Y') . '.xlsx'
+                $filename . '.xlsx'
             );
         }
 
@@ -99,19 +108,26 @@ class TransactionViewController extends Controller
         ));
     }
 
-    public function export()
+    public function export(Request $request)
     {
         $staff = Auth::guard('fo')->user();
-        $today = Carbon::today();
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : Carbon::today();
+        $endDate = $request->end_date ? Carbon::parse($request->end_date) : Carbon::today();
 
         $transactions = Purchase::with(['purchaseDetails', 'customer'])
-            ->whereDate('created_at', $today)
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $filename = 'Report-Transaksi-' . $startDate->format('d-m-Y');
+        if ($startDate->format('Y-m-d') !== $endDate->format('Y-m-d')) {
+            $filename .= '-sd-' . $endDate->format('d-m-Y');
+        }
+
         return Excel::download(
             new TransactionsExport($transactions, $staff),
-            'Report-Transaksi-' . $today->format('d-m-Y') . '.xlsx'
+            $filename . '.xlsx'
         );
     }
 }

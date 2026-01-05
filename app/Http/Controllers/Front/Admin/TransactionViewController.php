@@ -73,10 +73,13 @@ class TransactionViewController extends Controller
 
         $cashSession = $cashSessionQuery->first();
 
-        $purchaseToday = Purchase::whereDate('created_at','=', $today)
-            ->where('status', '2')
-            ->where('payment', '1')
-            ->sum('total');
+        $purchaseTunai = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '1')->sum('total');
+        $purchaseQrisBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '2')->sum('total');
+        $purchaseQrisMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '3')->sum('total');
+        $purchaseDebitBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '4')->sum('total');
+        $purchaseDebitMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '5')->sum('total');
+        $purchaseQrisBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '7')->sum('total');
+        $purchaseDebitBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '8')->sum('total');
 
         if (!$cashSession) {
             $cashSession = new CashSession([
@@ -101,7 +104,13 @@ class TransactionViewController extends Controller
             'paymentOptions',
             'filterPayments',
             'cashSession',
-            'purchaseToday',
+            'purchaseTunai',
+            'purchaseQrisBca',
+            'purchaseQrisMandiri',
+            'purchaseDebitBca',
+            'purchaseDebitMandiri',
+            'purchaseQrisBri',
+            'purchaseDebitBri'
         ));
     }
 

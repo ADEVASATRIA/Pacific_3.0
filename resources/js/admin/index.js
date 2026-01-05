@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ambil semua elemen input yang relevan
     const saldoDisplay = document.getElementById('saldo_akhir_display');
     const saldoHidden = document.getElementById('saldo_akhir');
-    
+
     const kolamDisplay = document.getElementById('penjualan_fnb_kolam_display');
     const kolamHidden = document.getElementById('penjualan_fnb_kolam');
     const cafeDisplay = document.getElementById('penjualan_fnb_cafe_display');
@@ -40,6 +40,51 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) modal.style.display = 'none';
     });
 
+    // 🔹 Tombol Print Summary
+    const btnPrintSummary = document.getElementById('btnPrintSummary');
+    if (btnPrintSummary) {
+        btnPrintSummary.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Update print time to now
+            const printTimeEl = document.getElementById('printCloseTime');
+            if (printTimeEl) {
+                const now = new Date();
+                // Format: HH:MM | DD MMM YYYY (Custom format to match PHP)
+                const formatted = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' | ' +
+                    now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                printTimeEl.innerText = formatted;
+            }
+
+            // 🔹 Sync Dynamic Data for Print
+            // FnB
+            const fnbKolamVal = document.getElementById('penjualan_fnb_kolam_display')?.value || 'Rp. 0';
+            const fnbCafeVal = document.getElementById('penjualan_fnb_cafe_display')?.value || 'Rp. 0';
+            if (document.getElementById('printFnbKolam')) document.getElementById('printFnbKolam').innerText = fnbKolamVal;
+            if (document.getElementById('printFnbCafe')) document.getElementById('printFnbCafe').innerText = fnbCafeVal;
+
+            // Saldo Akhir
+            const saldoAkhirVal = document.getElementById('saldo_akhir_display')?.value || 'Rp. 0';
+            if (document.getElementById('printSaldoAkhir')) document.getElementById('printSaldoAkhir').innerText = saldoAkhirVal;
+
+            // Cash In & Cash Out Sums
+            // Helper to sum inputs with class .cash-amount
+            const sumListRaw = (listId) => {
+                const listEl = document.getElementById(listId);
+                if (!listEl) return 0;
+                return Array.from(listEl.querySelectorAll('.cash-amount')).reduce((acc, el) => acc + (parseInt(el.value || 0)), 0);
+            };
+
+            const cashInTotal = sumListRaw('cashInList');
+            const cashOutTotal = sumListRaw('cashOutList');
+
+            // Use existing formatRupiah
+            if (document.getElementById('printCashIn')) document.getElementById('printCashIn').innerText = formatRupiah(cashInTotal);
+            if (document.getElementById('printCashOut')) document.getElementById('printCashOut').innerText = formatRupiah(cashOutTotal);
+
+            window.print();
+        });
+    }
+
     // 🔹 Tombol export report
     const btnExport = document.getElementById('btnExportReport');
     if (btnExport) {
@@ -67,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayInput.addEventListener('input', function () {
                 // Hapus semua karakter kecuali angka
                 const raw = this.value.replace(/[^0-9]/g, '');
-                
+
                 if (raw === '') {
                     this.value = '';
                     hiddenInput.value = 0;
@@ -123,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <input type="text" class="cash-amount-display closecashier-input" placeholder="Rp. 0" value="Rp. 0">
             <input type="hidden" class="cash-amount" value="0">
-            <input type="text" class="cash-notes" placeholder="Keterangan Cash In">
+            <input type="text" class="cash-notes closecashier-input" placeholder="Keterangan Cash In">
             <button type="button" class="btn-danger cash-remove">Hapus</button>
         `;
         cashInList.appendChild(div);
@@ -136,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <input type="text" class="cash-amount-display closecashier-input" placeholder="Rp. 0" value="Rp. 0">
             <input type="hidden" class="cash-amount" value="0">
-            <input type="text" class="cash-notes" placeholder="Keterangan Cash Out">
+            <input type="text" class="cash-notes closecashier-input" placeholder="Keterangan Cash Out">
             <button type="button" class="btn-danger cash-remove">Hapus</button>
         `;
         cashOutList.appendChild(div);

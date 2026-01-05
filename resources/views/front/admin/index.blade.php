@@ -109,7 +109,7 @@
                 </p>
 
                 <p><strong>Saldo Awal:</strong> Rp {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
-                <p><strong>Saldo Penjualan Tiket Tunai: </strong> Rp. {{ number_format($purchaseToday ?? 0, 0, ',', '.') }}</p>
+                <p><strong>Saldo Penjualan Tiket Tunai: </strong> Rp. {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</p>
                 <div class="closecashier-form">
                     <label for="penjualan_fnb_kolam">Saldo Penjualan F&B Kolam Tunai :</label>
                     <input type="text" id="penjualan_fnb_kolam_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
@@ -136,8 +136,95 @@
             </div>
 
             <div class="closecashier-footer">
+                <button id="btnPrintSummary" class="btn-secondary" style="width: auto;">Print Summary</button>
                 <button id="btnCloseModal" class="btn-danger">Batalkan</button>
                 <button id="btnProcessClose" class="btn-success">Tutup Kasir & Logout</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Print Template (Hidden on Screen, Visible on Print) -->
+    <div id="print-area" class="print-area">
+        <div class="print-header">
+            <h3>Report Summary Transaksi Kasir</h3>
+        </div>
+        <div class="print-body">
+            <div class="print-row">
+                <span>Nama Kasir :</span>
+                <span>{{ $staff->name ?? '—' }}</span>
+            </div>
+            <div class="print-row">
+                <span>Waktu Buka :</span>
+                <span>{{ isset($cashSession->waktu_buka) ? \Carbon\Carbon::parse($cashSession->waktu_buka)->format('H:i | d M Y') : '—' }}</span>
+            </div>
+            <div class="print-row">
+                <span>Waktu Tutup :</span>
+                <span id="printCloseTime">{{ now()->format('H:i | d M Y') }}</span>
+            </div>
+            
+            <hr class="print-divider">
+
+            <div class="print-row">
+                <span>Tunai</span>
+                <span id="printTunai">Rp. {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="print-row">
+                <span>Qris BCA</span>
+                <span>Rp. {{ number_format($purchaseQrisBca ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="print-row">
+                <span>Debit BCA</span>
+                <span>Rp. {{ number_format($purchaseDebitBca ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="print-row">
+                <span>Qris Mandiri</span>
+                <span>Rp. {{ number_format($purchaseQrisMandiri ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="print-row">
+                <span>Debit Mandiri</span>
+                <span>Rp. {{ number_format($purchaseDebitMandiri ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="print-row">
+                <span>Qris BRI</span>
+                <span>Rp. {{ number_format($purchaseQrisBri ?? 0, 0, ',', '.') }}</span>
+            </div>
+             <div class="print-row">
+                <span>Debit BRI</span>
+                <span>Rp. {{ number_format($purchaseDebitBri ?? 0, 0, ',', '.') }}</span>
+            </div>
+
+            <br>
+            <div class="print-section-title">Summary Tutup Kasir :</div>
+            
+            <div class="print-row">
+                <span>Saldo Awal :</span>
+                <span id="printSaldoAwal">Rp. {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div class="print-row">
+                <span>Penjualan Tunai Tiket</span>
+                <span id="printPenjualanTiket">Rp. {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</span>
+            </div>
+             <div class="print-row">
+                <span>Penjualan Tunai F&B Kolam</span>
+                <span id="printFnbKolam">Rp. 0</span>
+            </div>
+             <div class="print-row">
+                <span>Penjualan Tunai F&B Cafe</span>
+                <span id="printFnbCafe">Rp. 0</span>
+            </div>
+             <div class="print-row">
+                <span>Cash in Tunai</span>
+                <span id="printCashIn">Rp. 0</span>
+            </div>
+             <div class="print-row">
+                <span>Cash Out Tunai</span>
+                <span id="printCashOut">Rp. 0</span>
+            </div>
+            <hr class="print-divider">
+             <div class="print-row bold">
+                <span>Saldo Akhir</span>
+                <span id="printSaldoAkhir">Rp. 0</span>
             </div>
         </div>
     </div>

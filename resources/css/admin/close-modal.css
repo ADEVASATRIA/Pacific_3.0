@@ -227,6 +227,7 @@
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -237,6 +238,7 @@
         transform: translateY(-50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -248,6 +250,7 @@
         transform: scale(0.5);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -267,9 +270,12 @@
 }
 
 @keyframes scale {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: none;
     }
+
     50% {
         transform: scale3d(1.1, 1.1, 1);
     }
@@ -356,7 +362,7 @@
     .success-modal-content {
         padding: 36px 24px;
     }
-    
+
     .cash-row {
         flex-direction: column;
         align-items: stretch;
@@ -366,5 +372,115 @@
     .cash-row .cash-remove {
         width: 100%;
         height: 36px;
+    }
+}
+
+/* ============================= */
+/* Print Area Styling */
+/* ============================= */
+#print-area {
+    display: none;
+}
+
+@media print {
+
+    /* Hide everything else */
+    body * {
+        visibility: hidden;
+    }
+
+    .app,
+    .sidebar,
+    .main,
+    .closecashier-modal,
+    .success-modal {
+        display: none !important;
+    }
+
+    /* Show only print area */
+    #print-area,
+    #print-area * {
+        visibility: visible;
+    }
+
+    @page {
+        size: 58mm auto;
+        /* Set paper size */
+        margin: 0;
+        /* Remove default page margins */
+    }
+
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Or 58mm specifically if needed */
+        display: block;
+        padding: 5px;
+        /* Minimal padding */
+        margin: 0;
+        font-family: Arial, sans-serif;
+        /* Changed to Arial */
+        color: black;
+        background: white;
+    }
+
+    .print-header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .print-header h3 {
+        font-size: 12px;
+        /* Smaller header */
+        margin: 0 0 2px 0;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .print-body {
+        font-size: 10px;
+        /* Smaller body font */
+        line-height: 1.2;
+    }
+
+    .print-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+        /* Tighter spacing */
+        flex-wrap: wrap;
+        /* Allow wrapping if text is long */
+    }
+
+    .print-row span:first-child {
+        max-width: 60%;
+        /* Prevent label from taking too much space if value is short */
+    }
+
+    .print-row span:last-child {
+        text-align: right;
+        flex: 1;
+    }
+
+    .print-divider {
+        border-top: 1px dashed black;
+        margin: 5px 0;
+        border-bottom: none;
+    }
+
+    .print-section-title {
+        font-weight: bold;
+        margin: 5px 0;
+        text-decoration: none;
+        /* Removed underline to save space/cleaner look */
+        font-size: 11px;
+    }
+
+    .print-row.bold {
+        font-weight: bold;
+        font-size: 11px;
+        margin-top: 5px;
     }
 }

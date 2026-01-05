@@ -19,23 +19,29 @@ class ViewHistoryTicketsController extends Controller
         $today = Carbon::today();
         $phone = $request->input('phone');
 
-		// Alur purchase today
-		 $purchaseToday = Purchase::whereDate('created_at','=', $today)
-            ->where('status', '2')
-            ->where('payment', '1')
-            ->sum('total');
+		$purchaseTunai = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '1')->sum('total');
+        $purchaseQrisBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '2')->sum('total');
+        $purchaseQrisMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '3')->sum('total');
+        $purchaseDebitBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '4')->sum('total');
+        $purchaseDebitMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '5')->sum('total');
+        // $purchaseTransfer = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '6')->sum('total'); // Transfer usually not in cashier closing? But listed in request.
+        $purchaseQrisBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '7')->sum('total');
+        $purchaseDebitBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '8')->sum('total');
+        
+        // $purchaseToday used for "Penjualan Tunai Tiket" display in modal, which usually refers to Cash (1). 
+        // If $purchaseToday in original code meant all sales, I should check. 
+        // Original: ->where('payment', '1')->sum('total'); -> It was already just filtering payment 1 (Cash).
+        
+        // dd($purchaseToday);
 
-		// Alur Cash Session 
-		$cashSession = null;
-        if ($staff) {
-            $cashSession = CashSession::where('staff_id', $staff->id)
-                ->whereDate('waktu_buka', $today->toDateString())
-                ->where('status', 1)
-                ->latest()
-                ->first();
-        }
+        $cashSessionQuery = CashSession::where('staff_id', $staff->id)
+            ->whereDate('waktu_buka', $today)
+            ->where('status', 1)
+            ->latest();
+        
+        $cashSession = $cashSessionQuery->first();
 
-		// jika tidak ada session aktif, bikin object default agar view tidak error saat mengakses properti
+
         if (!$cashSession) {
             $cashSession = new CashSession([
                 'saldo_awal' => 0,
@@ -109,7 +115,13 @@ class ViewHistoryTicketsController extends Controller
 			'today',
 			'cashSession',
             'staff',
-            'purchaseToday'
+            'purchaseTunai',
+            'purchaseQrisBca',
+            'purchaseQrisMandiri',
+            'purchaseDebitBca',
+            'purchaseDebitMandiri',
+            'purchaseQrisBri',
+            'purchaseDebitBri'
         ]));
     }
 }

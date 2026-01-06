@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CashSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Purchase;
 
 use App\Exports\ShiftExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,12 +19,34 @@ class ShiftViewController extends Controller
         $staff = Auth::guard('fo')->user();
         $today = now()->startOfDay();
 
+        $purchaseToday = Purchase::whereDate('created_at','=', $today)
+            ->where('status', '2')
+            ->where('payment', '1')
+            ->sum('total');
+
         // Ambil kas sesi aktif hari ini
-        $cashSession = CashSession::where('staff_id', $staff->id)
+        $purchaseTunai = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '1')->sum('total');
+        $purchaseQrisBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '2')->sum('total');
+        $purchaseQrisMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '3')->sum('total');
+        $purchaseDebitBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '4')->sum('total');
+        $purchaseDebitMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '5')->sum('total');
+        // $purchaseTransfer = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '6')->sum('total'); // Transfer usually not in cashier closing? But listed in request.
+        $purchaseQrisBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '7')->sum('total');
+        $purchaseDebitBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '8')->sum('total');
+        
+        // $purchaseToday used for "Penjualan Tunai Tiket" display in modal, which usually refers to Cash (1). 
+        // If $purchaseToday in original code meant all sales, I should check. 
+        // Original: ->where('payment', '1')->sum('total'); -> It was already just filtering payment 1 (Cash).
+        
+        // dd($purchaseToday);
+
+        $cashSessionQuery = CashSession::where('staff_id', $staff->id)
             ->whereDate('waktu_buka', $today)
             ->where('status', 1)
-            ->latest()
-            ->first();
+            ->latest();
+        
+        $cashSession = $cashSessionQuery->first();
+
 
         if (!$cashSession) {
             $cashSession = new CashSession([
@@ -59,6 +82,13 @@ class ShiftViewController extends Controller
             'cashSession' => $cashSession,
             'shift' => $shift,
             'staff' => $staff,
+            'purchaseTunai' => $purchaseTunai,
+            'purchaseQrisBca' => $purchaseQrisBca,
+            'purchaseQrisMandiri' => $purchaseQrisMandiri,
+            'purchaseDebitBca' => $purchaseDebitBca,
+            'purchaseDebitMandiri' => $purchaseDebitMandiri,
+            'purchaseQrisBri' => $purchaseQrisBri,
+            'purchaseDebitBri' => $purchaseDebitBri
         ]);
     }
 
@@ -88,7 +118,4 @@ class ShiftViewController extends Controller
 
         return Excel::download(new ShiftExport($shift, $staff), $filename);
     }
-
-
-
 }

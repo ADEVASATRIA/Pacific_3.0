@@ -486,6 +486,7 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+    margin-right: 5rem;
     background: var(--bg-secondary);
     border-radius: 50px;
     cursor: pointer;

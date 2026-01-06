@@ -3,7 +3,7 @@
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
-    <div class="promo-page">
+    <div class="active-customer-package-page">
         <h2 class="page-title">Data Active Customer Package</h2>
 
         {{-- Filter --}}

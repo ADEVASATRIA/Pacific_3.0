@@ -10,10 +10,33 @@ use Illuminate\Support\Facades\DB;
 
 class BackCoachController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $coaches = Customer::where('is_pelatih', "1")->paginate(10);
-        $clubhouse = Clubhouse::all();
+        $request->validate([
+            'search_name' => 'nullable|string|max:10',
+        ]);
+
+        // Query mencari nama coach
+        $pelatih = Customer::query()
+            ->where('is_pelatih', "1")
+            ->when($request->search_name, fn($q, $name) => $q->where('name', 'LIKE', "%$name%"))
+            ->when($request->status, function ($q, $status) {
+                $now = now()->toDateString();
+                if ($status == 1) { // Aktif
+                    $q->whereDate('awal_masa_berlaku', '<=', $now)
+                        ->whereDate('akhir_masa_berlaku', '>=', $now);
+                } elseif ($status == 2) { // Tidak Aktif
+                    $q->where(function ($sub) use ($now) {
+                        $sub->whereDate('awal_masa_berlaku', '>', $now)
+                            ->orWhereDate('akhir_masa_berlaku', '<', $now);
+                    });
+                }
+            })
+            ->orderBy('name', 'asc')
+            ->paginate(10);
+
+        $coaches = $pelatih;
+        $clubhouse = Clubhouse::orderBy('name', 'asc')->get();
         return view('back.coach.index', compact('coaches', 'clubhouse'));
     }
 
@@ -76,7 +99,7 @@ class BackCoachController extends Controller
     public function getCoach($id)
     {
         $coach = Customer::find($id);
-        $clubhouse = Clubhouse::all();
+        $clubhouse = Clubhouse::orderBy('name', 'asc')->get();
         return response()->json([
             'coach' => $coach,
             'clubhouse' => $clubhouse

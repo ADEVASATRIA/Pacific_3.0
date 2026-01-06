@@ -20,11 +20,14 @@
     background: #fff;
     border-radius: 16px;
     padding: 32px;
-    width: 90%;
-    max-width: 480px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    animation: slideDown 0.4s ease;
+    width: 95%;
+    height: 95%;
+    max-width: none;
+    max-height: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
 }
+
 
 .closecashier-modal-content h2 {
     margin: 0 0 24px 0;
@@ -224,6 +227,7 @@
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -234,6 +238,7 @@
         transform: translateY(-50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -245,6 +250,7 @@
         transform: scale(0.5);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -264,12 +270,78 @@
 }
 
 @keyframes scale {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: none;
     }
+
     50% {
         transform: scale3d(1.1, 1.1, 1);
     }
+}
+
+/* ============================= */
+/* Cash In / Out Dynamic Rows */
+/* ============================= */
+.cashinout-list {
+    margin-bottom: 12px;
+}
+
+.cash-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.cash-row:hover {
+    border-color: #3498db;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.cash-row .cash-amount-display {
+    flex: 1;
+    min-width: 140px;
+}
+
+.cash-row .cash-notes {
+    flex: 2;
+    min-width: 200px;
+}
+
+.cash-row .cash-remove {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #ffebee;
+    color: #e74c3c;
+    border: 1px solid #ffcdd2;
+    transition: all 0.3s ease;
+}
+
+.cash-row .cash-remove:hover {
+    background: #e74c3c;
+    color: #fff;
+    border-color: #e74c3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2);
+}
+
+.cash-row .cash-remove svg {
+    width: 20px;
+    height: 20px;
 }
 
 /* Responsive */
@@ -290,6 +362,125 @@
     .success-modal-content {
         padding: 36px 24px;
     }
+
+    .cash-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .cash-row .cash-remove {
+        width: 100%;
+        height: 36px;
+    }
 }
 
+/* ============================= */
+/* Print Area Styling */
+/* ============================= */
+#print-area {
+    display: none;
+}
 
+@media print {
+
+    /* Hide everything else */
+    body * {
+        visibility: hidden;
+    }
+
+    .app,
+    .sidebar,
+    .main,
+    .closecashier-modal,
+    .success-modal {
+        display: none !important;
+    }
+
+    /* Show only print area */
+    #print-area,
+    #print-area * {
+        visibility: visible;
+    }
+
+    @page {
+        size: 58mm auto;
+        /* Set paper size */
+        margin: 0;
+        /* Remove default page margins */
+    }
+
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Or 58mm specifically if needed */
+        display: block;
+        padding: 5px;
+        /* Minimal padding */
+        margin: 0;
+        font-family: Arial, sans-serif;
+        /* Changed to Arial */
+        color: black;
+        background: white;
+    }
+
+    .print-header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .print-header h3 {
+        font-size: 12px;
+        /* Smaller header */
+        margin: 0 0 2px 0;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .print-body {
+        font-size: 10px;
+        /* Smaller body font */
+        line-height: 1.2;
+    }
+
+    .print-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+        /* Tighter spacing */
+        flex-wrap: wrap;
+        /* Allow wrapping if text is long */
+    }
+
+    .print-row span:first-child {
+        max-width: 60%;
+        /* Prevent label from taking too much space if value is short */
+    }
+
+    .print-row span:last-child {
+        text-align: right;
+        flex: 1;
+    }
+
+    .print-divider {
+        border-top: 1px dashed black;
+        margin: 5px 0;
+        border-bottom: none;
+    }
+
+    .print-section-title {
+        font-weight: bold;
+        margin: 5px 0;
+        text-decoration: none;
+        /* Removed underline to save space/cleaner look */
+        font-size: 11px;
+    }
+
+    .print-row.bold {
+        font-weight: bold;
+        font-size: 11px;
+        margin-top: 5px;
+    }
+}

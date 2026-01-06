@@ -3,17 +3,39 @@
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
-    <div class="promo-page">
+    <div class="coach-page">
         <h2 class="page-title">Data Pelatih</h2>
         <div class="filter-section mb-4">
             <div class="filter-form flex items-end gap-4 flex-wrap">
                 <div class="form-group">
-                    <div class="flex items-center gap-2">
-                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
-                            data-bs-toggle="modal" data-bs-target="#modalTambahCoach">
-                            Tambah Pelatih
-                        </button>
-                    </div>
+                    <form action="{{ route('coach') }}" method="GET">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-auto">
+                                <label for="search_name" class="form-label fw-semibold">Search Nama</label>
+                                <input type="text" name="search_name" id="search_name" class="form-control"
+                                    placeholder="Masukkan nama pelatih" value="{{ request('search_name') }}">
+                            </div>
+
+                            <div class="col-md-auto">
+                                <label for="status" class="form-label fw-semibold">Filter Aktif atau non aktif</label>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="">Semua</option>
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Non Aktif</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-auto">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-group flex items-end mb-1">
+                    <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
+                        data-bs-toggle="modal" data-bs-target="#modalTambahCoach">
+                        Tambah Pelatih
+                    </button>
                 </div>
             </div>
         </div>
@@ -27,6 +49,7 @@
                         <th class="text-center">Awal Masa Berlaku</th>
                         <th class="text-center">Akhir masa Berlaku</th>
                         <th class="text-center">Clubhouse</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -42,6 +65,17 @@
                                 {{ \Carbon\Carbon::parse($coach->akhir_masa_berlaku)->format('d M Y') }}
                             </td>
                             <td>{{ $coach->clubhouse->name ?? ($coach->clubhouse2->name ?? '-') }}</td>
+                            <td class="text-center">
+                                @php
+                                    $now = \Carbon\Carbon::now()->format('Y-m-d');
+                                    $isActive = $coach->awal_masa_berlaku <= $now && $coach->akhir_masa_berlaku >= $now;
+                                @endphp
+                                @if ($isActive)
+                                    <span class="badge bg-success">Aktif</span>
+                                @else
+                                    <span class="badge bg-danger">Non Aktif</span>
+                                @endif
+                            </td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $coach->id }})">
                                     Edit
@@ -133,12 +167,13 @@
                                     <select class="form-select" aria-label="Clubhouse" id="add_clubhouse_id"
                                         name="clubhouse_id" required>
                                         <option value="" disabled selected>Pilih Clubhouse</option>
-                                        {{-- Loop ini bergantung pada variabel $clubhouses yang disediakan dari Controller --}}
+                                        {{-- Loop ini bergantung pada variabel $clubhouses yang disediakan dari Controller
+                                        --}}
                                         @if (isset($clubhouse))
                                             @foreach ($clubhouse as $cb)
-                                                <option value="{{ $cb->id }}"
-                                                    {{ old('clubhouse_id') == $cb->id ? 'selected' : '' }}>
-                                                    {{ $cb->name }}</option>
+                                                <option value="{{ $cb->id }}" {{ old('clubhouse_id') == $cb->id ? 'selected' : '' }}>
+                                                    {{ $cb->name }}
+                                                </option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -172,8 +207,7 @@
 
 
     {{-- Modal Edit Pelatih --}}
-    <div class="modal fade" id="modalEditCoach" tabindex="-1" aria-labelledby="modalEditCoachLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalEditCoach" tabindex="-1" aria-labelledby="modalEditCoachLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
 

@@ -14,7 +14,8 @@ class CashSession extends Model
         'staff_id',
         'saldo_awal',
         'saldo_akhir',
-        'penjualan_fnb',
+        'penjualan_fnb_kolam',
+        'penjualan_fnb_cafe',
         'waktu_buka',
         'waktu_tutup',
         'status',
@@ -23,5 +24,9 @@ class CashSession extends Model
     public function staff()
     {
         return $this->belongsTo(Admin::class, 'staff_id');
+    }
+
+    public function cashInOut(){
+        return $this->hasMany(CashInOut::class);
     }
 }

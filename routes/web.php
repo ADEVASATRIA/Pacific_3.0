@@ -50,6 +50,7 @@ Route::post('/logout-bo', [AuthController::class, 'logoutBo'])->name('logout.bo'
 
 
 Route::middleware('fo.auth')->group(function () {
+    Route::get('/cash/check-latest', [CashSessionController::class, 'checkLastSession'])->name('cash.checkLatest');
     Route::post('/cash/open', [CashSessionController::class, 'store'])->name('cash.store');
     Route::get('/cashsession/export', [CashSessionController::class, 'exportReport'])->name('cashsession.export');
     Route::post('/cashsession/close', [CashSessionController::class, 'processClose'])->name('cashsession.processClose');

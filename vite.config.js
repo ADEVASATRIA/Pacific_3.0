@@ -36,6 +36,9 @@ export default defineConfig({
                 'resources/css/front/print-ticket-coach.css',
                 'resources/css/front/print-ticket-member.css',
                 'resources/css/front/print-ticket-package.css',
+
+                // JS QZ Tray Print
+                'resources/js/qz-print.js',
             ],
             refresh: true,
         }),

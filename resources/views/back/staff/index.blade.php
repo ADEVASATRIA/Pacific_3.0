@@ -3,7 +3,7 @@
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
-    <div class="promo-page">
+    <div class="staff-page">
         <h2 class="page-title">Data Staff</h2>
 
         {{-- Filter Section (optional, currently commented out) --}}

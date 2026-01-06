@@ -3,7 +3,7 @@
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
-    <div class="promo-page">
+    <div class="cloubhouse-page">
         <h2 class="page-title">Data Clubhouse</h2>
         <div class="filter-section mb-4">
             <div class="filter-form flex items-end gap-4 flex-wrap">

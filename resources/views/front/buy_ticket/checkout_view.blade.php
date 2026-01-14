@@ -51,7 +51,7 @@
                                                 <span class="item-name">{{ $it['name'] }}</span>
 
                                                 {{-- Jika item butuh pilihan Clubhouse & Coach --}}
-                                                @if (!empty($it['is_coach_club_require']) && $it['is_coach_club_require'] == 1)
+                                                @if ((!empty($it['is_coach_club_require']) && $it['is_coach_club_require'] == 1) || (isset($it['tipe_khusus']) && in_array($it['tipe_khusus'], [4, 5])))
                                                     <div class="dropdown-group-inline">
                                                         {{-- Dropdown Clubhouse --}}
                                                         <div class="clubhouse-select">

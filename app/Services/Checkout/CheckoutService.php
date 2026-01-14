@@ -27,13 +27,18 @@ class CheckoutService
     public function prepareCheckoutData(Request $request)
     {
         $tickets = collect($request->input('tickets', []))
-            ->map(fn($t) => [
-                'id' => intval($t['id'] ?? 0),
-                'name' => $t['name'] ?? '',
-                'price' => intval($t['price'] ?? 0),
-                'qty' => intval($t['qty'] ?? 0),
-                'type_purchase' => intval($t['type_purchase'] ?? 1), // default regular
-            ])
+            ->map(function ($t) {
+                $ticketType = TicketType::find($t['id'] ?? 0);
+                return [
+                    'id' => intval($t['id'] ?? 0),
+                    'name' => $t['name'] ?? '',
+                    'price' => intval($t['price'] ?? 0),
+                    'qty' => intval($t['qty'] ?? 0),
+                    'type_purchase' => intval($t['type_purchase'] ?? 1), // default regular
+                    'tipe_khusus' => $ticketType ? $ticketType->tipe_khusus : null,
+                    'is_coach_club_require' => $ticketType ? $ticketType->is_coach_club_require : 0,
+                ];
+            })
             ->filter(fn($t) => $t['qty'] > 0);
 
         $packages = collect($request->input('packages', []))
@@ -43,6 +48,8 @@ class CheckoutService
                 'price' => intval($p['price'] ?? 0),
                 'qty' => intval($p['qty'] ?? 0),
                 'type_purchase' => intval($p['type_purchase'] ?? 3), // default package
+                'tipe_khusus' => null,
+                'is_coach_club_require' => 0,
             ])
             ->filter(fn($p) => $p['qty'] > 0);
 
@@ -144,6 +151,11 @@ class CheckoutService
                 $name = $row->name;
                 $qty_extra = $row->qty_extra ?? 0;
                 $ticket_kode_ref = $row->ticket_kode_ref ?? null;
+
+                // Validation logic for special ticket types
+                if (in_array($row->tipe_khusus, [4, 5]) && empty($it['clubhouse_id'])) {
+                    throw new \Exception("Pilih Clubhouse untuk melanjutkan transaksi !");
+                }
             } elseif ($type === 3) {
                 $row = PackageCombo::find($id);
                 $packageComboDetail = PackageComboDetail::where('package_combo_id', $id)->first();
@@ -163,13 +175,13 @@ class CheckoutService
                 $clubhouse = \App\Models\Clubhouse::find($it['clubhouse_id']);
                 $clubhouseName = $clubhouse ? $clubhouse->name : null;
             }
-            if(!empty($it['coach_id'])) {
+            if (!empty($it['coach_id'])) {
                 $coach = Customer::find($it['coach_id']);
                 $coachName = $coach ? $coach->name : null;
             }
 
 
-            $suffix = collect([$clubhouseName , $coachName])
+            $suffix = collect([$clubhouseName, $coachName])
                 ->filter()
                 ->join(', ');
 
@@ -242,7 +254,7 @@ class CheckoutService
 
             foreach ($purchase->purchaseDetails as $pd) {
                 if ($pd->type == 1 && $pd->ticketType) {
-                    if ($pd->ticketType->tipe_khusus == 1 || $pd->ticketType->tipe_khusus == 5  || $pd->ticketType->tipe_khusus == 2) {
+                    if ($pd->ticketType->tipe_khusus == 1 || $pd->ticketType->tipe_khusus == 5 || $pd->ticketType->tipe_khusus == 2) {
                         $ticketService->createTicketRegular($pd);
                     } elseif ($pd->ticketType->tipe_khusus == 4) {
                         $ticketService->createTicketMember($pd);

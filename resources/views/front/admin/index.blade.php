@@ -35,17 +35,20 @@
                     <span>Transaksi</span>
                 </a>
 
-                <a href="{{ route('admin.package') }}" class="nav-item @if (request()->routeIs('admin.package')) active @endif">
+                <a href="{{ route('admin.package') }}"
+                    class="nav-item @if (request()->routeIs('admin.package')) active @endif">
                     <i data-lucide="package"></i>
                     <span>Package</span>
                 </a>
 
-                <a href="{{ route('admin.member') }}" class="nav-item @if (request()->routeIs('admin.member')) active @endif">
+                <a href="{{ route('admin.member') }}"
+                    class="nav-item @if (request()->routeIs('admin.member')) active @endif">
                     <i data-lucide="users"></i>
                     <span>Member</span>
                 </a>
 
-                <a href="{{ route('admin.sponsor') }}" class="nav-item @if (request()->routeIs('admin.sponsor')) active @endif">
+                <a href="{{ route('admin.sponsor') }}"
+                    class="nav-item @if (request()->routeIs('admin.sponsor')) active @endif">
                     <i data-lucide="ticket-slash"></i>
                     <span>Sponsor</span>
                 </a>
@@ -56,7 +59,8 @@
                     <span>History Tiket Keluar</span>
                 </a>
 
-                <a href="{{ route('admin.shift') }}" class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
+                <a href="{{ route('admin.shift') }}"
+                    class="nav-item @if (request()->routeIs('admin.shift')) active @endif">
                     <i data-lucide="shirt"></i>
                     <span>Shift Hari ini</span>
                 </a>
@@ -94,45 +98,63 @@
             <h2>Tutup Kasir</h2>
 
             <div class="closecashier-body">
-                <div class="closecashier-report">
-                    <p><strong>Report:</strong></p>
-                    <button id="btnExportReport" class="btn-secondary">Export Laporan Harian</button>
+                <div class="closecashier-columns">
+                    <!-- Left Column -->
+                    <div class="col-left">
+                        <div class="closecashier-report">
+                            <p><strong>Report:</strong></p>
+                            <button id="btnExportReport" class="btn-secondary">Export Laporan Harian</button>
+                        </div>
+
+                        <div class="info-section">
+                            <p><strong>Staff:</strong> {{ $staff->name ?? '—' }}</p>
+
+                            <p><strong>Waktu Buka:</strong>
+                                {{ isset($cashSession->waktu_buka) ? \Carbon\Carbon::parse($cashSession->waktu_buka)->format('H:i | d M Y') : '—' }}
+                            </p>
+                            <p><strong>Waktu Closing:</strong>
+                                <span id="closeCashierTime">{{ now()->format('H:i | d M Y') }}</span>
+                            </p>
+
+                            <p><strong>Saldo Awal:</strong> Rp
+                                {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
+                            <p><strong>Saldo Penjualan Tiket Tunai: </strong> Rp.
+                                {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</p>
+                        </div>
+
+                        <div class="closecashier-form">
+                            <label for="penjualan_fnb_kolam">Saldo Penjualan F&B Kolam Tunai :</label>
+                            <input type="text" id="penjualan_fnb_kolam_display" class="closecashier-input"
+                                placeholder="Rp. 0" value="Rp. 0">
+                            <input type="hidden" id="penjualan_fnb_kolam" value="0">
+
+                            <label for="penjualan_fnb_cafe">Saldo penjualan F&B Cafe Tunai :</label>
+                            <input type="text" id="penjualan_fnb_cafe_display" class="closecashier-input"
+                                placeholder="Rp. 0" value="Rp. 0">
+                            <input type="hidden" id="penjualan_fnb_cafe" value="0">
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-right">
+                        <div class="closecashier-form">
+                            <label>Uang Masuk / Cash In Tunai :</label>
+                            <div id="cashInList" class="cashinout-list"></div>
+                            <button type="button" id="btnAddCashInRow" class="btn-secondary">Tambah Cash In</button>
+
+                            <label style="margin-top: 15px;">Uang Keluar / Cash Out Tunai :</label>
+                            <div id="cashOutList" class="cashinout-list"></div>
+                            <button type="button" id="btnAddCashOutRow" class="btn-secondary">Tambah Cash Out</button>
+
+                            <label for="saldo_akhir" style="margin-top: 20px;">Saldo Akhir (otomatis):</label>
+                            <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0"
+                                value="Rp. 0" readonly>
+                            <input type="hidden" id="saldo_akhir" value="0">
+                        </div>
+                    </div>
                 </div>
-                <br>
-                <p><strong>Staff:</strong> {{ $staff->name ?? '—' }}</p>
-                
-                <p><strong>Waktu Buka:</strong>
-                    {{ isset($cashSession->waktu_buka) ? \Carbon\Carbon::parse($cashSession->waktu_buka)->format('H:i | d M Y') : '—' }}
-                </p>
-                <p><strong>Waktu Closing:</strong>
-                    <span id="closeCashierTime">{{ now()->format('H:i | d M Y') }}</span>
-                </p>
 
-                <p><strong>Saldo Awal:</strong> Rp {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
-                <p><strong>Saldo Penjualan Tiket Tunai: </strong> Rp. {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</p>
-                <div class="closecashier-form">
-                    <label for="penjualan_fnb_kolam">Saldo Penjualan F&B Kolam Tunai :</label>
-                    <input type="text" id="penjualan_fnb_kolam_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
-                    <input type="hidden" id="penjualan_fnb_kolam" value="0">
 
-                    <label for="penjualan_fnb_cafe">Saldo penjualan F&B Cafe Tunai :</label>
-                    <input type="text" id="penjualan_fnb_cafe_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0">
-                    <input type="hidden" id="penjualan_fnb_cafe" value="0">
-
-                    <label>Uang Masuk / Cash In Tunai :</label>
-                    <div id="cashInList" class="cashinout-list"></div>
-                    <button type="button" id="btnAddCashInRow" class="btn-secondary">Tambah Cash In</button>
-
-                    <label>Uang Keluar / Cash Out Tunai :</label>
-                    <div id="cashOutList" class="cashinout-list"></div>
-                    <button type="button" id="btnAddCashOutRow" class="btn-secondary">Tambah Cash Out</button>
-
-                    <label for="saldo_akhir">Saldo Akhir (otomatis):</label>
-                    <input type="text" id="saldo_akhir_display" class="closecashier-input" placeholder="Rp. 0" value="Rp. 0" readonly>
-                    <input type="hidden" id="saldo_akhir" value="0">
-                </div>
-
-                
             </div>
 
             <div class="closecashier-footer">
@@ -141,7 +163,7 @@
                 <button id="btnProcessClose" class="btn-success">Tutup Kasir & Logout</button>
             </div>
         </div>
-        </div>
+    </div>
     </div>
 
     <!-- 🔹 Print Template (Hidden on Screen, Visible on Print) -->
@@ -162,7 +184,7 @@
                 <span>Waktu Tutup :</span>
                 <span id="printCloseTime">{{ now()->format('H:i | d M Y') }}</span>
             </div>
-            
+
             <hr class="print-divider">
 
             <div class="print-row">
@@ -189,14 +211,14 @@
                 <span>Qris BRI</span>
                 <span>Rp. {{ number_format($purchaseQrisBri ?? 0, 0, ',', '.') }}</span>
             </div>
-             <div class="print-row">
+            <div class="print-row">
                 <span>Debit BRI</span>
                 <span>Rp. {{ number_format($purchaseDebitBri ?? 0, 0, ',', '.') }}</span>
             </div>
 
             <br>
             <div class="print-section-title">Summary Tutup Kasir :</div>
-            
+
             <div class="print-row">
                 <span>Saldo Awal :</span>
                 <span id="printSaldoAwal">Rp. {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</span>
@@ -205,24 +227,24 @@
                 <span>Penjualan Tunai Tiket</span>
                 <span id="printPenjualanTiket">Rp. {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</span>
             </div>
-             <div class="print-row">
+            <div class="print-row">
                 <span>Penjualan Tunai F&B Kolam</span>
                 <span id="printFnbKolam">Rp. 0</span>
             </div>
-             <div class="print-row">
+            <div class="print-row">
                 <span>Penjualan Tunai F&B Cafe</span>
                 <span id="printFnbCafe">Rp. 0</span>
             </div>
-             <div class="print-row">
+            <div class="print-row">
                 <span>Cash in Tunai</span>
                 <span id="printCashIn">Rp. 0</span>
             </div>
-             <div class="print-row">
+            <div class="print-row">
                 <span>Cash Out Tunai</span>
                 <span id="printCashOut">Rp. 0</span>
             </div>
             <hr class="print-divider">
-             <div class="print-row bold">
+            <div class="print-row bold">
                 <span>Saldo Akhir</span>
                 <span id="printSaldoAkhir">Rp. 0</span>
             </div>
@@ -253,8 +275,8 @@
         };
         window.CsrfToken = "{{ csrf_token() }}";
         window.CashierData = {
-            saldoAwal: {{ (int)($cashSession->saldo_awal ?? 0) }},
-            purchaseToday: {{ (int)($purchaseToday ?? 0) }}
+            saldoAwal: {{ (int) ($cashSession->saldo_awal ?? 0) }},
+            purchaseToday: {{ (int) ($purchaseToday ?? 0) }}
         };
     </script>
     @stack('scripts')

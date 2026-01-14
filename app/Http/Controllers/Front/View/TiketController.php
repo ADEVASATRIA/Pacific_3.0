@@ -17,7 +17,11 @@ class TiketController extends Controller
         
         // Ticket Regular
         $ticketRegular = $filterType == 1 || $filterType == null
-            ? TicketType::where('tipe_khusus', 1)->where('is_active', 1)->where('deleted_at', null)->get() : collect();
+            ? TicketType::where('tipe_khusus', 1)
+            ->where('is_active', 1)
+            ->where('deleted_at', null)
+            ->orderBy('weight', 'asc')
+            ->get() : collect();
             
         // Ticket Pengantar
         $ticketPengantar = $filterType == 2 || $filterType == null
@@ -37,7 +41,10 @@ class TiketController extends Controller
         
         // Ticket Package 
         $ticketPackage = $filterType == 6 || $filterType == null
-            ? PackageCombo::where('is_active', 1)->where('deleted_at', null)->get() : collect();
+            ? PackageCombo::where('is_active', 1)
+            ->where('deleted_at', null)
+            ->orderBy('weight', 'asc')
+            ->get() : collect();
         
         $customer = $customerId ? Customer::find($customerId) : null;
 

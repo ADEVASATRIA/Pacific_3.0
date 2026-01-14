@@ -12,6 +12,7 @@ class PackageCombo extends Model
         'expired_duration',
         'tipe_khusus',
         'is_Active',
+        'weight',
     ];
     public function details() {
         return $this->hasMany(PackageComboDetail::class);

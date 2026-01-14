@@ -38,6 +38,7 @@
                 <thead>
                     <tr class="bg-gray-100">
                         <th>Nama</th>
+                        <th>Weight / Urutan</th>
                         <th>Harga</th>
                         <th>Durasi</th>
                         <th>Extra Ticket</th>
@@ -50,6 +51,7 @@
                     @forelse ($packageCombos as $item)
                         <tr>
                             <td>{{ $item->name }}</td>
+                            <td>{{ $item->weight }}</td>
                             <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
                             <td class="text-center">{{ $item->expired_duration }}</td>
                             <td class="text-center">{{ $item->details->sum('qty_extra') }}</td>
@@ -113,6 +115,13 @@
                                 <div class="col-md-6">
                                     <label for="name" class="form-label fw-semibold">Nama Package</label>
                                     <input type="text" name="name" id="name" class="form-control shadow-sm"
+                                        required>
+                                </div>
+
+                                {{-- Weight --}}
+                                <div class="col-md-6">
+                                    <label for="weight" class="form-label fw-semibold">Weight / Urutan</label>
+                                    <input type="number" name="weight" id="weight" class="form-control shadow-sm"
                                         required>
                                 </div>
 
@@ -214,6 +223,13 @@
                                 <div class="col-md-6">
                                     <label for="edit_name" class="form-label fw-semibold">Nama Package</label>
                                     <input type="text" name="name" id="edit_name" class="form-control shadow-sm"
+                                        required>
+                                </div>
+
+                                {{-- Weight --}}
+                                <div class="col-md-6">
+                                    <label for="edit_weight" class="form-label fw-semibold">Weight / Urutan</label>
+                                    <input type="number" name="weight" id="edit_weight" class="form-control shadow-sm"
                                         required>
                                 </div>
 
@@ -355,6 +371,7 @@
 
                 // Isi field utama
                 document.getElementById('edit_name').value = data.name ?? '';
+                document.getElementById('edit_weight').value = data.weight ?? '';
                 document.getElementById('edit_price').value = data.price ?? '';
                 document.getElementById('edit_expired_duration').value = data.expired_duration ?? '';
                 document.getElementById('edit_is_active').value = data.is_active ?? 1;

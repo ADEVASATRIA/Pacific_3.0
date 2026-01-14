@@ -28,6 +28,7 @@ class PackageComboController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'weight' => 'integer',
             'price' => 'required|integer|min:1',
             'expired_duration' => 'required|integer|min:1',
             'is_active' => 'required|integer',
@@ -45,6 +46,7 @@ class PackageComboController extends Controller
 
             $packageCombo = new PackageCombo();
             $packageCombo->name = $request->name;
+            $packageCombo->weight = $request->weight;
             $packageCombo->price = $request->price;
             $packageCombo->expired_duration = $request->expired_duration;
             $packageCombo->is_active = $request->is_active;
@@ -84,6 +86,7 @@ class PackageComboController extends Controller
     public function edit(Request $request, $id){
         $request->validate([
             'name' => 'required|string|max:255',
+            'weight' => 'integer',
             'price' => 'required|integer|min:1',
             'expired_duration' => 'required|integer|min:1',
             'is_active' => 'required|integer',
@@ -102,6 +105,7 @@ class PackageComboController extends Controller
 
             $packageCombo = PackageCombo::findOrFail($id);
             $packageCombo->name = $request->name;
+            $packageCombo->weight = $request->weight;
             $packageCombo->price = $request->price;
             $packageCombo->expired_duration = $request->expired_duration;
             $packageCombo->is_active = $request->is_active;

@@ -85,11 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 🔹 Tombol export report
+    // 🔹 Tombol export excel
     const btnExport = document.getElementById('btnExportReport');
     if (btnExport) {
         btnExport.addEventListener('click', () => {
             window.location.href = window.CashierRoutes.exportReport;
+        });
+    }
+
+    // 🔹 Tombol export pdf
+    const btnExportPdf = document.getElementById('btnExportPdf');
+    if (btnExportPdf) {
+        btnExportPdf.addEventListener('click', () => {
+            window.location.href = window.CashierRoutes.exportReport + '?type=pdf';
         });
     }
 

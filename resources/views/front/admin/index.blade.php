@@ -103,7 +103,10 @@
                     <div class="col-left">
                         <div class="closecashier-report">
                             <p><strong>Report:</strong></p>
-                            <button id="btnExportReport" class="btn-secondary">Export Laporan Harian</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="btnExportReport" class="btn-secondary">Export Excel</button>
+                                <button id="btnExportPdf" class="btn-secondary">Export PDF</button>
+                            </div>
                         </div>
 
                         <div class="info-section">
@@ -117,9 +120,11 @@
                             </p>
 
                             <p><strong>Saldo Awal:</strong> Rp
-                                {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}</p>
+                                {{ number_format($cashSession->saldo_awal ?? 0, 0, ',', '.') }}
+                            </p>
                             <p><strong>Saldo Penjualan Tiket Tunai: </strong> Rp.
-                                {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}</p>
+                                {{ number_format($purchaseTunai ?? 0, 0, ',', '.') }}
+                            </p>
                         </div>
 
                         <div class="closecashier-form">

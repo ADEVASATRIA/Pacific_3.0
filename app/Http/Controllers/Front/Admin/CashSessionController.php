@@ -10,13 +10,14 @@ use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\TransactionsExport;
+use App\Exports\DailyReportExport;
 
 
 class CashSessionController
 {
-    // Alur Cek Session yang masih belum di tutup
-    public function checkLastSession(Request $request){
+    // Alur Cek Session yang  masih belum di tutup
+    public function checkLastSession(Request $request)
+    {
         $staff = Auth::guard('fo')->user();
 
         if (!$staff) {
@@ -27,12 +28,12 @@ class CashSessionController
             ->where('status', 1)
             ->latest()
             ->first();
-        
+
         // dd($lastSession);
 
         if ($lastSession) {
             return response()->json(['success' => false, 'message' => 'Session kasir masih terbuka.']);
-        }else{
+        } else {
             return response()->json(['success' => true, 'message' => 'Session kasir belum terbuka.']);
         }
 
@@ -56,20 +57,31 @@ class CashSessionController
     }
 
     // ✅ Export laporan harian kasir
-    public function exportReport()
+    public function exportReport(Request $request)
     {
         $staff = Auth::guard('fo')->user();
         $today = Carbon::today();
+        $type = $request->query('type'); // 'pdf' or null (excel)
+
+        // Get cash session data
+        $cashSession = CashSession::where('staff_id', $staff->id)
+            ->where('status', 1)
+            ->latest()
+            ->first();
 
         $transactions = Purchase::with(['purchaseDetails', 'customer'])
             ->whereDate('created_at', $today)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return Excel::download(
-            new TransactionsExport($transactions, $staff),
-            'Report-Kasir-' . $today->format('d-m-Y') . '.xlsx'
-        );
+        $export = new DailyReportExport($transactions, $staff, $cashSession);
+        $filename = 'Report-Kasir-' . $today->format('d-m-Y');
+
+        if ($type === 'pdf') {
+            return Excel::download($export, $filename . '.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
+
+        return Excel::download($export, $filename . '.xlsx');
     }
 
     // ✅ Proses tutup kasir + logout
@@ -92,16 +104,16 @@ class CashSessionController
             'cash_in_out.*.type' => 'integer|in:1,2',
             'cash_in_out.*.keterangan' => 'required|string|max:255',
         ]);
-        
+
 
         $cashSession = CashSession::where('staff_id', $staff->id)
             ->whereDate('waktu_buka', $today)
             ->where('status', 1)
             ->latest()
             ->first();
-        
+
         DB::beginTransaction();
-        
+
         try {
             if ($cashSession) {
                 // $cashSession->saldo_awal = $request->saldo_awal;

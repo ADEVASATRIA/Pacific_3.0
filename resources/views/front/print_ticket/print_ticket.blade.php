@@ -13,7 +13,7 @@
         <!-- Tombol Aksi -->
         <div class="print-btn" style="display: flex; gap: 10px; justify-content: center;">
             <button onclick="window.print()">Print Tiket</button>
-            <button onclick="printWithAutoCut()">Print Tiket</button>
+            <!-- <button onclick="printWithAutoCut()">Print Tiket</button> -->
 
             <button onclick="window.location.href='{{ route('main') }}'"
                 style="background-color: #6c757d; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">

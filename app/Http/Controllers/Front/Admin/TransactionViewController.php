@@ -31,14 +31,6 @@ class TransactionViewController extends Controller
 
         $transactions = $query->orderBy('created_at', 'desc')->get();
 
-        // Jika user klik tombol Export
-        if ($request->has('export')) {
-            return Excel::download(
-                new TransactionsExport($transactions, $staff),
-                'Transaksi-Hari-Ini-' . $today->format('d-m-Y') . '.xlsx'
-            );
-        }
-
         // Summary
         $totalTransaksi = $transactions->count();
         $pendapatanHariIni = $transactions->sum('total');
@@ -112,19 +104,27 @@ class TransactionViewController extends Controller
         ));
     }
 
-    public function export()
+    public function export(Request $request)
     {
         $staff = Auth::guard('fo')->user();
         $today = Carbon::today();
 
-        $transactions = Purchase::with(['purchaseDetails', 'customer'])
-            ->whereDate('created_at', $today)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // Ambil filter dari request
+        $filterPayments = $request->input('payment', []);
+
+        $query = Purchase::with(['purchaseDetails', 'customer'])
+            ->whereDate('created_at', $today);
+
+        // Apply filter jika ada
+        if (!empty($filterPayments)) {
+            $query->whereIn('payment', $filterPayments);
+        }
+
+        $transactions = $query->orderBy('created_at', 'desc')->get();
 
         return Excel::download(
             new TransactionsExport($transactions, $staff),
-            'Report-Transaksi-' . $today->format('d-m-Y') . '.xlsx'
+            'Report-Harian-' . $today->format('d-m-Y') . '.xlsx'
         );
     }
 }

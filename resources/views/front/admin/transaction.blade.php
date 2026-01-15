@@ -19,7 +19,7 @@
         </div>
 
         {{-- Tombol Export --}}
-        <button type="submit" name="export" value="1" class="btn primary">Export</button>
+        <button type="submit" formaction="{{ route('admin.transaction.export') }}" class="btn primary">Export</button>
     </form>
 
 @endsection

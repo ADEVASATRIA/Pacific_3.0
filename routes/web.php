@@ -84,6 +84,9 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/admin', [AdminAuthController::class, 'index'])->name('admin.index');
     Route::post('/admin/check-pin', [AdminAuthController::class, 'checkPin'])->name('admin.check_pin');
     Route::get('/admin/transaction', [TransactionViewController::class, 'transactionIndex'])->name('admin.transaksi');
+    Route::get('/admin/transaction/export', [TransactionViewController::class, 'export'])->name('admin.transaction.export');
+
+
     Route::get('/admin/member', [MemberViewController::class, 'viewMemberIndex'])->name('admin.member');
 
     Route::get('/admin/close', [CashSessionController::class, 'close'])->name('admin.close');

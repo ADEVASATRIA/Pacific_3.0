@@ -37,13 +37,12 @@ class AdminAuthController
         // Original: ->where('payment', '1')->sum('total'); -> It was already just filtering payment 1 (Cash).
         
         // dd($purchaseToday);
-
         $cashSessionQuery = CashSession::where('staff_id', $staff->id)
-            ->whereDate('waktu_buka', $today)
             ->where('status', 1)
             ->latest();
         
         $cashSession = $cashSessionQuery->first();
+        // dd($cashSession);
 
 
         if (!$cashSession) {

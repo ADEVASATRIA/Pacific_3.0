@@ -99,7 +99,6 @@ class CashSessionController
             ->where('status', 1)
             ->latest()
             ->first();
-        // dd($cashSession);
         
         DB::beginTransaction();
         

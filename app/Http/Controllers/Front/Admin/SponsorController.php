@@ -47,7 +47,6 @@ class SponsorController extends Controller
         // dd($purchaseToday);
 
         $cashSessionQuery = CashSession::where('staff_id', $staff->id)
-            ->whereDate('waktu_buka', $today)
             ->where('status', 1)
             ->latest();
         

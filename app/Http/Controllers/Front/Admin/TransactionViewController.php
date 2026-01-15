@@ -46,7 +46,6 @@ class TransactionViewController extends Controller
 
         // Ambil saldo awal shift aktif
         $cashSession = CashSession::where('staff_id', $staff->id)
-            ->whereDate('waktu_buka', $today)
             ->where('status', 1)
             ->latest()
             ->first();

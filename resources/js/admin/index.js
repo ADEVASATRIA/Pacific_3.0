@@ -81,6 +81,44 @@ document.addEventListener('DOMContentLoaded', () => {
             if (document.getElementById('printCashIn')) document.getElementById('printCashIn').innerText = formatRupiah(cashInTotal);
             if (document.getElementById('printCashOut')) document.getElementById('printCashOut').innerText = formatRupiah(cashOutTotal);
 
+            // 🔹 Populate Cash In Details
+            const cashInDetailsEl = document.getElementById('printCashInDetails');
+            if (cashInDetailsEl && cashInList) {
+                cashInDetailsEl.innerHTML = '';
+                const rows = cashInList.querySelectorAll('.cash-row');
+                rows.forEach(row => {
+                    const amount = parseInt(row.querySelector('.cash-amount')?.value || 0);
+                    const notes = row.querySelector('.cash-notes')?.value || '-';
+                    if (amount > 0) {
+                        cashInDetailsEl.innerHTML += `
+                            <div class="print-detail-row">
+                                <span class="detail-desc">• ${notes}</span>
+                                <span class="detail-amount">${formatRupiah(amount)}</span>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // 🔹 Populate Cash Out Details
+            const cashOutDetailsEl = document.getElementById('printCashOutDetails');
+            if (cashOutDetailsEl && cashOutList) {
+                cashOutDetailsEl.innerHTML = '';
+                const rows = cashOutList.querySelectorAll('.cash-row');
+                rows.forEach(row => {
+                    const amount = parseInt(row.querySelector('.cash-amount')?.value || 0);
+                    const notes = row.querySelector('.cash-notes')?.value || '-';
+                    if (amount > 0) {
+                        cashOutDetailsEl.innerHTML += `
+                            <div class="print-detail-row">
+                                <span class="detail-desc">• ${notes}</span>
+                                <span class="detail-amount">${formatRupiah(amount)}</span>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
             window.print();
         });
     }

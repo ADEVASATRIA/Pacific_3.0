@@ -244,10 +244,15 @@
                 <span>Cash in Tunai</span>
                 <span id="printCashIn">Rp. 0</span>
             </div>
+            <!-- Rincian Cash In -->
+            <div id="printCashInDetails" class="print-details"></div>
+
             <div class="print-row">
                 <span>Cash Out Tunai</span>
                 <span id="printCashOut">Rp. 0</span>
             </div>
+            <!-- Rincian Cash Out -->
+            <div id="printCashOutDetails" class="print-details"></div>
             <hr class="print-divider">
             <div class="print-row bold">
                 <span>Saldo Akhir</span>

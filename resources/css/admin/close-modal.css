@@ -510,4 +510,32 @@
         font-size: 11px;
         margin-top: 5px;
     }
+
+    /* Rincian Cash In / Out */
+    .print-details {
+        margin-left: 8px;
+        margin-bottom: 5px;
+        border-left: 1px solid #ccc;
+        padding-left: 6px;
+    }
+
+    .print-detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 9px;
+        color: #333;
+        margin-bottom: 1px;
+    }
+
+    .print-detail-row .detail-desc {
+        max-width: 55%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .print-detail-row .detail-amount {
+        text-align: right;
+        flex: 1;
+    }
 }

@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const computeFinalBalance = () => {
         const saldoAwal = (window.CashierData && window.CashierData.saldoAwal) ? parseInt(window.CashierData.saldoAwal) : 0;
-        const penjualanTiketTunai = (window.CashierData && window.CashierData.purchaseToday) ? parseInt(window.CashierData.purchaseToday) : 0;
+        const penjualanTiketTunai = (window.CashierData && window.CashierData.purchaseTunai) ? parseInt(window.CashierData.purchaseTunai) : 0;
         const kolam = parseInt(kolamHidden?.value || 0);
         const cafe = parseInt(cafeHidden?.value || 0);
         const sumList = (listEl) => {

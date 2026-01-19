@@ -281,7 +281,7 @@
         window.CsrfToken = "{{ csrf_token() }}";
         window.CashierData = {
             saldoAwal: {{ (int) ($cashSession->saldo_awal ?? 0) }},
-            purchaseToday: {{ (int) ($purchaseToday ?? 0) }}
+            purchaseTunai: {{ (int) ($purchaseTunai ?? 0) }}
         };
     </script>
     @stack('scripts')

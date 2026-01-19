@@ -73,26 +73,34 @@ class MemberViewController extends Controller
 
 
         // Alur Cash Session Data agar ke-load 
-        $purchaseTunai = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '1')->sum('total');
-        $purchaseQrisBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '2')->sum('total');
-        $purchaseQrisMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '3')->sum('total');
-        $purchaseDebitBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '4')->sum('total');
-        $purchaseDebitMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '5')->sum('total');
-        // $purchaseTransfer = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '6')->sum('total'); // Transfer usually not in cashier closing? But listed in request.
-        $purchaseQrisBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '7')->sum('total');
-        $purchaseDebitBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '8')->sum('total');
-        
-        // $purchaseToday used for "Penjualan Tunai Tiket" display in modal, which usually refers to Cash (1). 
-        // If $purchaseToday in original code meant all sales, I should check. 
-        // Original: ->where('payment', '1')->sum('total'); -> It was already just filtering payment 1 (Cash).
-        
-        // dd($purchaseToday);
-
-        $cashSessionQuery = CashSession::where('staff_id', $staff->id)
+        // Alur Cash Session Data agar ke-load 
+        // Get cash session FIRST
+        $cashSession = CashSession::where('staff_id', $staff->id)
             ->where('status', 1)
-            ->latest();
-        
-        $cashSession = $cashSessionQuery->first();
+            ->latest()
+            ->first();
+
+        // Determine session start time
+        $sessionStartTime = $cashSession?->waktu_buka;
+
+        // Build base query for payment summaries with session filter
+        $baseQuery = function () use ($sessionStartTime, $today) {
+            $q = Purchase::where('status', '2');
+            if ($sessionStartTime) {
+                $q->where('created_at', '>=', $sessionStartTime);
+            } else {
+                $q->whereDate('created_at', $today);
+            }
+            return $q;
+        };
+
+        $purchaseTunai = $baseQuery()->where('payment', '1')->sum('total');
+        $purchaseQrisBca = $baseQuery()->where('payment', '2')->sum('total');
+        $purchaseQrisMandiri = $baseQuery()->where('payment', '3')->sum('total');
+        $purchaseDebitBca = $baseQuery()->where('payment', '4')->sum('total');
+        $purchaseDebitMandiri = $baseQuery()->where('payment', '5')->sum('total');
+        $purchaseQrisBri = $baseQuery()->where('payment', '7')->sum('total');
+        $purchaseDebitBri = $baseQuery()->where('payment', '8')->sum('total');
 
 
         if (!$cashSession) {
@@ -110,7 +118,7 @@ class MemberViewController extends Controller
             'totalAll' => $totalAll,
             'cashSession' => $cashSession,
             'staff' => $staff,
-            
+
             'purchaseTunai' => $purchaseTunai,
             'purchaseQrisBca' => $purchaseQrisBca,
             'purchaseQrisMandiri' => $purchaseQrisMandiri,

@@ -69,10 +69,16 @@ class CashSessionController
             ->latest()
             ->first();
 
-        $transactions = Purchase::with(['purchaseDetails', 'customer'])
-            ->whereDate('created_at', $today)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $transactionsQuery = Purchase::with(['purchaseDetails', 'customer'])
+            ->orderBy('created_at', 'desc');
+
+        if ($cashSession && $cashSession->waktu_buka) {
+            $transactionsQuery->where('created_at', '>=', $cashSession->waktu_buka);
+        } else {
+            $transactionsQuery->whereDate('created_at', $today);
+        }
+
+        $transactions = $transactionsQuery->get();
 
         $export = new DailyReportExport($transactions, $staff, $cashSession);
         $filename = 'Report-Kasir-' . $today->format('d-m-Y');
@@ -107,7 +113,7 @@ class CashSessionController
 
 
         $cashSession = CashSession::where('staff_id', $staff->id)
-            ->whereDate('waktu_buka', $today)
+            // ->whereDate('waktu_buka', $today) // Removed to ensure we get the active session even if opened previously
             ->where('status', 1)
             ->latest()
             ->first();

@@ -19,11 +19,27 @@ class TransactionViewController extends Controller
         $today = Carbon::today();
         $staff = Auth::guard('fo')->user();
 
+        // Get cash session FIRST
+        $cashSession = CashSession::where('staff_id', $staff->id)
+            ->where('status', 1)
+            ->latest()
+            ->first();
+
+        // Determine session start time
+        $sessionStartTime = $cashSession?->waktu_buka;
+
         // Filter berdasarkan jenis pembayaran
         $filterPayments = $request->input('payment', []);
 
-        $query = Purchase::with(['purchaseDetails', 'customer'])
-            ->whereDate('created_at', $today);
+        // Build transaction query
+        $query = Purchase::with(['purchaseDetails', 'customer']);
+
+        // Filter by session waktu_buka if exists, otherwise fallback to today
+        if ($sessionStartTime) {
+            $query->where('created_at', '>=', $sessionStartTime);
+        } else {
+            $query->whereDate('created_at', $today);
+        }
 
         if (!empty($filterPayments)) {
             $query->whereIn('payment', $filterPayments);
@@ -35,15 +51,6 @@ class TransactionViewController extends Controller
         $totalTransaksi = $transactions->count();
         $pendapatanHariIni = $transactions->sum('total');
         $pending = $transactions->where('status', 1)->count();
-
-        // Ambil saldo awal shift aktif
-        $cashSession = CashSession::where('staff_id', $staff->id)
-            ->where('status', 1)
-            ->latest()
-            ->first();
-
-        $saldoAwal = $cashSession?->saldo_awal ?? 0;
-        $pendapatanDenganSaldo = $pendapatanHariIni + $saldoAwal;
 
         // Opsi payment
         $paymentOptions = [
@@ -57,19 +64,27 @@ class TransactionViewController extends Controller
             8 => 'Debit BRI',
         ];
 
-        $cashSessionQuery = CashSession::where('staff_id', $staff->id)
-            ->where('status', 1)
-            ->latest();
+        $saldoAwal = $cashSession?->saldo_awal ?? 0;
+        $pendapatanDenganSaldo = $pendapatanHariIni + $saldoAwal;
 
-        $cashSession = $cashSessionQuery->first();
+        // Build base query for payment summaries with session filter
+        $baseQuery = function () use ($sessionStartTime, $today) {
+            $q = Purchase::where('status', '2');
+            if ($sessionStartTime) {
+                $q->where('created_at', '>=', $sessionStartTime);
+            } else {
+                $q->whereDate('created_at', $today);
+            }
+            return $q;
+        };
 
-        $purchaseTunai = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '1')->sum('total');
-        $purchaseQrisBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '2')->sum('total');
-        $purchaseQrisMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '3')->sum('total');
-        $purchaseDebitBca = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '4')->sum('total');
-        $purchaseDebitMandiri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '5')->sum('total');
-        $purchaseQrisBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '7')->sum('total');
-        $purchaseDebitBri = Purchase::whereDate('created_at', $today)->where('status', '2')->where('payment', '8')->sum('total');
+        $purchaseTunai = $baseQuery()->where('payment', '1')->sum('total');
+        $purchaseQrisBca = $baseQuery()->where('payment', '2')->sum('total');
+        $purchaseQrisMandiri = $baseQuery()->where('payment', '3')->sum('total');
+        $purchaseDebitBca = $baseQuery()->where('payment', '4')->sum('total');
+        $purchaseDebitMandiri = $baseQuery()->where('payment', '5')->sum('total');
+        $purchaseQrisBri = $baseQuery()->where('payment', '7')->sum('total');
+        $purchaseDebitBri = $baseQuery()->where('payment', '8')->sum('total');
 
         if (!$cashSession) {
             $cashSession = new CashSession([
@@ -78,10 +93,6 @@ class TransactionViewController extends Controller
                 'status' => 0,
             ]);
         }
-
-        // // Buat instance DNS1D
-        // $barcodeGenerator = new DNS1D();
-        // $barcode = $barcodeGenerator->getBarcodePNG($transactions->invoice_no, 'C39'); // Code39
 
         return view('front.admin.transaction', compact(
             'transactions',
@@ -109,11 +120,25 @@ class TransactionViewController extends Controller
         $staff = Auth::guard('fo')->user();
         $today = Carbon::today();
 
+        // 1. Get Cash Session logic (same as index)
+        $cashSession = CashSession::where('staff_id', $staff->id)
+            ->where('status', 1)
+            ->latest()
+            ->first();
+
+        $sessionStartTime = $cashSession?->waktu_buka;
+
         // Ambil filter dari request
         $filterPayments = $request->input('payment', []);
 
-        $query = Purchase::with(['purchaseDetails', 'customer'])
-            ->whereDate('created_at', $today);
+        $query = Purchase::with(['purchaseDetails', 'customer']);
+
+        // Filter by session waktu_buka if exists, otherwise fallback to today
+        if ($sessionStartTime) {
+            $query->where('created_at', '>=', $sessionStartTime);
+        } else {
+            $query->whereDate('created_at', $today);
+        }
 
         // Apply filter jika ada
         if (!empty($filterPayments)) {

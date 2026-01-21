@@ -17,11 +17,38 @@
                             </div>
 
                             <div class="col-md-auto">
+                                <label for="start_date" class="form-label fw-semibold">Awal Masa Berlaku</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control"
+                                    value="{{ request('start_date') }}">
+                            </div>
+
+                            <div class="col-md-auto">
+                                <label for="end_date" class="form-label fw-semibold">Akhir Masa Berlaku</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control"
+                                    value="{{ request('end_date') }}">
+                            </div>
+
+                            <div class="col-md-auto">
+                                <label for="clubhouse_id" class="form-label fw-semibold">Filter Clubhouse</label>
+                                <select name="clubhouse_id" id="clubhouse_id" class="form-select">
+                                    <option value="">Semua Clubhouse</option>
+                                    @foreach ($clubhouse as $cb)
+                                        <option value="{{ $cb->id }}"
+                                            {{ request('clubhouse_id') == $cb->id ? 'selected' : '' }}>
+                                            {{ $cb->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-auto">
                                 <label for="status" class="form-label fw-semibold">Filter Aktif atau non aktif</label>
                                 <select name="status" id="status" class="form-select">
                                     <option value="">Semua</option>
-                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Non Aktif</option>
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif
+                                    </option>
+                                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Non Aktif
+                                    </option>
                                 </select>
                             </div>
 

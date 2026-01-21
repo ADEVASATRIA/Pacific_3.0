@@ -14,12 +14,24 @@ class BackCoachController extends Controller
     {
         $request->validate([
             'search_name' => 'nullable|string|max:10',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'clubhouse_id' => 'nullable|integer',
         ]);
 
         // Query mencari nama coach
         $pelatih = Customer::query()
             ->where('is_pelatih', "1")
             ->when($request->search_name, fn($q, $name) => $q->where('name', 'LIKE', "%$name%"))
+            ->when($request->start_date, fn($q, $date) => $q->whereDate('awal_masa_berlaku', '>=', $date))
+            ->when($request->end_date, fn($q, $date) => $q->whereDate('akhir_masa_berlaku', '<=', $date))
+            ->when($request->clubhouse_id, function ($q, $clubhouseId) {
+                // Check both clubhouse_id and id_club_renang for robustness
+                $q->where(function ($sub) use ($clubhouseId) {
+                    $sub->where('clubhouse_id', $clubhouseId)
+                        ->orWhere('id_club_renang', $clubhouseId);
+                });
+            })
             ->when($request->status, function ($q, $status) {
                 $now = now()->toDateString();
                 if ($status == 1) { // Aktif

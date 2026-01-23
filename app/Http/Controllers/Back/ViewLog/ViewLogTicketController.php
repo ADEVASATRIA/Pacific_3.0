@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\LogQtyPacketTicket;
 use App\Models\LogPrintSingles;
 use App\Models\LogPrintMemberPelatih;
-use App\Models\Purchase;
-use Illuminate\Support\Facades\Auth;
-use App\Models\CashSession;
+use App\Models\PackageComboRedeem;
 
 class ViewLogTicketController extends Controller
 {
@@ -91,6 +89,28 @@ class ViewLogTicketController extends Controller
             'todaysSummary',
             'today',
             'selectedDate',
+            'phone'
+        ]));
+    }
+
+    public function viewActivePackageCustomer(Request $request){
+        $phone = $request->input('phone');
+        $query = PackageComboRedeem::with(['customer', 'details'])
+            ->where('expired_date', '>=', now())
+            ->whereNull('fully_redeemed_at')
+            ->orderBy('expired_date', 'asc'); // Urutkan berdasarkan tanggal kadaluarsa terdekat
+
+        // Filter berdasarkan nomor telepon jika ada input 'phone'
+        if ($request->has('phone') && !empty($request->phone)) {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('phone', 'like', '%' . $request->phone . '%');
+            });
+        }
+
+        $activePackages = $query->get();
+
+        return view('back.viewLog.viewActivePackageCustomer', compact([
+            'activePackages',
             'phone'
         ]));
     }

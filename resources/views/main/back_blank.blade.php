@@ -58,7 +58,7 @@
                     <li class="menu-divider"></li>
                     <!-- View Log Ticket -->
                     <li
-                        class="menu-group {{ request()->is('view-log-history-ticket') || request()->is('package-combo') ? 'open' : '' }}">
+                        class="menu-group {{ request()->is('view-log-history-ticket') || request()->is('view-active-package-customer') ? 'open' : '' }}">
                         <div class="menu-group-header">
                             <div class="menu-group-title">
                                 <i data-feather="eye" class="menu-icon"></i>
@@ -73,8 +73,8 @@
                                     <span class="menu-text">Log Ticket</span>
                                 </a>
                             </li>
-                            <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
-                                <a href="{{ route('package-combo') }}" class="menu-link">
+                            <li class="submenu-item {{ request()->is('view-active-package-customer') ? 'active' : '' }}">
+                                <a href="{{ route('view-active-package-customer') }}" class="menu-link">
                                     <span class="submenu-dot"></span>
                                     <span class="menu-text">Customer Active Package</span>
                                 </a>

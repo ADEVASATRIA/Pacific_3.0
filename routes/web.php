@@ -208,12 +208,9 @@ Route::middleware('bo.auth')->group(function () {
 
     Route::get('/report/customer', [CustomerReportController::class, 'index'])->name('report.customer');
 
-
     // Route Halaman View Log History Ticket
     Route::get('/view-log-history-ticket', [ViewLogTicketController::class, 'index'])->name('view-log-history-ticket');
-
-    // Alur Management Package Customer
-    Route::get('/package-active-customer', [ManagementPackageCustomerController::class, 'index'])->name('package.active.customer');
+    Route::get('/view-active-package-customer', [ViewLogTicketController::class, 'viewActivePackageCustomer'])->name('view-active-package-customer');
  
 
 });

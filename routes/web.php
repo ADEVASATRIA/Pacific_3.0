@@ -15,6 +15,7 @@ use App\Http\Controllers\Back\Customer\CustomerController as BackCustomerControl
 use App\Http\Controllers\Back\Report\HomeController as BackReportHomeController;
 use App\Http\Controllers\Back\Report\Customer\CustomerReportController;
 
+use App\Http\Controllers\Back\ViewLog\ViewLogTicketController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
@@ -206,6 +207,10 @@ Route::middleware('bo.auth')->group(function () {
     })->name('loading');
 
     Route::get('/report/customer', [CustomerReportController::class, 'index'])->name('report.customer');
+
+
+    // Route Halaman View Log History Ticket
+    Route::get('/view-log-history-ticket', [ViewLogTicketController::class, 'index'])->name('view-log-history-ticket');
 
     // Alur Management Package Customer
     Route::get('/package-active-customer', [ManagementPackageCustomerController::class, 'index'])->name('package.active.customer');

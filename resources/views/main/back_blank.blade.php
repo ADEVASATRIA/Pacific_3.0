@@ -56,6 +56,35 @@
 
                     <!-- Divider -->
                     <li class="menu-divider"></li>
+                    <!-- View Log Ticket -->
+                    <li
+                        class="menu-group {{ request()->is('view-log-history-ticket') || request()->is('package-combo') ? 'open' : '' }}">
+                        <div class="menu-group-header">
+                            <div class="menu-group-title">
+                                <i data-feather="eye" class="menu-icon"></i>
+                                <span class="menu-text">View Log Ticket</span>
+                            </div>
+                            <i data-feather="chevron-down" class="arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li class="submenu-item {{ request()->is('view-log-history-ticket') ? 'active' : '' }}">
+                                <a href="{{ route('view-log-history-ticket') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Log Ticket</span>
+                                </a>
+                            </li>
+                            <li class="submenu-item {{ request()->is('package-combo') ? 'active' : '' }}">
+                                <a href="{{ route('package-combo') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Customer Active Package</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+
+                    <!-- Divider -->
+                    <li class="menu-divider"></li>
 
                     <!-- Management Ticket Group -->
                     <li
@@ -82,33 +111,6 @@
                             </li>
                         </ul>
                     </li>
-
-                    {{-- <li
-                        class="menu-group {{ request()->is('package.active.customer') || request()->is('package.active.customer') ? 'open' : '' }}">
-                        <div class="menu-group-header">
-                            <div class="menu-group-title">
-                                <i data-feather="package" class="menu-icon"></i>
-                                <span class="menu-text">Management Package</span>
-                            </div>
-                            <i data-feather="chevron-down" class="arrow-icon"></i>
-                        </div>
-                        <ul class="submenu">
-                            <li class="submenu-item {{ request()->is('package.active.customer') ? 'active' : '' }}">
-                                <a href="{{ route('package.active.customer') }}" class="menu-link">
-                                    <span class="submenu-dot"></span>
-                                    <span class="menu-text">View Customer Active</span>
-                                </a>
-                            </li>
-                            <li class="submenu-item {{ request()->is('package.detail.customer') ? 'active' : '' }}">
-                                <a href="{{ route('package.detail.customer') }}" class="menu-link">
-                                    <span class="submenu-dot"></span>
-                                    <span class="menu-text">Edit Package</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> --}}
-
-
 
                     <!-- Management Member, Coach & Clubhouse Group -->
                     <li

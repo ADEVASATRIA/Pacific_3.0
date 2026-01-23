@@ -57,12 +57,21 @@
                             <p class="ticket-desc screen-only">
                                 @if ($entry->type == 1)
                                     {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                    Berlaku Sampai Tanggal
-                                    <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                    @if ($ticket->date_end)
+                                        Berlaku Sampai Tanggal
+                                        <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                    @else
+                                        <strong>Berlaku Lifetime</strong>
+                                    @endif
+
                                 @elseif($entry->type == 2)
                                     Tiket Pengantar Tambahan Gratis <br>
-                                    Berlaku Sampai Tanggal
-                                    <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                    @if ($ticket->date_end)
+                                        Berlaku Sampai Tanggal
+                                        <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                    @else
+                                        <strong>Berlaku Lifetime</strong>
+                                    @endif
                                 @endif
                             </p>
 
@@ -70,10 +79,18 @@
                             <p class="ticket-subtitle print-only">
                                 @if ($entry->type == 1)
                                     {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} -
-                                    {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                    @if ($ticket->date_end)
+                                        {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                    @else
+                                        Berlaku Lifetime
+                                    @endif
                                 @elseif($entry->type == 2)
                                     Tiket Pengantar Tambahan Gratis <br>
-                                    {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                    @if ($ticket->date_end)
+                                        {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                    @else
+                                        Berlaku Lifetime
+                                    @endif
                                 @endif
                             </p>
 

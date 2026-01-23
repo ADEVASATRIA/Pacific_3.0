@@ -16,7 +16,20 @@ class Ticket extends Model
         'date_end',
         'is_active'
     ];
-    
+
+    public function isLifetime(): bool
+    {
+        return is_null($this->date_end);
+    }
+
+    public function scopeValid($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('date_end')
+            ->orWhere('date_end', '>=', now());
+        });
+    }
+
     public function purchaseDetail()
     {
         return $this->belongsTo(PurchaseDetail::class);

@@ -19,57 +19,16 @@ use App\Models\LogPrintSingles;
 
 class CreateTickets
 {
-    // public function createTicketRegular(PurchaseDetail $purchaseDetail)
-    // {
-    //     $purchase = $purchaseDetail->purchase;
-    //     $ticketType = TicketType::find($purchaseDetail->purchase_item_id);
+    private function resolveTicketValidity(TicketType $ticketType): array
+    {
+        $start = now();
 
-    //     if (!$purchase || !$ticketType) {
-    //         throw new \Exception("Purchase atau TicketType tidak ditemukan.");
-    //     }
+        if ($ticketType->validity_type === 'lifetime') {
+            return [$start, null];
+        }
 
-    //     $createdTickets = [];
-    //     $qty = (int) $purchaseDetail->qty;
-
-    //     for ($i = 0; $i < $qty; $i++) {
-    //         $ticketkodeRef = $ticketType->ticket_kode_ref;
-
-    //         $ticket = new Ticket();
-    //         $ticket->purchase_detail_id = $purchaseDetail->id;
-    //         $ticket->customer_id = $purchase->customer_id;
-    //         $ticket->code = $ticketkodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
-    //         $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
-    //         $ticket->date_start = now();
-    //         $ticket->date_end = now()->addDays($ticketType->duration);
-    //         $ticket->is_active = true;
-    //         $ticket->save();
-
-    //         $entries = [];
-
-    //         // ✅ Entry original
-    //         $entries[] = $this->createEntry($ticket, 1);
-
-    //         // ✅ Entry extra jika ada
-    //         if ($ticketType->qty_extra > 0) {
-    //             for ($j = 0; $j < $ticketType->qty_extra; $j++) {
-    //                 $entries[] = $this->createEntry($ticket, 2);
-    //             }
-    //         }
-
-    //         $ticket->entries = $entries;
-    //         $createdTickets[] = $ticket;
-    //     }
-    //     // dd([
-    //     //    'purchaseDetail' => $purchaseDetail->toArray(),
-    //     //    'ticketType' => $ticketType->toArray(),
-    //     //    'createdTickets' => $createdTickets,
-    //     // ]);
-
-
-    //     return $createdTickets;
-    // }
-
-
+        return [$start, $start->copy()->addDays($ticketType->duration)];
+    }
 
     public function createTicketRegular(PurchaseDetail $purchaseDetail)
     {
@@ -93,8 +52,11 @@ class CreateTickets
             $ticket->customer_id = $purchase->customer_id;
             $ticket->code = $ticketkodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
-            $ticket->date_start = now();
-            $ticket->date_end = now()->addDays($ticketType->duration);
+            
+            [$startDate, $endDate] = $this->resolveTicketValidity($ticketType);
+            $ticket->date_start = $startDate;
+            $ticket->date_end = $endDate;
+            
             $ticket->is_active = true;
             $ticket->save();
 
@@ -178,8 +140,13 @@ class CreateTickets
             $ticket->customer_id = $customer->id;
             $ticket->code = $ticketType->ticket_kode_ref . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
-            $ticket->date_start = now();
-            $ticket->date_end = now()->addDays($ticketType->duration);
+
+            [$startDate, $endDate] = $this->resolveTicketValidity($ticketType);
+
+            $ticket->date_start = $startDate;
+            $ticket->date_end = $endDate;
+
+
             $ticket->is_active = true;
             $ticket->save();
 
@@ -201,8 +168,17 @@ class CreateTickets
         }
 
         // Update membership period dan member_id seperti semula
-        $customer->awal_masa_berlaku = now();
-        $customer->akhir_masa_berlaku = now()->addDays($ticketType->duration);
+        // $customer->awal_masa_berlaku = now();
+        // $customer->akhir_masa_berlaku = now()->addDays($ticketType->duration);
+
+        $customer->awal_masa_berlaku = $startDate;
+
+        if ($ticketType->validity_type === 'lifetime') {
+            $customer->akhir_masa_berlaku = null;
+        } else {
+            $customer->akhir_masa_berlaku = $endDate;
+        }
+
 
         if (empty($customer->member_id)) {
             $customer->member_id = $customer->generateMemberId();
@@ -253,8 +229,12 @@ class CreateTickets
             $ticket->customer_id = $pelatih->id;
             $ticket->code = $ticketType->ticket_kode_ref . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $ticket->ticket_kode_ref = $ticketType->ticket_kode_ref;
-            $ticket->date_start = now();
-            $ticket->date_end = now()->addDays($ticketType->duration);
+
+            [$startDate, $endDate] = $this->resolveTicketValidity($ticketType);
+
+            $ticket->date_start = $startDate;
+            $ticket->date_end = $endDate;
+
             $ticket->is_active = true;
             $ticket->save();
 

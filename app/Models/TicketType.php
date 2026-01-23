@@ -10,6 +10,7 @@ class TicketType extends Model
         'name',
         'price',
         'duration',
+        'validity_type',
         'qty_extra',
         'weight',
         'is_dob_mandatory',

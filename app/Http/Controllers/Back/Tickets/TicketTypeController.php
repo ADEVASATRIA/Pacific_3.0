@@ -26,7 +26,10 @@ class TicketTypeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|integer',
-            'duration' => 'required|integer|min:1',
+            'validity_type' => 'required|in:duration,lifetime',
+
+            'duration' => 'required_if:validity_type,duration|nullable|integer|min:1',
+
             'qty_extra' => 'required|integer|min:0',
             'weight' => 'required|integer|min:1',
             'is_dob_mandatory' => 'required|integer',
@@ -38,11 +41,17 @@ class TicketTypeController extends Controller
             'ticket_kode_ref' => 'required|string|max:255'
         ]);
 
-
         $ticketType = new TicketType();
         $ticketType->name = $request->name;
         $ticketType->price = $request->price;
-        $ticketType->duration = $request->duration;
+        $ticketType->validity_type = $request->validity_type;
+
+        if ($request->validity_type === 'lifetime') {
+            $ticketType->duration = null;
+        } else {
+            $ticketType->duration = $request->duration;
+        }
+
         $ticketType->qty_extra = $request->qty_extra;
         $ticketType->weight = $request->weight;
         $ticketType->is_dob_mandatory = $request->is_dob_mandatory;
@@ -53,6 +62,7 @@ class TicketTypeController extends Controller
         $ticketType->tipe_khusus = $request->tipe_khusus;
         $ticketType->ticket_kode_ref = $request->ticket_kode_ref;
         $ticketType->save();
+
 
         return redirect()->route('ticket-types')->with([
             'success' => true,
@@ -80,10 +90,13 @@ class TicketTypeController extends Controller
     public function edit(Request $request, $id){
         $ticketType = TicketType::findOrFail($id);
 
-        $validatedFields = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|integer',
-            'duration' => 'required|integer|min:1',
+            'validity_type' => 'required|in:duration,lifetime',
+
+            'duration' => 'required_if:validity_type,duration|nullable|integer|min:1',
+
             'qty_extra' => 'required|integer|min:0',
             'weight' => 'required|integer|min:1',
             'is_dob_mandatory' => 'required|integer',
@@ -95,19 +108,20 @@ class TicketTypeController extends Controller
             'ticket_kode_ref' => 'required|string|max:255'
         ]);
 
+
         // $ticketType->update($validatedFields);
-        $ticketType->name = $validatedFields['name'];
-        $ticketType->price = $validatedFields['price'];
-        $ticketType->duration = $validatedFields['duration'];
-        $ticketType->qty_extra = $validatedFields['qty_extra'];
-        $ticketType->weight = $validatedFields['weight'];
-        $ticketType->is_dob_mandatory = $validatedFields['is_dob_mandatory'];
-        $ticketType->is_phone_mandatory = $validatedFields['is_phone_mandatory'];
-        $ticketType->is_active = $validatedFields['is_active'];
-        $ticketType->can_buy_tiket_pengantar = $validatedFields['can_buy_tiket_pengantar'];
-        $ticketType->is_coach_club_require = $validatedFields['is_coach_club_require'];
-        $ticketType->tipe_khusus = $validatedFields['tipe_khusus'];
-        $ticketType->ticket_kode_ref = $validatedFields['ticket_kode_ref'];
+        $ticketType->name = $request->name;
+        $ticketType->price = $request->price;
+        $ticketType->duration = $request->duration;
+        $ticketType->qty_extra = $request->qty_extra;
+        $ticketType->weight = $request->weight;
+        $ticketType->is_dob_mandatory = $request->is_dob_mandatory;
+        $ticketType->is_phone_mandatory = $request->is_phone_mandatory;
+        $ticketType->is_active = $request->is_active;
+        $ticketType->can_buy_tiket_pengantar = $request->can_buy_tiket_pengantar;
+        $ticketType->is_coach_club_require = $request->is_coach_club_require;
+        $ticketType->tipe_khusus = $request->tipe_khusus;
+        $ticketType->ticket_kode_ref = $request->ticket_kode_ref;
 
         $ticketType->save();
 

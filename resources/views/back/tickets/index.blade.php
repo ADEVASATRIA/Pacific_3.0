@@ -60,7 +60,13 @@
                                 <tr>
                                     <td>{{ $item->name }}</td>
                                     <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                    <td class="text-center">{{ $item->duration }}</td>
+                                    <td class="text-center">
+                                        @if ($item->validity_type === 'lifetime')
+                                            <span class="badge bg-success">Selamanya</span>
+                                        @else
+                                            {{ $item->duration }} hari
+                                        @endif
+                                    </td>
                                     <td class="text-center">{{ $item->qty_extra }}</td>
                                     <td class="text-center">{{ $item->weight }}</td>
                                     {{-- <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
@@ -120,7 +126,7 @@
                         {{ $ticketTypes->appends(request()->query())->links('pagination::bootstrap-5') }}
                     </div>
                 @endif
-            </div>
+        </div>
 
             {{-- Modal Tambah data Ticket Types --}}
             <div class="modal fade" id="modalTambahTicketTypes" tabindex="-1" aria-labelledby="modalTambahTicketTypesLabel"
@@ -161,13 +167,22 @@
                                                 required>
                                         </div>
 
-                                        {{-- Durasi Tiket --}}
+                                        {{-- Masa Berlaku --}}
                                         <div class="col-md-6">
-                                            <label for="duration" class="form-label fw-semibold">Durasi (hari)</label><span
-                                                class="text-danger">*</span>
-                                            <input type="number" id="duration" name="duration" class="form-control shadow-sm"
-                                                required>
+                                            <label class="form-label fw-semibold">Masa Berlaku</label><span class="text-danger">*</span>
+                                            <select name="validity_type" id="validity_type" class="form-select shadow-sm" required>
+                                                <option value="duration" selected>Durasi (Hari)</option>
+                                                <option value="lifetime">Selamanya</option>
+                                            </select>
                                         </div>
+
+
+                                        {{-- Durasi Tiket --}}
+                                        <div class="col-md-6" id="durationGroup">
+                                            <label for="duration" class="form-label fw-semibold">Durasi (hari)</label>
+                                            <input type="number" id="duration" name="duration" class="form-control shadow-sm" min="1">
+                                        </div>
+
 
                                         {{-- Extra Ticket --}}
                                         <div class="col-md-6">
@@ -310,13 +325,21 @@
                                                 class="form-control shadow-sm" required>
                                         </div>
 
-                                        {{-- Durasi Tiket --}}
+                                        {{-- Masa Berlaku --}}
                                         <div class="col-md-6">
-                                            <label for="edit_duration" class="form-label fw-semibold">Durasi
-                                                (hari)</label><span class="text-danger">*</span>
-                                            <input type="number" id="edit_duration" name="duration"
-                                                class="form-control shadow-sm" required>
+                                            <label class="form-label fw-semibold">Masa Berlaku</label><span class="text-danger">*</span>
+                                            <select name="validity_type" id="edit_validity_type" class="form-select shadow-sm" required>
+                                                <option value="duration">Durasi (Hari)</option>
+                                                <option value="lifetime">Selamanya</option>
+                                            </select>
                                         </div>
+
+                                        {{-- Durasi Tiket --}}
+                                        <div class="col-md-6" id="editDurationGroup">
+                                            <label for="edit_duration" class="form-label fw-semibold">Durasi (hari)</label>
+                                            <input type="number" id="edit_duration" name="duration" class="form-control shadow-sm" min="1">
+                                        </div>
+
 
                                         {{-- Extra Ticket --}}
                                         <div class="col-md-6">
@@ -475,100 +498,146 @@
             </div>
 
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const canBuyTiket = document.getElementById('can_buy_tiket_pengantar');
-                    const tipeKhusus = document.getElementById('tipeKhusus');
+    </div>
 
-                    function toggleTipeKhusus() {
-                        tipeKhusus.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
-                    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canBuyTiket = document.getElementById('can_buy_tiket_pengantar');
+            const tipeKhusus = document.getElementById('tipeKhusus');
 
-                    toggleTipeKhusus();
-                    canBuyTiket.addEventListener('change', toggleTipeKhusus);
-                });
+            function toggleTipeKhusus() {
+                tipeKhusus.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
+            }
 
-                const confirmModal = document.getElementById('confirmDeleteModal');
-                const successModal = document.getElementById('successModal');
-                const deleteTicketTypeForm = document.getElementById('deleteTicketTypeForm');
-                const ticketTypeInfo = document.getElementById('deleteTicketTypeInfo');
-                const cancelBtn = document.getElementById('btnCancelDelete');
+            toggleTipeKhusus();
+            canBuyTiket.addEventListener('change', toggleTipeKhusus);
+        });
 
-                function openConfirmModal(id, name) {
-                    confirmModal.style.display = 'flex';
-                    ticketTypeInfo.innerHTML = `<p>Apakah Anda yakin ingin menghapus promo <strong>${name}</strong>?</p>`;
-                    deleteTicketTypeForm.action = `/delete-ticket-type/${id}`;
-                }
+        const confirmModal = document.getElementById('confirmDeleteModal');
+        const successModal = document.getElementById('successModal');
+        const deleteTicketTypeForm = document.getElementById('deleteTicketTypeForm');
+        const ticketTypeInfo = document.getElementById('deleteTicketTypeInfo');
+        const cancelBtn = document.getElementById('btnCancelDelete');
 
-                async function openEditModal(id) {
-                    try {
-                        // Ambil data ticket type dari backend
-                        const response = await fetch(`/get-ticket-types/${id}`);
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        function openConfirmModal(id, name) {
+            confirmModal.style.display = 'flex';
+            ticketTypeInfo.innerHTML = `<p>Apakah Anda yakin ingin menghapus promo <strong>${name}</strong>?</p>`;
+            deleteTicketTypeForm.action = `/delete-ticket-type/${id}`;
+        }
 
-                        const data = await response.json();
-                        console.log('Ticket Type Data:', data);
+        async function openEditModal(id) {
+            try {
+                // Ambil data ticket type dari backend
+                const response = await fetch(`/get-ticket-types/${id}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-                        // Pastikan form action diarahkan ke route edit
-                        document.getElementById('formEditTicketTypes').action = `/edit-ticket-type/${id}`;
+                const data = await response.json();
+                console.log('Ticket Type Data:', data);
 
-                        // Isi semua field form edit sesuai data dari response
-                        document.getElementById('edit_name').value = data.name ?? '';
-                        document.getElementById('edit_price').value = data.price ?? '';
-                        document.getElementById('edit_duration').value = data.duration ?? '';
-                        document.getElementById('edit_qty_extra').value = data.qty_extra ?? '';
-                        document.getElementById('edit_weight').value = data.weight ?? '';
-                        document.getElementById('edit_ticket_kode_ref').value = data.ticket_kode_ref ?? '';
+                // Pastikan form action diarahkan ke route edit
+                document.getElementById('formEditTicketTypes').action = `/edit-ticket-type/${id}`;
 
-                        document.getElementById('edit_is_dob_mandatory').value = data.is_dob_mandatory ?? 0;
-                        document.getElementById('edit_is_phone_mandatory').value = data.is_phone_mandatory ?? 0;
-                        document.getElementById('edit_is_active').value = data.is_active ?? 1;
-                        document.getElementById('edit_can_buy_tiket_pengantar').value = data.can_buy_tiket_pengantar ?? 0;
-                        document.getElementById('edit_is_coach_club_require').value = data.is_coach_club_require ?? 0;
-                        document.getElementById('edit_tipeKhusus').value = data.tipe_khusus ?? 1;
+                // Isi semua field form edit sesuai data dari response
+                document.getElementById('edit_name').value = data.name ?? '';
+                document.getElementById('edit_price').value = data.price ?? '';
+                document.getElementById('edit_validity_type').value = data.validity_type ?? 'duration';
+                document.getElementById('edit_duration').value = data.duration ?? '';
+                document.getElementById('edit_qty_extra').value = data.qty_extra ?? '';
+                document.getElementById('edit_weight').value = data.weight ?? '';
+                document.getElementById('edit_ticket_kode_ref').value = data.ticket_kode_ref ?? '';
 
-                        // Tampilkan modal edit
-                        const modal = new bootstrap.Modal(document.getElementById('modalEditTicketTypes'));
-                        modal.show();
+                document.getElementById('edit_is_dob_mandatory').value = data.is_dob_mandatory ?? 0;
+                document.getElementById('edit_is_phone_mandatory').value = data.is_phone_mandatory ?? 0;
+                document.getElementById('edit_is_active').value = data.is_active ?? 1;
+                document.getElementById('edit_can_buy_tiket_pengantar').value = data.can_buy_tiket_pengantar ?? 0;
+                document.getElementById('edit_is_coach_club_require').value = data.is_coach_club_require ?? 0;
+                document.getElementById('edit_tipeKhusus').value = data.tipe_khusus ?? 1;
 
-                        // Jalankan toggle visibilitas untuk "Tipe Khusus" (agar konsisten)
-                        toggleEditTipeKhusus();
+                // Tampilkan modal edit
+                const modal = new bootstrap.Modal(document.getElementById('modalEditTicketTypes'));
+                modal.show();
 
-                    } catch (error) {
-                        alert('Gagal memuat data Ticket Type.');
-                        console.error('Error:', error);
-                    }
-                }
+                // Jalankan toggle visibilitas untuk "Tipe Khusus" (agar konsisten)
+                toggleEditTipeKhusus();
 
-                // Fungsi untuk sembunyikan field "Tipe Khusus" jika can_buy_tiket_pengantar = 1
-                function toggleEditTipeKhusus() {
-                    const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
-                    const tipeKhususContainer = document.getElementById('edit_tipeKhusus').closest('div');
+                toggleEditDuration();
 
-                    tipeKhususContainer.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
-                }
+            } catch (error) {
+                alert('Gagal memuat data Ticket Type.');
+                console.error('Error:', error);
+            }
+        }
 
-                // Event listener agar toggle tetap aktif kalau user ubah dropdown
-                document.addEventListener('DOMContentLoaded', function() {
-                    const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
-                    if (canBuyTiket) {
-                        canBuyTiket.addEventListener('change', toggleEditTipeKhusus);
-                    }
-                });
+        // Fungsi untuk sembunyikan field "Tipe Khusus" jika can_buy_tiket_pengantar = 1
+        function toggleEditTipeKhusus() {
+            const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
+            const tipeKhususContainer = document.getElementById('edit_tipeKhusus').closest('div');
+
+            tipeKhususContainer.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
+        }
+
+        // Event listener agar toggle tetap aktif kalau user ubah dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
+            if (canBuyTiket) {
+                canBuyTiket.addEventListener('change', toggleEditTipeKhusus);
+            }
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            confirmModal.style.display = 'none';
+        });
+        @if (session('success'))
+            window.addEventListener('load', () => {
+                successModal.style.display = 'flex';
+                setTimeout(() => {
+                    successModal.style.display = 'none';
+                }, 2500);
+            });
+        @endif
+    </script>
+
+    <script>
+        // ===== TAMBAH TICKET TYPE =====
+        const validitySelect = document.getElementById('validity_type');
+        const durationGroup = document.getElementById('durationGroup');
+        const durationInput = document.getElementById('duration');
+
+        function toggleDuration() {
+            if (!validitySelect) return;
+
+            if (validitySelect.value === 'lifetime') {
+                durationGroup.style.display = 'none';
+                durationInput.value = '';
+                durationInput.required = false;
+            } else {
+                durationGroup.style.display = 'block';
+                durationInput.required = true;
+            }
+        }
+
+        validitySelect?.addEventListener('change', toggleDuration);
+        toggleDuration();
 
 
+        // ===== EDIT TICKET TYPE =====
+        const editValidity = document.getElementById('edit_validity_type');
+        const editDurationGroup = document.getElementById('editDurationGroup');
+        const editDurationInput = document.getElementById('edit_duration');
 
-                cancelBtn.addEventListener('click', () => {
-                    confirmModal.style.display = 'none';
-                });
-                @if (session('success'))
-                    window.addEventListener('load', () => {
-                        successModal.style.display = 'flex';
-                        setTimeout(() => {
-                            successModal.style.display = 'none';
-                        }, 2500);
-                    });
-                @endif
-            </script>
+        function toggleEditDuration() {
+            if (!editValidity) return;
 
-        @endsection
+            if (editValidity.value === 'lifetime') {
+                editDurationGroup.style.display = 'none';
+                editDurationInput.value = '';
+                editDurationInput.required = false;
+            } else {
+                editDurationGroup.style.display = 'block';
+                editDurationInput.required = true;
+            }
+        }
+
+        editValidity?.addEventListener('change', toggleEditDuration);
+    </script>
+@endsection

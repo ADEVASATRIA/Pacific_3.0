@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Ticket extends Model
 {
@@ -48,5 +49,10 @@ class Ticket extends Model
     public function entries()
     {
         return $this->hasMany(TicketEntry::class);
+    }
+    public static function generateCodeFast($prefix = '')
+    {
+        // format: PREFIX-XXXXXX (misalnya: TKT-AB12CD34)
+        return strtoupper($prefix . '-' . Str::random(8));
     }
 }

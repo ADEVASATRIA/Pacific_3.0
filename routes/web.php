@@ -211,7 +211,12 @@ Route::middleware('bo.auth')->group(function () {
     // Route Halaman View Log History Ticket
     Route::get('/view-log-history-ticket', [ViewLogTicketController::class, 'index'])->name('view-log-history-ticket');
     Route::get('/view-active-package-customer', [ViewLogTicketController::class, 'viewActivePackageCustomer'])->name('view-active-package-customer');
- 
 
+    // Route Halaman management customer package
+    Route::get('/view-update-package-home', [ManagementPackageCustomerController::class,'index'])->name('view-update-package-home');
+    Route::get('/view-detail-package/{id}', [ManagementPackageCustomerController::class,'viewDetailPackage'])->name('view-detail-package');
+    Route::get('/get-edit-package/{id}', [ManagementPackageCustomerController::class,'getEditPackage'])->name('get-edit-package');
+    Route::post('/edit-package/{id}', [ManagementPackageCustomerController::class,'editPackage'])->name('edit-package');
+    Route::delete('/delete-package/{id}', [ManagementPackageCustomerController::class,'deletePackage'])->name('delete-package');
 });
 

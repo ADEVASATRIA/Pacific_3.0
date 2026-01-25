@@ -145,7 +145,7 @@
                     </li>
 
                     <!-- Management Customer Group -->
-                    <li class="menu-group {{ request()->is('customer') ? 'open' : '' }}">
+                    <li class="menu-group {{ request()->is('customer') || request()->is('view-update-package-home') ? 'open' : '' }}">
                         <div class="menu-group-header">
                             <div class="menu-group-title">
                                 <i data-feather="user-check" class="menu-icon"></i>
@@ -158,6 +158,13 @@
                                 <a href="{{ route('customer') }}" class="menu-link">
                                     <span class="submenu-dot"></span>
                                     <span class="menu-text">Customer</span>
+                                </a>
+                            </li>
+
+                            <li class="submenu-item {{ request()->is('view-update-package-home') ? 'active' : '' }}">
+                                <a href="{{ route('view-update-package-home') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Update Package Customer</span>
                                 </a>
                             </li>
                         </ul>

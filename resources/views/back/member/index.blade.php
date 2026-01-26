@@ -4,11 +4,11 @@
 
 @section('content')
     <div class="member-page">
-        <h2 class="page-title">Data Member</h2>
+        <h2 class="page-title mb-4">Data Member</h2>
         <div class="filter-section mb-4">
             <form method="GET" action="{{ route('member') }}" class="filter-form flex items-end gap-4 flex-wrap">
 
-                <div class="row g-3">
+                <div class="row g-3 align-items-end">
                     <div class="col-md-auto">
                         <label for="name" class="form-label block text-sm font-medium text-gray-700">Nama</label>
                         <input type="text" name="name" id="name"
@@ -29,9 +29,23 @@
                             class="form-control mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                             value="{{ request('dob') }}">
                     </div>
+
+                    <div class="col-md-auto">
+                        <label for="clubhouse_id" class="form-label block text-sm font-medium text-gray-700">Filter
+                            Clubhouse</label>
+                        <select name="clubhouse_id" id="clubhouse_id"
+                            class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="">Semua Clubhouse</option>
+                            @foreach ($clubhouses as $cb)
+                                <option value="{{ $cb->id }}" {{ request('clubhouse_id') == $cb->id ? 'selected' : '' }}>
+                                    {{ $cb->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
-                <div class="row g-3 items-end">
+                <div class="row g-3 align-items-end">
                     <div class="col-md-auto">
                         <label for="awal_masa" class="form-label block text-sm font-medium text-gray-700">Awal Masa
                             Berlaku</label>
@@ -61,7 +75,7 @@
                     </div>
                 </div>
 
-                <div class="form-group flex items-end">
+                <div class="form-group flex items-end mb-1">
                     <div class="flex items-center gap-2">
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
                             <i class="fas fa-filter me-1"></i> Filter
@@ -76,7 +90,8 @@
                 <thead>
                     <tr class="bg-gray-100">
                         <th class="text-center">Nomer Telephone</th>
-                        <th class="text-center">Nama</th> {{-- Tambahkan kolom Nama jika $member->name ada --}}
+                        <th class="text-center">Nama</th>
+                        <th class="text-center">Clubhouse</th>
                         <th class="text-center">Awal Masa Berlaku</th>
                         <th class="text-center">Akhir masa Berlaku</th>
                         <th class="text-center">Tanggal Lahir</th>
@@ -89,6 +104,9 @@
                         <tr>
                             <td>{{ $member->phone }}</td>
                             <td>{{ $member->name }}</td>
+                            <td class="text-center">
+                                {{ $member->clubhouse?->name ?? $member->clubhouse2?->name ?? 'Tidak ada' }}
+                            </td>
                             <td class="text-center">
                                 {{ $member->tiketTerbaru?->date_start ? \Carbon\Carbon::parse($member->tiketTerbaru->date_start)->format('d M Y') : '-' }}
                             </td>

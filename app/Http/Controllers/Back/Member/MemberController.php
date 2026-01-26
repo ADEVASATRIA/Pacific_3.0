@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Clubhouse;
 
 class MemberController extends Controller
 {
@@ -19,6 +20,8 @@ class MemberController extends Controller
             'awal_masa' => 'nullable|date_format:Y-m-d',
             'akhir_masa' => 'nullable|date_format:Y-m-d|after_or_equal:awal_masa',
             'active' => 'nullable|in:0,1',
+
+            'clubhouse_id' => 'nullable|integer',
         ]);
 
         $today = now()->startOfDay();
@@ -50,6 +53,12 @@ class MemberController extends Controller
             ->when($request->name, fn($q, $name) => $q->where('name', 'LIKE', "%$name%"))
             ->when($request->dob, fn($q, $dob) => $q->whereDate('dob', Carbon::parse($dob)->startOfDay()))
             ->when($request->phone, fn($q, $phone) => $q->where('phone', $phone))
+            ->when($request->clubhouse_id, function ($q) use ($request) {
+                $q->where(function ($sub) use ($request) {
+                    $sub->where('clubhouse_id', $request->clubhouse_id)
+                        ->orWhere('id_club_renang', $request->clubhouse_id);
+                });
+            })
             ->with([
                 'tiketTerbaru',
                 'tickets' => fn($q) => $q->where('code', 'LIKE', 'M%')
@@ -57,7 +66,9 @@ class MemberController extends Controller
             ])
             ->paginate(10);
 
-        return view('back.member.index', compact('members'));
+        $clubhouses = Clubhouse::all();
+
+        return view('back.member.index', compact('members', 'clubhouses'));
     }
 
     public function getMember($id)

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="ticket-types-page">
-        <h2 class="page-title">Data Tickets Types</h2>
+        <h2 class="page-title mb-4">Data Tickets Types</h2>
 
         {{-- Filter --}}
         <div class="filter-section mb-4">

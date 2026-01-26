@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="ticket-types-page">
-        <h2 class="page-title">View Active Package Customer</h2>
+        <h2 class="page-title mb-4">View Active Package Customer</h2>
 
         <div class="filter-section mb-4">
             <form method="GET" action="{{ route('view-active-package-customer') }}"

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="staff-page">
-        <h2 class="page-title">Data Staff</h2>
+        <h2 class="page-title mb-4">Data Staff</h2>
 
         {{-- Filter Section (optional, currently commented out) --}}
         <div class="filter-section mb-4">

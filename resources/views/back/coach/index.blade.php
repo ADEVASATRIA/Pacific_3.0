@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="coach-page">
-        <h2 class="page-title">Data Pelatih</h2>
+        <h2 class="page-title mb-4">Data Pelatih</h2>
         <div class="filter-section mb-4">
             <div class="filter-form flex items-end gap-4 flex-wrap">
                 <div class="form-group">

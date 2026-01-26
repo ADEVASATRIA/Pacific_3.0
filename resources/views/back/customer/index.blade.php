@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="customer-page">
-        <h2 class="page-title">Data Customer</h2>
+        <h2 class="page-title mb-4">Data Customer</h2>
         <div class="filter-section mb-4">
             <form method="GET" action="{{ route('customer') }}" class="filter-form flex items-end gap-4 flex-wrap">
 

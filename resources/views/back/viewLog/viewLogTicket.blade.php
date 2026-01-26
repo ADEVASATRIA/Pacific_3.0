@@ -133,7 +133,7 @@
 
 @section('content')
     <div class="ticket-types-page">
-        <h2 class="page-title">Log History Ticket</h2>
+        <h2 class="page-title mb-4">Log History Ticket</h2>
         <div class="filter-section mb-4">
             {{-- Filter Section --}}
             <form method="GET" action="{{ route('view-log-history-ticket') }}" class="filter-form flex items-end gap-4 flex-wrap">

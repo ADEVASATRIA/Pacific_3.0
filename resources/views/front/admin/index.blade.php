@@ -72,7 +72,7 @@
                 </a>
             </nav>
 
-            <div class="sidebar-footer">© Pacific Global</div>
+            <div class="sidebar-footer">© Insyst Media</div>
         </aside>
 
         <!-- Main -->

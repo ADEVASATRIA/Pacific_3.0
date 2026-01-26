@@ -23,16 +23,33 @@
                             placeholder="Cari No. Telepon" value="{{ request('phone') }}">
                     </div>
 
+                    <div class="col-md-auto">
+                        <label for="clubhouse_id" class="form-label fw-semibold">Filter Clubhouse</label>
+                        <select name="clubhouse_id" id="clubhouse_id" class="form-select">
+                            <option value="">Semua Clubhouse</option>
+                            @foreach ($clubhouses as $cb)
+                                <option value="{{ $cb->id }}"
+                                    {{ request('clubhouse_id') == $cb->id ? 'selected' : '' }}>
+                                    {{ $cb->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                 </div>
 
                 <div class="form-group">
                     <div class="flex items-center gap-2">
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-                            Filter
+                            <i class="fas fa-filter me-1"></i> Filter
+                        </button>
+                        <button type="button" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700"
+                            onclick="exportCustomer()">
+                            <i class="fas fa-file-excel me-1"></i> Export Excel
                         </button>
                         <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
                             data-bs-toggle="modal" data-bs-target="#modalTambahCustomer">
-                            Tambah Customer
+                            <i class="fas fa-user-plus me-1"></i> Tambah Customer
                         </button>
                     </div>
                 </div>
@@ -595,5 +612,22 @@
                 }, 2500);
             });
         @endif
+
+        // Function untuk export customer dengan filter
+        function exportCustomer() {
+            // Ambil parameter filter dari form
+            const params = new URLSearchParams();
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const clubhouseId = document.getElementById('clubhouse_id').value;
+            
+            if (name) params.append('name', name);
+            if (phone) params.append('phone', phone);
+            if (clubhouseId) params.append('clubhouse_id', clubhouseId);
+            
+            // Redirect ke route export dengan parameter
+            window.location.href = `/export-customer?${params.toString()}`;
+        }
     </script>
 @endsection

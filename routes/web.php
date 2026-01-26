@@ -97,7 +97,7 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/admin/log-history-redeem-customer-package-detail', [PackageViewController::class, 'logHistoryRedeemCustomerPackageDetail'])->name('admin.logHistoryRedeemCustomerPackageDetail');
 
     // Alur print receipt di Admin
-    Route::get('/admin/print-receipt/{id}' , [PrintReceiptController::class, 'printReceipt'])->name('admin.print_receipt');
+    Route::get('/admin/print-receipt/{id}', [PrintReceiptController::class, 'printReceipt'])->name('admin.print_receipt');
 
     //Alur View Hitory Tickets di admin
     Route::get('/admin/viewHistoryTickets', [ViewHistoryTicketsController::class, 'viewHistoryTickets'])->name('admin.viewHistoryTickets');
@@ -199,6 +199,7 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-customer', [BackCustomerController::class, 'add'])->name('add.customer');
     Route::post('/edit-customer/{id}', [BackCustomerController::class, 'edit'])->name('edit.customer');
     Route::delete('/delete-customer/{id}', [BackCustomerController::class, 'delete'])->name('delete.customer');
+    Route::get('/export-customer', [BackCustomerController::class, 'export'])->name('export.customer');
 
     //Route halaman report
     Route::get('/report', [BackReportHomeController::class, 'index'])->name('report');
@@ -213,10 +214,10 @@ Route::middleware('bo.auth')->group(function () {
     Route::get('/view-active-package-customer', [ViewLogTicketController::class, 'viewActivePackageCustomer'])->name('view-active-package-customer');
 
     // Route Halaman management customer package
-    Route::get('/view-update-package-home', [ManagementPackageCustomerController::class,'index'])->name('view-update-package-home');
-    Route::get('/view-detail-package/{id}', [ManagementPackageCustomerController::class,'viewDetailPackage'])->name('view-detail-package');
-    Route::get('/get-edit-package/{id}', [ManagementPackageCustomerController::class,'getEditPackage'])->name('get-edit-package');
-    Route::post('/edit-package/{id}', [ManagementPackageCustomerController::class,'editPackage'])->name('edit-package');
-    Route::delete('/delete-package/{id}', [ManagementPackageCustomerController::class,'deletePackage'])->name('delete-package');
+    Route::get('/view-update-package-home', [ManagementPackageCustomerController::class, 'index'])->name('view-update-package-home');
+    Route::get('/view-detail-package/{id}', [ManagementPackageCustomerController::class, 'viewDetailPackage'])->name('view-detail-package');
+    Route::get('/get-edit-package/{id}', [ManagementPackageCustomerController::class, 'getEditPackage'])->name('get-edit-package');
+    Route::post('/edit-package/{id}', [ManagementPackageCustomerController::class, 'editPackage'])->name('edit-package');
+    Route::delete('/delete-package/{id}', [ManagementPackageCustomerController::class, 'deletePackage'])->name('delete-package');
 });
 

@@ -22,6 +22,10 @@ class CustomerController extends Controller
             $query->where('phone', 'like', '%' . $request->phone . '%');
         }
 
+        if ($request->filled('clubhouse_id')) {
+            $query->where('clubhouse_id', $request->clubhouse_id)->orWhere('id_club_renang', $request->clubhouse_id);
+        }
+
         $customers = $query->where('deleted_at', null)->orderBy('created_at', 'asc')->paginate(10);
         $clubhouses = Clubhouse::all();
 
@@ -158,5 +162,35 @@ class CustomerController extends Controller
             'success' => true,
             'action' => 'delete'
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        // Build query dengan filter yang sama seperti index
+        $query = Customer::with('clubhouse');
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('phone')) {
+            $query->where('phone', 'like', '%' . $request->phone . '%');
+        }
+
+        if ($request->filled('clubhouse_id')) {
+            $query->where('clubhouse_id', $request->clubhouse_id)->orWhere('id_club_renang', $request->clubhouse_id);
+        }
+
+        // Get all data (tanpa pagination untuk export)
+        $customers = $query->where('deleted_at', null)->orderBy('created_at', 'asc')->get();
+
+        // Generate filename dengan timestamp
+        $filename = 'Customer_Export_' . now()->format('Y-m-d_His') . '.xlsx';
+
+        // Return Excel download
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\CustomerExport($customers),
+            $filename
+        );
     }
 }

@@ -169,41 +169,8 @@
                             </li>
                         </ul>
                     </li>
-
-                    <!-- Divider -->
-                    <li class="menu-divider"></li>
-
-                    <!-- Management Report Group -->
-                    {{-- <li class="menu-group {{ request()->is('customer') ? 'open' : '' }}">
-                        <div class="menu-group-header">
-                            <div class="menu-group-title">
-                                <i data-feather="user-check" class="menu-icon"></i>
-                                <span class="menu-text">Management Report</span>
-                            </div>
-                            <i data-feather="chevron-down" class="arrow-icon"></i>
-                        </div>
-                        <ul class="submenu">
-                            <li class="submenu-item {{ request()->is('report.customer') ? 'active' : '' }}">
-                                <a href="{{ route('report.customer') }}" class="menu-link">
-                                    <span class="submenu-dot"></span>
-                                    <span class="menu-text">Report Customer</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> --}}
-
                 </ul>
             </nav>
-
-            {{-- <!-- Sidebar Footer -->
-            <div class="sidebar-footer">
-                <div class="footer-card">
-                    <i data-feather="help-circle" class="footer-icon"></i>
-                    <h4>Need Help?</h4>
-                    <p>Contact support team</p>
-                    <button class="btn-support">Get Support</button>
-                </div>
-            </div> --}}
         </aside>
 
         <!-- Main Content -->

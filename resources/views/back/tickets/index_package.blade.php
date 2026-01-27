@@ -41,6 +41,8 @@
                         <th>Weight / Urutan</th>
                         <th>Harga</th>
                         <th>Durasi</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Akhir</th>
                         <th>Extra Ticket</th>
                         <th>Tipe Khusus</th>
                         <th>Status</th>
@@ -54,6 +56,20 @@
                             <td>{{ $item->weight }}</td>
                             <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
                             <td class="text-center">{{ $item->expired_duration }}</td>
+                            <td class="text-center">
+                                @if ($item->start_date)
+                                    {{ \Carbon\Carbon::parse($item->start_date)->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if ($item->end_date)
+                                    {{ \Carbon\Carbon::parse($item->end_date)->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="text-center">{{ $item->details->sum('qty_extra') }}</td>
                             <td class="text-center">
                                 @if ($item->tipe_khusus == 1)
@@ -132,12 +148,44 @@
                                         required>
                                 </div>
 
-                                {{-- Expired Duration --}}
-                                <div class="col-md-6">
+                                {{-- Pilihan Mode Expired --}}
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Metode Expired</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="expired_mode"
+                                                id="mode_duration" value="duration" checked>
+                                            <label class="form-check-label" for="mode_duration">
+                                                Durasi (Hari)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="expired_mode"
+                                                id="mode_date" value="date">
+                                            <label class="form-check-label" for="mode_date">
+                                                Tanggal (Start - End)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Expired Duration (Input Hari) --}}
+                                <div class="col-md-6" id="durationInputGroup">
                                     <label for="expired_duration" class="form-label fw-semibold">Expired Duration
                                         (hari)</label>
                                     <input type="number" name="expired_duration" id="expired_duration"
-                                        class="form-control shadow-sm" required>
+                                        class="form-control shadow-sm">
+                                </div>
+
+                                {{-- Tanggal Start & End (Input Date) --}}
+                                <div class="col-md-6" id="dateStartGroup" style="display: none;">
+                                    <label for="start_date" class="form-label fw-semibold">Start Date</label>
+                                    <input type="date" name="start_date" id="start_date"
+                                        class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6" id="dateEndGroup" style="display: none;">
+                                    <label for="end_date" class="form-label fw-semibold">End Date</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control shadow-sm">
                                 </div>
 
                                 {{-- Qty --}}
@@ -204,9 +252,9 @@
             <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
 
                 {{-- Header --}}
-                <div class="modal-header bg-gradient-primary text-white py-3 px-4">
+                <div class="modal-header bg-warning text-white py-3 px-4">
                     <h5 class="modal-title fw-semibold" id="modalEditPackageComboLabel">
-                        <i class="fas fa-tags me-2"></i>Tambah Package Combo Baru
+                        <i class="fas fa-tags me-2"></i>Edit Package Combo
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
@@ -240,12 +288,44 @@
                                         required>
                                 </div>
 
-                                {{-- Expired Duration --}}
-                                <div class="col-md-6">
+                                {{-- Pilihan Mode Expired --}}
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Metode Expired</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="expired_mode"
+                                                id="edit_mode_duration" value="duration" checked>
+                                            <label class="form-check-label" for="edit_mode_duration">
+                                                Durasi (Hari)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="expired_mode"
+                                                id="edit_mode_date" value="date">
+                                            <label class="form-check-label" for="edit_mode_date">
+                                                Tanggal (Start - End)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Expired Duration (Input Hari) --}}
+                                <div class="col-md-6" id="edit_durationInputGroup">
                                     <label for="edit_expired_duration" class="form-label fw-semibold">Expired Duration
                                         (hari)</label>
                                     <input type="number" name="expired_duration" id="edit_expired_duration"
                                         class="form-control shadow-sm" required>
+                                </div>
+
+                                {{-- Tanggal Start & End (Input Date) --}}
+                                <div class="col-md-6" id="edit_dateStartGroup" style="display: none;">
+                                    <label for="edit_start_date" class="form-label fw-semibold">Start Date</label>
+                                    <input type="date" name="start_date" id="edit_start_date"
+                                        class="form-control shadow-sm">
+                                </div>
+                                <div class="col-md-6" id="edit_dateEndGroup" style="display: none;">
+                                    <label for="edit_end_date" class="form-label fw-semibold">End Date</label>
+                                    <input type="date" name="end_date" id="edit_end_date" class="form-control shadow-sm">
                                 </div>
 
                                 {{-- Qty --}}
@@ -356,6 +436,120 @@
 
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logic Toggle Mode Expired (Duration vs Date) untuk Modal Tambah
+            const modeRadios = document.querySelectorAll('input[name="expired_mode"]');
+            const durationGroup = document.getElementById('durationInputGroup');
+            const dateStartGroup = document.getElementById('dateStartGroup');
+            const dateEndGroup = document.getElementById('dateEndGroup');
+            
+            const durationInput = document.getElementById('expired_duration');
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+
+            function toggleExpiredMode() {
+                const selectedMode = document.querySelector('input[name="expired_mode"]:checked').value;
+
+                if (selectedMode === 'duration') {
+                    // Show Duration, Hide Dates
+                    durationGroup.style.display = 'block';
+                    dateStartGroup.style.display = 'none';
+                    dateEndGroup.style.display = 'none';
+
+                    durationInput.setAttribute('required', 'required');
+                    startDateInput.removeAttribute('required');
+                    endDateInput.removeAttribute('required');
+                    
+                    // Reset values
+                    startDateInput.value = '';
+                    endDateInput.value = '';
+                } else {
+                    // Show Dates, Hide Duration
+                    durationGroup.style.display = 'none';
+                    dateStartGroup.style.display = 'block';
+                    dateEndGroup.style.display = 'block';
+
+                    durationInput.removeAttribute('required');
+                    startDateInput.setAttribute('required', 'required');
+                    endDateInput.setAttribute('required', 'required');
+                    
+                    // Reset value
+                    durationInput.value = '';
+                }
+            }
+
+            modeRadios.forEach(radio => {
+                radio.addEventListener('change', toggleExpiredMode);
+            });
+
+            // Init state
+            if(modeRadios.length > 0) {
+                toggleExpiredMode();
+            }
+
+            // Logic untuk toggle Extra Qty pada Modal Add (jika belum ada)
+            const addItemSelect = document.getElementById('item_id');
+            const addExtraGroup = document.getElementById('extraQtyGroup');
+            const addExtraInput = document.getElementById('qty_extra');
+
+            if (addItemSelect && addExtraGroup) {
+                function toggleAddExtraQty() {
+                    if (addItemSelect.value == '2') { // Tiket Anak
+                        addExtraGroup.style.display = 'block';
+                        addExtraInput.value = 1; 
+                    } else {
+                        addExtraGroup.style.display = 'none';
+                        addExtraInput.value = 0;
+                    }
+                }
+                addItemSelect.addEventListener('change', toggleAddExtraQty);
+                toggleAddExtraQty(); // Init
+            }
+
+            // Logic Toggle Mode Expired untuk Modal Edit
+            const editModeRadios = document.querySelectorAll('input[name="expired_mode"][id^="edit_mode"]');
+            const editDurationGroup = document.getElementById('edit_durationInputGroup');
+            const editDateStartGroup = document.getElementById('edit_dateStartGroup');
+            const editDateEndGroup = document.getElementById('edit_dateEndGroup');
+            
+            const editDurationInput = document.getElementById('edit_expired_duration');
+            const editStartDateInput = document.getElementById('edit_start_date');
+            const editEndDateInput = document.getElementById('edit_end_date');
+
+            function toggleEditExpiredMode() {
+                // Cari radio yang checked di dalam modal edit
+                // Karena name sama dengan modal add, kita persempit scope atau cari ID spesifik
+                const selectedMode = document.querySelector('input[name="expired_mode"][id^="edit_mode"]:checked').value;
+
+                if (selectedMode === 'duration') {
+                    editDurationGroup.style.display = 'block';
+                    editDateStartGroup.style.display = 'none';
+                    editDateEndGroup.style.display = 'none';
+
+                    editDurationInput.setAttribute('required', 'required');
+                    editStartDateInput.removeAttribute('required');
+                    editEndDateInput.removeAttribute('required');
+                    
+                    editStartDateInput.value = '';
+                    editEndDateInput.value = '';
+                } else {
+                    editDurationGroup.style.display = 'none';
+                    editDateStartGroup.style.display = 'block';
+                    editDateEndGroup.style.display = 'block';
+
+                    editDurationInput.removeAttribute('required');
+                    editStartDateInput.setAttribute('required', 'required');
+                    editEndDateInput.setAttribute('required', 'required');
+                    
+                    editDurationInput.value = '';
+                }
+            }
+
+            editModeRadios.forEach(radio => {
+                radio.addEventListener('change', toggleEditExpiredMode);
+            });
+        });
+
         // Fungsi buka modal edit
         async function openEditModal(id) {
             try {
@@ -376,6 +570,21 @@
                 document.getElementById('edit_expired_duration').value = data.expired_duration ?? '';
                 document.getElementById('edit_is_active').value = data.is_active ?? 1;
                 document.getElementById('edit_tipe_khusus').value = data.tipe_khusus ?? 1;
+                
+                document.getElementById('edit_start_date').value = data.start_date ?? '';
+                document.getElementById('edit_end_date').value = data.end_date ?? '';
+
+                // Tentukan Mode Expired berdasarkan data
+                if (data.start_date && data.end_date) {
+                    document.getElementById('edit_mode_date').checked = true;
+                } else {
+                    document.getElementById('edit_mode_duration').checked = true;
+                }
+                
+                // Trigger change event agar UI menyesuaikan (karena listener ada di DOMContentLoaded)
+                document.getElementById('edit_mode_duration').dispatchEvent(new Event('change'));
+                document.getElementById('edit_mode_date').dispatchEvent(new Event('change'));
+
 
                 // Pastikan detail tersedia (bisa null kalau belum ada)
                 const detail = data.details && data.details.length > 0 ? data.details[0] : null;

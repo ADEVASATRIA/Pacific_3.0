@@ -289,18 +289,47 @@ class CreateTickets
             throw new \Exception("Purchase atau PackageCombo tidak ditemukan.");
         }
 
-        // Buat PackageComboRedeem
+        /*
+        |--------------------------------------------------------------------------
+        | DATE LOGIC (CENTRALIZED)
+        |--------------------------------------------------------------------------
+        */
+
+        // Expired date untuk redeem
+        $expiredDate = $packageCombo->end_date
+            ? Carbon::parse($packageCombo->end_date)
+            : Carbon::now()->addDays($packageCombo->expired_duration);
+
+        // Date start & end untuk ticket
+        if ($packageCombo->start_date && $packageCombo->end_date) {
+            $ticketStartDate = Carbon::parse($packageCombo->start_date);
+            $ticketEndDate   = Carbon::parse($packageCombo->end_date);
+        } else {
+            $ticketStartDate = Carbon::now();
+            $ticketEndDate   = Carbon::now()->addDays($packageCombo->expired_duration);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE PACKAGE COMBO REDEEM
+        |--------------------------------------------------------------------------
+        */
         $newRedeem = $purchaseDetail->packageComboRedeem()->create([
             'package_combo_id' => $packageCombo->id,
             'customer_id' => $purchase->customer_id,
             'name' => $packageCombo->name,
             'price' => $packageCombo->price,
-            'expired_date' => Carbon::now()->addDays($packageCombo->expired_duration),
+            'expired_date' => $expiredDate,
             'fully_redeemed' => null,
         ]);
 
         $createdTickets = [];
 
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE REDEEM DETAIL & TICKETS
+        |--------------------------------------------------------------------------
+        */
         foreach ($packageCombo->details as $comboDetail) {
 
             $redeemDetail = $newRedeem->details()->create([
@@ -314,13 +343,13 @@ class CreateTickets
                 'qty_printed' => 0,
             ]);
 
-            // total ticket
             $totalTickets = $redeemDetail->qty;
 
             for ($i = 0; $i < $totalTickets; $i++) {
 
-                if ($comboDetail->type != 1)
+                if ($comboDetail->type != 1) {
                     continue;
+                }
 
                 $ticketCodeRef = $comboDetail->ticketType->ticket_kode_ref;
 
@@ -330,25 +359,25 @@ class CreateTickets
                     'customer_id' => $purchase->customer_id,
                     'code' => $ticketCodeRef . str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
                     'ticket_kode_ref' => $ticketCodeRef,
-                    'date_start' => now(),
-                    'date_end' => now()->addDays($packageCombo->expired_duration),
+                    'date_start' => $ticketStartDate,
+                    'date_end' => $ticketEndDate,
                     'is_active' => true,
                 ]);
 
                 // 1️⃣ Entry original
                 $this->createEntry($ticket, 1);
 
-                // 2️⃣ Entry gratis sesuai qty_extra, selang-seling
+                // 2️⃣ Entry gratis (qty_extra)
                 for ($j = 0; $j < $purchaseDetail->qty_extra; $j++) {
                     $this->createEntry($ticket, 2);
                 }
 
                 $createdTickets[] = $ticket;
             }
-
-
         }
 
         return $createdTickets;
     }
+
+    
 }

@@ -10,6 +10,8 @@ class PackageCombo extends Model
         'name',
         'price',
         'expired_duration',
+        'start_date',
+        'end_date',
         'tipe_khusus',
         'is_Active',
         'weight',

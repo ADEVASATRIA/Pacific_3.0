@@ -252,8 +252,8 @@
             <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
 
                 {{-- Header --}}
-                <div class="modal-header bg-warning text-white py-3 px-4">
-                    <h5 class="modal-title fw-semibold" id="modalEditPackageComboLabel">
+                <div class="modal-header bg-warning py-3 px-4">
+                    <h5 class="modal-title fw-semibold text-black" id="modalEditPackageComboLabel">
                         <i class="fas fa-tags me-2"></i>Edit Package Combo
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

@@ -141,8 +141,8 @@
             <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
 
                 {{-- Header --}}
-                <div class="modal-header bg-gradient-primary text-white py-3 px-4">
-                    <h5 class="modal-title fw-semibold" id="modalEditPackageLabel">
+                <div class="modal-header bg-warning py-3 px-4">
+                    <h5 class="modal-title fw-semibold text-black" id="modalEditPackageLabel">
                         <i class="fas fa-user-edit me-2"></i>Edit Package
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

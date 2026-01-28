@@ -241,8 +241,8 @@
         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
-                <div class="modal-header bg-warning text-white py-3 px-4">
-                    <h5 class="modal-title fw-semibold" id="modalEditPromoLabel">
+                <div class="modal-header bg-warning py-3 px-4">
+                    <h5 class="modal-title fw-semibold text-black" id="modalEditPromoLabel">
                         <i class="fas fa-edit me-2"></i> Edit Data Promo
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"

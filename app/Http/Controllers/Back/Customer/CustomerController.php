@@ -7,6 +7,8 @@ use App\Models\Clubhouse;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 class CustomerController extends Controller
 {
     public function index(Request $request)
@@ -34,7 +36,7 @@ class CustomerController extends Controller
 
     public function add(Request $request)
     {
-        $validatedFields = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:15|unique:customers,phone',
             'dob' => 'nullable|date',
@@ -48,6 +50,13 @@ class CustomerController extends Controller
             'phone.unique' => 'Nomor telepon ini sudah terdaftar!',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Gagal menambahkan data! Pastikan semua input sudah sesuai.');
+        }
+
         try {
             DB::beginTransaction();
 
@@ -55,35 +64,36 @@ class CustomerController extends Controller
 
             if ($request->kategory_customer == 2) {
                 $customer->is_pelatih = 1;
-                $customer->awal_masa_berlaku = $validatedFields['awal_masa_berlaku'];
-                $customer->akhir_masa_berlaku = $validatedFields['akhir_masa_berlaku'];
+                $customer->awal_masa_berlaku = $request->awal_masa_berlaku;
+                $customer->akhir_masa_berlaku = $request->akhir_masa_berlaku;
             } else {
                 $customer->is_pelatih = 0;
             }
 
-            $customer->name = $validatedFields['name'];
-            $customer->phone = $validatedFields['phone'];
-            $customer->dob = $validatedFields['dob'];
-            $customer->tipe_customer = $validatedFields['tipe_customer'];
-            $customer->kategory_customer = $validatedFields['kategory_customer'];
-            $customer->id_club_renang = $validatedFields['id_club_renang'];
-            $customer->clubhouse_id = $validatedFields['id_club_renang'];
-            $customer->catatan = $validatedFields['catatan'];
+            $customer->name = $request->name;
+            $customer->phone = $request->phone;
+            $customer->dob = $request->dob;
+            $customer->tipe_customer = $request->tipe_customer;
+            $customer->kategory_customer = $request->kategory_customer;
+            $customer->id_club_renang = $request->id_club_renang;
+            $customer->clubhouse_id = $request->id_club_renang;
+            $customer->catatan = $request->catatan;
             $customer->save();
 
             DB::commit();
 
             return redirect()->route('customer')->with([
-                'success' => true,
+                'success' => 'Berhasil menambahkan data customer!',
                 'action' => 'add'
             ]);
 
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('customer')->with([
+            return redirect()->back()->with([
                 'success' => false,
-                'action' => 'add'
+                'action' => 'add',
+                'error' => 'Terjadi kesalahan: ' . $th->getMessage()
             ]);
         }
     }
@@ -102,19 +112,26 @@ class CustomerController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $validatedFields = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15|unique:customers,phone',
+            'phone' => 'required|string|max:15|unique:customers,phone,' . $id,
             'dob' => 'nullable|date',
-            'tipe_customer' => 'required|in:1,2,3',
-            'kategory_customer' => 'required|in:1,2,3',
-            'id_club_renang' => 'required|exists:clubhouses,id',
+            'tipe_customer' => 'nullable|in:1,2,3',
+            'kategory_customer' => 'nullable|in:1,2,3',
+            'id_club_renang' => 'nullable|exists:clubhouses,id',
             'catatan' => 'nullable|string|max:255',
             'awal_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
             'akhir_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
         ], [
             'phone.unique' => 'Nomor telepon ini sudah terdaftar!',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Gagal mengedit data! Pastikan semua input sudah sesuai.');
+        }
 
         try {
             DB::beginTransaction();
@@ -123,32 +140,34 @@ class CustomerController extends Controller
 
             if ($request->kategory_customer == 2) {
                 $customer->is_pelatih = 1;
-                $customer->awal_masa_berlaku = $validatedFields['awal_masa_berlaku'];
-                $customer->akhir_masa_berlaku = $validatedFields['akhir_masa_berlaku'];
+                $customer->awal_masa_berlaku = $request->awal_masa_berlaku;
+                $customer->akhir_masa_berlaku = $request->akhir_masa_berlaku;
             } else {
                 $customer->is_pelatih = 0;
             }
 
-            $customer->name = $validatedFields['name'];
-            $customer->phone = $validatedFields['phone'];
-            $customer->dob = $validatedFields['dob'];
-            $customer->tipe_customer = $validatedFields['tipe_customer'];
-            $customer->kategory_customer = $validatedFields['kategory_customer'];
-            $customer->id_club_renang = $validatedFields['id_club_renang'];
-            $customer->catatan = $validatedFields['catatan'];
+            $customer->name = $request->name;
+            $customer->phone = $request->phone;
+            $customer->dob = $request->dob;
+            $customer->tipe_customer = $request->tipe_customer;
+            $customer->kategory_customer = $request->kategory_customer;
+            $customer->id_club_renang = $request->id_club_renang;
+            $customer->clubhouse_id = $request->id_club_renang;
+            $customer->catatan = $request->catatan;
             $customer->save();
 
             DB::commit();
 
             return redirect()->route('customer')->with([
-                'success' => true,
+                'success' => 'Berhasil mengedit data customer!',
                 'action' => 'edit'
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('customer')->with([
+            return redirect()->back()->with([
                 'success' => false,
-                'action' => 'edit'
+                'action' => 'edit',
+                'error' => 'Terjadi kesalahan: ' . $th->getMessage()
             ]);
         }
     }

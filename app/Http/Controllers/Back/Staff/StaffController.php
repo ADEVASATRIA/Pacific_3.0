@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class StaffController extends Controller
 {
     public function index(Request $request)
     {
+        $nama = $request->input('nama');
         $isActive = $request->input('is_active');
 
         $query = Admin::query();
@@ -19,49 +21,63 @@ class StaffController extends Controller
             $query->where('is_active', (bool) $isActive);
         }
 
+        if ($nama !== null && $nama !== '') {
+            $query->where('name', 'like', '%' . $nama . '%');
+        }
+
         $admins = $query->where('deleted_at', null)->orderBy('created_at', 'asc')->get();
         return view('back.staff.index', compact('admins'));
     }
 
     public function add(Request $request)
     {
-        $validatedFields = $request->validate([
-            'username' => 'required|string|unique:admins,username',
-            'password' => 'required|string|min:6',
-            'tipe' => 'required|integer|in:1,2',
-            'is_active' => 'required|integer|in:0,1',
-            'pin' => 'nullable|digits:4|numeric',
-        ]);
-
-        // dd('masuk sini', $request->all(), $validatedFields);
-
+        // dd($request->all());
         try {
             DB::beginTransaction();
 
+            $validator = Validator::make($request->all(), [
+                'username' => 'required|string|unique:admins,username',
+                'password' => 'required|string|min:6',
+                'tipe' => 'required|integer|in:1,2',
+                'is_active' => 'required|integer|in:0,1',
+                'pin' => 'nullable|digits:4|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
+
             // --- Validasi tambahan untuk PIN ---
             if ($request->tipe == 1 && empty($request->pin)) {
-                return redirect()->back()->withErrors('PIN wajib diisi untuk tipe 3!');
+                throw new \Exception(
+                    'PIN wajib diisi untuk tipe Staff!'
+                );
             }
 
             if (!empty($request->pin)) {
                 // Pastikan PIN hanya angka dan 4 digit
                 if (!preg_match('/^\d{4}$/', $request->pin)) {
-                    return redirect()->back()->withErrors('PIN harus berupa 4 digit angka.');
+                    throw new \Exception(
+                        'PIN harus berupa 4 digit angka.'
+                    );
                 }
 
                 // Cek apakah PIN sudah digunakan sebelumnya
                 $pinExists = Admin::where('pin', $request->pin)->exists();
                 if ($pinExists) {
-                    return redirect()->back()->withErrors('PIN ini sudah digunakan. Silakan gunakan PIN lain.');
+                    // dd('masuk sini');
+                    throw new \Exception(
+                        'Pin yang anda masukkan sudah digunakan. Silakan gunakan PIN lain.'
+                    );
                 }
             }
 
             // --- Buat instance baru admin/staff ---
             $staff = new Admin();
-            $staff->username = $validatedFields['username'];
-            $staff->name = $validatedFields['username'];
-            $staff->password = bcrypt($validatedFields['password']);
-            $staff->is_active = $validatedFields['is_active'];
+            $staff->username = $request->username;
+            $staff->name = $request->username;
+            $staff->password = bcrypt($request->password);
+            $staff->is_active = $request->is_active;
             $staff->pin = $request->pin;
 
             // --- Logika tipe user ---
@@ -74,17 +90,17 @@ class StaffController extends Controller
             DB::commit();
 
             return redirect()->route('staff')->with([
-                'success' => true,
+                'success' => 'Berhasil menambahkan data staff!',
                 'action' => 'add'
             ]);
 
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            return redirect()->route('staff')->with([
+            return redirect()->back()->with([
                 'success' => false,
                 'action' => 'add',
-                'error' => $th->getMessage()
+                'error' => 'Terjadi kesalahan: ' . $th->getMessage()
             ]);
         }
     }
@@ -97,32 +113,42 @@ class StaffController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $admin = Admin::findOrFail($id);
-
-        $validatedFields = $request->validate([
-            'username' => 'required|string|unique:admins,username,' . $id,
-            'password' => 'nullable|string|min:6',
-            'tipe' => 'required|integer|in:1,2',
-            'is_active' => 'required|integer|in:0,1',
-            'pin' => 'nullable|digits:4|numeric',
-        ]);
-
         try {
             DB::beginTransaction();
 
+            $admin = Admin::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
+                'username' => 'required|string|unique:admins,username,' . $id,
+                'password' => 'nullable|string|min:6',
+                'tipe' => 'required|integer|in:1,2',
+                'is_active' => 'required|integer|in:0,1',
+                'pin' => 'nullable|digits:4|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
+
             // --- Validasi tambahan untuk PIN ---
             if ($request->tipe == 1 && empty($request->pin)) {
-                return redirect()->back()->withErrors('PIN wajib diisi untuk tipe Kasir!');
+                throw new \Exception(
+                    'PIN wajib diisi untuk tipe Staff!'
+                );
             }
 
             if (!empty($request->pin)) {
                 if (!preg_match('/^\d{4}$/', $request->pin)) {
-                    return redirect()->back()->withErrors('PIN harus berupa 4 digit angka.');
+                    throw new \Exception(
+                        'PIN harus berupa 4 digit angka.'
+                    );
                 }
 
                 $pinExists = Admin::where('pin', $request->pin)->where('id', '!=', $id)->exists();
                 if ($pinExists) {
-                    return redirect()->back()->withErrors('PIN ini sudah digunakan. Silakan gunakan PIN lain.');
+                    throw new \Exception(
+                        'Pin yang anda masukkan sudah digunakan. Silakan gunakan PIN lain.'
+                    );
                 }
             }
 
@@ -131,28 +157,28 @@ class StaffController extends Controller
             $admin->is_admin = $request->tipe == 2 ? 1 : 0;
 
             // --- Update data ---
-            $admin->username = $validatedFields['username'];
-            $admin->is_active = $validatedFields['is_active'];
+            $admin->username = $request->username;
+            $admin->is_active = $request->is_active;
             $admin->pin = $request->pin;
 
-            if (!empty($validatedFields['password'])) {
-                $admin->password = bcrypt($validatedFields['password']);
+            if (!empty($request->password)) {
+                $admin->password = bcrypt($request->password);
             }
 
             $admin->save();
             DB::commit();
 
             return redirect()->route('staff')->with([
-                'success' => true,
+                'success' => 'Berhasil mengedit data staff!',
                 'action' => 'edit'
             ]);
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('staff')->with([
+            return redirect()->back()->with([
                 'success' => false,
                 'action' => 'edit',
-                'error' => $th->getMessage()
+                'error' => 'Terjadi kesalahan: ' . $th->getMessage()
             ]);
         }
     }

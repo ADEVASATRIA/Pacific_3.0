@@ -1,6 +1,6 @@
 @extends('main.back_blank')
 @section('title', 'Data Staff')
-@vite('resources/css/admin/close-modal.css')
+@vite(['resources/css/admin/close-modal.css', 'resources/css/back/partial.css'])
 
 @section('content')
     <div class="staff-page">
@@ -9,6 +9,13 @@
         {{-- Filter Section (optional, currently commented out) --}}
         <div class="filter-section mb-4">
             <form method="GET" action="{{ route('staff') }}" class="filter-form flex items-end gap-4 flex-wrap">
+                {{-- Filter nama --}}
+                <div class="form-group">
+                    <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+                    <input type="text" name="nama" id="nama" value="{{ request('nama') }}"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                        placeholder="masukkan nama">
+                </div>
                 <div class="form-group">
                     <label for="is_active" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="is_active" id="is_active"
@@ -112,15 +119,13 @@
                                     <label for="username" class="form-label fw-semibold">Username</label>
                                     <input type="text" name="username" id="username" class="form-control"
                                         placeholder="Masukkan username" required>
-                                    <div class="invalid-feedback">Username wajib diisi.</div>
                                 </div>
 
                                 {{-- Password --}}
                                 <div class="col-md-6">
                                     <label for="password" class="form-label fw-semibold">Password</label>
                                     <input type="password" name="password" id="password" class="form-control"
-                                        placeholder="Masukkan password" minlength="6" required>
-                                    <div class="invalid-feedback">Password minimal 6 karakter.</div>
+                                        placeholder="Password minimal 6 karakter" minlength="6" required>
                                 </div>
 
 
@@ -132,7 +137,6 @@
                                         <option value="1">Staff (Wajib PIN)</option>
                                         <option value="2">Admin</option>
                                     </select>
-                                    <div class="invalid-feedback">Pilih tipe akun terlebih dahulu.</div>
                                 </div>
 
                                 {{-- PIN --}}
@@ -140,7 +144,6 @@
                                     <label for="pin" class="form-label fw-semibold">PIN (4 Digit)</label>
                                     <input type="number" name="pin" id="pin" class="form-control"
                                         placeholder="Masukkan 4 digit PIN">
-                                    <div class="invalid-feedback">PIN harus terdiri dari 4 digit angka.</div>
                                 </div>
 
                                 {{-- Status --}}
@@ -150,7 +153,6 @@
                                         <option value="1" selected>Aktif</option>
                                         <option value="0">Nonaktif</option>
                                     </select>
-                                    <div class="invalid-feedback">Pilih status akun.</div>
                                 </div>
 
                                 {{-- Tombol Submit --}}
@@ -401,5 +403,45 @@
                 }, 2500);
             });
         @endif
+
+        // Function aler error Exception
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
+                document.body.appendChild(alertDiv);
+
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                // show
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+
+                // auto hide
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 4000);
+            }
+
+            @if (session('error'))
+                console.log('Session Error:', @json(session('error')));
+                showAlert('error', @json(session('error')));
+            @endif
+
+            @if (session('success'))
+                showAlert('success', @json(session('success')));
+            @endif
+        });
     </script>
 @endsection

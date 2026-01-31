@@ -1,6 +1,7 @@
 @extends('main.back_blank')
 @section('title', 'Data Promo')
 @vite('resources/css/admin/close-modal.css')
+@vite('resources/css/back/partial.css')
 
 @section('content')
     <div class="promo-page">
@@ -62,13 +63,19 @@
                                 @endif
                             </td>
                             <td>
-                                <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
-                                    Edit
-                                </button>
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="openConfirmModal({{ $item->id }}, '{{ $item->code }}')">
-                                    Delete
-                                </button>
+                                <div class="flex items-center gap-1">
+                                    <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm"
+                                        onclick="openConfirmModal({{ $item->id }}, '{{ $item->code }}')">
+                                        Delete
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                        onclick="showPromoDetail({{ $item->id }})">
+                                        Detail
+                                    </button>
+                                </div>
                             </td>
 
                         </tr>
@@ -86,6 +93,17 @@
                     {{ $promo->appends(request()->query())->links('pagination::bootstrap-5') }}
                 </div>
             @endif
+        </div>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="promoDetailCanvas"
+            aria-labelledby="promoDetailLabel" style="--bs-offcanvas-width: 600px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="promoDetailLabel">Detail Promo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body" id="promoDetailBody">
+                <p class="text-muted">Memuat data...</p>
+            </div>
         </div>
     </div>
 
@@ -151,37 +169,42 @@
 
                                 {{-- Kuota --}}
                                 <div class="col-md-6">
-                                    <label for="quota" class="form-label fw-semibold">Kuota</label>
+                                    <label for="quota" class="form-label fw-semibold"><span
+                                            class="text-danger">*</span>Kuota</label>
                                     <input type="number" id="quota" name="quota" class="form-control shadow-sm"
                                         placeholder="Jumlah maksimal penggunaan">
                                 </div>
 
                                 {{-- Start Date --}}
                                 <div class="col-md-6">
-                                    <label for="start_date" class="form-label fw-semibold">Tanggal Mulai</label>
+                                    <label for="start_date" class="form-label fw-semibold"><span
+                                            class="text-danger">*</span>Tanggal Mulai</label>
                                     <input type="date" id="start_date" name="start_date"
                                         class="form-control shadow-sm">
                                 </div>
 
                                 {{-- Expired Date --}}
                                 <div class="col-md-6">
-                                    <label for="expired_date" class="form-label fw-semibold">Tanggal Berakhir</label>
+                                    <label for="expired_date" class="form-label fw-semibold"><span
+                                            class="text-danger">*</span>Tanggal Berakhir</label>
                                     <input type="date" id="expired_date" name="expired_date"
                                         class="form-control shadow-sm">
                                 </div>
 
                                 {{-- Min Purchase --}}
                                 <div class="col-md-6">
-                                    <label for="min_purchase" class="form-label fw-semibold">Minimal Pembelian</label>
+                                    <label for="min_purchase" class="form-label fw-semibold"><span
+                                            class="text-danger">*</span>Minimal Pembelian</label>
                                     <input type="number" id="min_purchase" name="min_purchase"
-                                        class="form-control shadow-sm" placeholder="Contoh: 100000">
+                                        class="form-control shadow-sm" placeholder="Contoh: Rp. 100000">
                                 </div>
 
                                 {{-- Max Discount --}}
                                 <div class="col-md-6">
-                                    <label for="max_discount" class="form-label fw-semibold">Maksimal Diskon</label>
+                                    <label for="max_discount" class="form-label fw-semibold"><span
+                                            class="text-danger">*</span>Maksimal Diskon</label>
                                     <input type="number" id="max_discount" name="max_discount"
-                                        class="form-control shadow-sm" placeholder="Contoh: 50000">
+                                        class="form-control shadow-sm" placeholder="Contoh: Rp. 50000">
                                 </div>
 
                                 {{-- Status --}}
@@ -441,8 +464,7 @@
 
                 // ambil ticket_types langsung dari data (bukan result.ticket_types)
                 const ticketTypes = Array.isArray(data.ticket_types) ?
-                    data.ticket_types :
-                    [];
+                    data.ticket_types : [];
 
                 // isi field form edit
                 document.getElementById('formEditPromo').action = `/edit-promo/${id}`;
@@ -490,5 +512,68 @@
                 }, 2500);
             });
         @endif
+
+        function showPromoDetail(promoId) {
+            const offcanvasElement = document.getElementById('promoDetailCanvas');
+            const offcanvasBody = document.getElementById('promoDetailBody');
+
+            offcanvasBody.innerHTML = '<p class="text-muted">Memuat data...</p>';
+
+            fetch(`/promo/detail/${promoId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Gagal memuat data');
+                    return res.text();
+                })
+                .then(html => {
+                    offcanvasBody.innerHTML = html;
+                })
+                .catch(err => {
+                    offcanvasBody.innerHTML = `<p class="text-danger">${err.message}</p>`;
+                });
+
+            const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+            bsOffcanvas.show();
+        }
+
+
+        // Function aler error Exception
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
+                document.body.appendChild(alertDiv);
+
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                // show
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+
+                // auto hide
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 4000);
+            }
+
+            @if (session('error'))
+                console.log('Session Error:', @json(session('error')));
+                showAlert('error', @json(session('error')));
+            @endif
+
+            @if (session('success'))
+                showAlert('success', @json(session('success')));
+            @endif
+        });
     </script>
 @endsection

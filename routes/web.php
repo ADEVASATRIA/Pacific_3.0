@@ -149,6 +149,7 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/do-create-promo', [PromoController::class, 'add'])->name('add.promo');
     Route::post('/edit-promo/{id}', [PromoController::class, 'edit'])->name('edit.promo');
     Route::delete('/delete-promo/{id}', [PromoController::class, 'delete'])->name('delete.promos');
+    Route::get('/promo/detail/{id}', [PromoController::class, 'detail'])->name('promo.detail');
 
 
     // Route Ticket Types view back office

@@ -6,20 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\TicketType;
 use Illuminate\Http\Request;
 use App\Models\Promo;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 class PromoController extends Controller
 {
 
     private $validatedFields = [
-        'code' => 'required',
+        'code' => 'required|string|max:255|unique:promos,code',
         'type' => 'required',
         'value' => 'required',
         'is_active' => 'required',
         'description' => 'nullable',
-        'expired_date' => 'nullable',
-        'start_date' => 'nullable',
-        'min_purchase' => 'nullable',
-        'max_discount' => 'nullable',
-        'quota' => 'nullable|numeric',
+        'expired_date' => 'required|date',
+        'start_date' => 'required|date',
+        'min_purchase' => 'required|numeric',
+        'max_discount' => 'required|numeric',
+        'quota' => 'required|numeric',
         'ticket_types' => 'required|array',
     ];
 
@@ -50,28 +53,72 @@ class PromoController extends Controller
 
     public function add(Request $request)
     {
-        $validatedFields = $request->validate($this->validatedFields);
+        try {
+            DB::beginTransaction();
 
-        Promo::create($validatedFields);
+            $validator = Validator::make($request->all(), $this->validatedFields);
 
-        return redirect()->route('promo')->with([
-            'success' => true,
-            'action' => 'add'
-        ]);
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
+
+            Promo::create($validator->validated());
+
+            DB::commit();
+
+            return redirect()->route('promo')->with([
+                'success' => 'Berhasil menambahkan promo!',
+                'action' => 'add'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->withInput()
+                ->with([
+                    'error' => 'Terjadi kesalahan: ' . $th->getMessage(),
+                    'action' => 'add'
+                ]);
+        }
     }
 
     public function edit(Request $request, $id)
     {
-        $promo = Promo::findOrFail($id);
+        try {
+            DB::beginTransaction();
 
-        $validatedFields = $request->validate($this->validatedFields);
+            $promo = Promo::findOrFail($id);
 
-        $promo->update($validatedFields);
+            // Adjust unique validation for update
+            $rules = $this->validatedFields;
+            $rules['code'] = 'required|string|max:255|unique:promos,code,' . $id;
 
-        return redirect()->route('promo')->with([
-            'success' => true,
-            'action' => 'edit'
-        ]);
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
+
+            $promo->update($validator->validated());
+
+            DB::commit();
+
+            return redirect()->route('promo')->with([
+                'success' => 'Berhasil mengupdate promo!',
+                'action' => 'edit'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->withInput()
+                ->with([
+                    'error' => 'Terjadi kesalahan: ' . $th->getMessage(),
+                    'action' => 'edit'
+                ]);
+        }
     }
 
 
@@ -84,5 +131,20 @@ class PromoController extends Controller
             'success' => true,
             'action' => 'delete'
         ]);
+    }
+
+    public function detail($id){
+        $promo = Promo::findOrFail($id);
+        
+        // Fetch ticket names based on the JSON array in ticket_types
+        $ticketIds = $promo->ticket_types ?? [];
+        // Ensure it's an array (handle case where it might be null or not an array)
+        if (!is_array($ticketIds)) {
+            $ticketIds = [];
+        }
+        
+        $ticketNames = TicketType::whereIn('id', $ticketIds)->pluck('name')->toArray();
+
+        return view('back.partials.promo.promo_detail', compact('promo', 'ticketNames'));
     }
 }

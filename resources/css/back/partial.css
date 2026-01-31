@@ -258,6 +258,7 @@
 .table .btn {
     white-space: nowrap;
     margin: 0 2px;
+    width: auto;
 }
 
 /* ===== Responsive ===== */

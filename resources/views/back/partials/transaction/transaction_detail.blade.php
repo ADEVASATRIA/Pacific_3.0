@@ -9,24 +9,26 @@
         </p>
     </div>
 
-    <table class="table table-sm w-full border border-gray-300">
-        <thead class="bg-gray-100">
-            <tr>
-                <th>Nama Item</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($purchase->purchaseDetails as $detail)
+    <div class="table-responsive">
+        <table class="table table-sm w-full border border-gray-300">
+            <thead class="bg-gray-100">
                 <tr>
-                    <td>{{ $detail->name ?? '-' }}</td>
-                    <td>{{ $detail->qty }}</td>
-                    <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($detail->qty * $detail->price, 0, ',', '.') }}</td>
+                    <th>Nama Item</th>
+                    <th>Qty</th>
+                    <th>Harga</th>
+                    <th>Subtotal</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($purchase->purchaseDetails as $detail)
+                    <tr>
+                        <td>{{ $detail->name ?? '-' }}</td>
+                        <td>{{ $detail->qty }}</td>
+                        <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($detail->qty * $detail->price, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>

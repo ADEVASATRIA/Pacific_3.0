@@ -146,7 +146,7 @@
 
             {{-- Offcanvas --}}
             <div class="offcanvas offcanvas-end" tabindex="-1" id="transactionDetailCanvas"
-                aria-labelledby="transactionDetailLabel">
+                aria-labelledby="transactionDetailLabel" style="--bs-offcanvas-width: 600px;">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="transactionDetailLabel">Detail Transaksi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

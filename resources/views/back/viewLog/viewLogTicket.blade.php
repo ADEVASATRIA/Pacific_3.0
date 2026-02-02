@@ -202,7 +202,10 @@
             {{-- PACKAGE TABLE --}}
             <section class="tab-pane active" data-content="package">
                 @if ($logQtyPacket->count() > 0)
-                    <table class="log-table">
+                    <div class="table-section mt-2 relative">
+                        <div class="table-scroll-container">
+                            <div class="table-wrapper">
+                                <table class="log-table">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -225,7 +228,10 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <div class="alert-info">Tidak ada tiket package yang di-redeem pada tanggal ini.</div>
                 @endif
@@ -257,7 +263,10 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <div class="alert-info">Tidak ada tiket single yang di-print pada tanggal ini.</div>
                 @endif
@@ -266,7 +275,10 @@
             {{-- MEMBER TABLE --}}
             <section class="tab-pane" data-content="member">
                 @if ($logPrintMember->count() > 0)
-                    <table class="log-table">
+                    <div class="table-section mt-2 relative">
+                        <div class="table-scroll-container">
+                            <div class="table-wrapper">
+                                <table class="log-table">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -296,7 +308,10 @@
             {{-- TRAINER TABLE --}}
             <section class="tab-pane" data-content="trainer">
                 @if ($logPrintPelatih->count() > 0)
-                    <table class="log-table">
+                    <div class="table-section mt-2 relative">
+                        <div class="table-scroll-container">
+                            <div class="table-wrapper">
+                                <table class="log-table">
                         <thead>
                             <tr>
                                 <th>No.</th>

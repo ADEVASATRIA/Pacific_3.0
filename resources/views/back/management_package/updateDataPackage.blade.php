@@ -124,8 +124,9 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </div>
             </div>
         @elseif(isset($customer) && isset($viewData) && count($viewData) == 0)
             <p class="text-center mt-4">Customer ditemukan, tetapi tidak memiliki data package.</p>

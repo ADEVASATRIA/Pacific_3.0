@@ -43,7 +43,7 @@ body {
 
 /* ===== Dashboard Wrapper ===== */
 .dashboard-wrapper {
-    display: flex;
+    display: block;
     min-height: 100vh;
     position: relative;
 }

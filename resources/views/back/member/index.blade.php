@@ -85,8 +85,10 @@
             </form>
         </div>
 
-        <div class="table-section mt-4">
-            <table class="table w-full border-collapse border border-gray-200">
+        <div class="table-section mt-2 relative">
+        <div class="table-scroll-container">
+            <div class="table-wrapper">
+                <table class="table">
                 <thead>
                     <tr class="bg-gray-100">
                         <th class="text-center">Nomer Telephone</th>
@@ -146,7 +148,9 @@
                     @endforelse
                 </tbody>
             </table>
-            @if ($members->hasPages())
+            </div>
+        </div>
+        @if ($members->hasPages())
                 <div class="mt-4 flex justify-center">
                     {{ $members->appends(request()->query())->links('pagination::bootstrap-5') }}
                 </div>

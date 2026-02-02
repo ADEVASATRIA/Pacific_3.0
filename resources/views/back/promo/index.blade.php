@@ -34,8 +34,10 @@
         </div>
 
         {{-- Table Section --}}
-        <div class="table-section mt-4">
-            <table class="table w-full border-collapse border border-gray-200">
+        <div class="table-section mt-2 relative">
+        <div class="table-scroll-container">
+            <div class="table-wrapper">
+                <table class="table">
                 <thead>
                     <tr class="bg-gray-100">
                         <th>Code</th>
@@ -86,6 +88,8 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
+        </div>
 
             {{-- Pagination --}}
             @if ($promo->hasPages())

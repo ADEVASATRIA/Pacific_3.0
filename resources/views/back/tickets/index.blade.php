@@ -35,90 +35,90 @@
 
         {{-- Table Section --}}
         <div class="table-section mt-2 relative"> {{-- tambahkan relative agar gradient scroll bisa muncul --}}
-            <div class="table-wrapper"> {{-- tambahan pembungkus untuk memastikan scroll tidak terpotong --}}
-                <div class="table-scroll-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nama</th>
-                                <th>Harga</th>
-                                <th>Durasi</th>
-                                <th>Extra Ticket</th>
-                                <th>Urutan</th>
-                                {{-- <th>Butuh DOB</th>
+            <div class="table-scroll-container">
+                <div class="table-wrapper"> {{-- tambahan pembungkus untuk memastikan scroll tidak terpotong --}}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Harga</th>
+                            <th>Durasi</th>
+                            <th>Extra Ticket</th>
+                            <th>Urutan</th>
+                            {{-- <th>Butuh DOB</th>
                                 <th>Butuh Telephone</th> --}}
-                                <th>Aktif</th>
-                                <th>Bisa Beli <br>Tiket Pengantar</th>
-                                <th>Bisa Input Coach <br>/ Clubhouse</th>
-                                <th>Tipe Khusus</th>
-                                <th>Tiket Kode REF</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($ticketTypes as $item)
-                                <tr>
-                                    <td>{{ $item->name }}</td>
-                                    <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                    <td class="text-center">
-                                        @if ($item->validity_type === 'lifetime')
-                                            <span class="badge bg-success">Selamanya</span>
-                                        @else
-                                            {{ $item->duration }} hari
-                                        @endif
-                                    </td>
-                                    <td class="text-center">{{ $item->qty_extra }}</td>
-                                    <td class="text-center">{{ $item->weight }}</td>
-                                    {{-- <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
+                            <th>Aktif</th>
+                            <th>Bisa Beli <br>Tiket Pengantar</th>
+                            <th>Bisa Input Coach <br>/ Clubhouse</th>
+                            <th>Tipe Khusus</th>
+                            <th>Tiket Kode REF</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($ticketTypes as $item)
+                            <tr>
+                                <td>{{ $item->name }}</td>
+                                <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                <td class="text-center">
+                                    @if ($item->validity_type === 'lifetime')
+                                        <span class="badge bg-success">Selamanya</span>
+                                    @else
+                                        {{ $item->duration }} hari
+                                    @endif
+                                </td>
+                                <td class="text-center">{{ $item->qty_extra }}</td>
+                                <td class="text-center">{{ $item->weight }}</td>
+                                {{-- <td class="text-center">{!! $item->getBadgeHtml($item->is_dob_mandatory) !!}</td>
                                     <td class="text-center">{!! $item->getBadgeHtml($item->is_phone_mandatory) !!}</td> --}}
-                                    <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
-                                    <td class="text-center">{!! $item->getBadgeHtml($item->can_buy_tiket_pengantar) !!}</td>
-                                    <td class="text-center">{!! $item->getBadgeHtml($item->is_coach_club_require) !!}</td>
-                                    <td class="text-center">
-                                        @switch($item->tipe_khusus)
-                                            @case(1)
-                                                <span class="badge bg-info text-dark">Normal</span>
-                                            @break
+                                <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
+                                <td class="text-center">{!! $item->getBadgeHtml($item->can_buy_tiket_pengantar) !!}</td>
+                                <td class="text-center">{!! $item->getBadgeHtml($item->is_coach_club_require) !!}</td>
+                                <td class="text-center">
+                                    @switch($item->tipe_khusus)
+                                        @case(1)
+                                            <span class="badge bg-info text-dark">Normal</span>
+                                        @break
 
-                                            @case(2)
-                                                <span class="badge bg-warning">Pengantar</span>
-                                            @break
+                                        @case(2)
+                                            <span class="badge bg-warning">Pengantar</span>
+                                        @break
 
-                                            @case(3)
-                                                <span class="badge bg-primary">Pelatih</span>
-                                            @break
+                                        @case(3)
+                                            <span class="badge bg-primary">Pelatih</span>
+                                        @break
 
-                                            @case(4)
-                                                <span class="badge bg-dark">Member</span>
-                                            @break
+                                        @case(4)
+                                            <span class="badge bg-dark">Member</span>
+                                        @break
 
-                                            @case(5)
-                                                <span class="badge bg-warning text-dark">Biaya Pelatih</span>
-                                            @break
-                                        @endswitch
-                                    </td>
-                                    <td class="text-center">{{ $item->ticket_kode_ref }}</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
-                                            Edit
-                                        </button>
-                                        <button class="btn btn-danger btn-sm"
-                                            onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
-                                            Delete
-                                        </button>
+                                        @case(5)
+                                            <span class="badge bg-warning text-dark">Biaya Pelatih</span>
+                                        @break
+                                    @endswitch
+                                </td>
+                                <td class="text-center">{{ $item->ticket_kode_ref }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm"
+                                        onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="13" class="text-center text-gray-500 py-3">
+                                        Tidak ada data tiket
                                     </td>
                                 </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="13" class="text-center text-gray-500 py-3">
-                                            Tidak ada data tiket
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
+            </div>
 
                 {{-- Pagination --}}
                 @if ($ticketTypes->hasPages())
@@ -126,7 +126,7 @@
                         {{ $ticketTypes->appends(request()->query())->links('pagination::bootstrap-5') }}
                     </div>
                 @endif
-        </div>
+            </div>
 
             {{-- Modal Tambah data Ticket Types --}}
             <div class="modal fade" id="modalTambahTicketTypes" tabindex="-1" aria-labelledby="modalTambahTicketTypesLabel"
@@ -169,8 +169,10 @@
 
                                         {{-- Masa Berlaku --}}
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Masa Berlaku</label><span class="text-danger">*</span>
-                                            <select name="validity_type" id="validity_type" class="form-select shadow-sm" required>
+                                            <label class="form-label fw-semibold">Masa Berlaku</label><span
+                                                class="text-danger">*</span>
+                                            <select name="validity_type" id="validity_type" class="form-select shadow-sm"
+                                                required>
                                                 <option value="duration" selected>Durasi (Hari)</option>
                                                 <option value="lifetime">Selamanya</option>
                                             </select>
@@ -180,7 +182,8 @@
                                         {{-- Durasi Tiket --}}
                                         <div class="col-md-6" id="durationGroup">
                                             <label for="duration" class="form-label fw-semibold">Durasi (hari)</label>
-                                            <input type="number" id="duration" name="duration" class="form-control shadow-sm" min="1">
+                                            <input type="number" id="duration" name="duration" class="form-control shadow-sm"
+                                                min="1">
                                         </div>
 
 
@@ -327,8 +330,10 @@
 
                                         {{-- Masa Berlaku --}}
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Masa Berlaku</label><span class="text-danger">*</span>
-                                            <select name="validity_type" id="edit_validity_type" class="form-select shadow-sm" required>
+                                            <label class="form-label fw-semibold">Masa Berlaku</label><span
+                                                class="text-danger">*</span>
+                                            <select name="validity_type" id="edit_validity_type"
+                                                class="form-select shadow-sm" required>
                                                 <option value="duration">Durasi (Hari)</option>
                                                 <option value="lifetime">Selamanya</option>
                                             </select>
@@ -337,7 +342,8 @@
                                         {{-- Durasi Tiket --}}
                                         <div class="col-md-6" id="editDurationGroup">
                                             <label for="edit_duration" class="form-label fw-semibold">Durasi (hari)</label>
-                                            <input type="number" id="edit_duration" name="duration" class="form-control shadow-sm" min="1">
+                                            <input type="number" id="edit_duration" name="duration"
+                                                class="form-control shadow-sm" min="1">
                                         </div>
 
 
@@ -496,8 +502,6 @@
 
                 </div>
             </div>
-
-
     </div>
 
     <script>

@@ -64,8 +64,8 @@
         @endif
         @if(isset($viewDetailsData) && count($viewDetailsData) > 0)
             <div class="table-section mt-2 relative">
-                <div class="table-wrapper">
-                    <div class="table-scroll-container">
+                <div class="table-scroll-container">
+                    <div class="table-wrapper">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -85,6 +85,9 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="mt-4">
+                    {{ $viewDetailsData->links() }}
                 </div>
             </div>
         @else

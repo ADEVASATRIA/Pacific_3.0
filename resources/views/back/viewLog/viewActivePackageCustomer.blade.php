@@ -60,6 +60,9 @@
                     </table>
                 </div>
             </div>
+            <div class="mt-4">
+                {{ $activePackages->withQueryString()->links() }}
+            </div>
         </div>
 
     </div>

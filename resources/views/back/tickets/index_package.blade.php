@@ -33,68 +33,72 @@
         </div>
 
         {{-- Table Section --}}
-        <div class="table-section mt-4">
-            <table class="table w-full border-collapse border border-gray-200">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th>Nama</th>
-                        <th>Weight / Urutan</th>
-                        <th>Harga</th>
-                        <th>Durasi</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Tanggal Akhir</th>
-                        <th>Extra Ticket</th>
-                        <th>Tipe Khusus</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($packageCombos as $item)
-                        <tr>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ $item->weight }}</td>
-                            <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                            <td class="text-center">{{ $item->expired_duration }}</td>
-                            <td class="text-center">
-                                @if ($item->start_date)
-                                    {{ \Carbon\Carbon::parse($item->start_date)->translatedFormat('d F Y') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                @if ($item->end_date)
-                                    {{ \Carbon\Carbon::parse($item->end_date)->translatedFormat('d F Y') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="text-center">{{ $item->details->sum('qty_extra') }}</td>
-                            <td class="text-center">
-                                @if ($item->tipe_khusus == 1)
-                                    <span class="badge bg-black">Packet</span>
-                                @endif
-                            </td>
-                            <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $item->id }})">
-                                    Edit
-                                </button>
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="11" class="text-center text-gray-500 py-3">Tidak ada data tiket</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
+        <div class="table-section mt-2 relative">
+            <div class="table-scroll-container">
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th>Nama</th>
+                                <th>Weight / Urutan</th>
+                                <th>Harga</th>
+                                <th>Durasi</th>
+                                <th>Tanggal Mulai</th>
+                                <th>Tanggal Akhir</th>
+                                <th>Extra Ticket</th>
+                                <th>Tipe Khusus</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($packageCombos as $item)
+                                <tr>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->weight }}</td>
+                                    <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                    <td class="text-center">{{ $item->expired_duration }}</td>
+                                    <td class="text-center">
+                                        @if ($item->start_date)
+                                            {{ \Carbon\Carbon::parse($item->start_date)->translatedFormat('d F Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($item->end_date)
+                                            {{ \Carbon\Carbon::parse($item->end_date)->translatedFormat('d F Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{{ $item->details->sum('qty_extra') }}</td>
+                                    <td class="text-center">
+                                        @if ($item->tipe_khusus == 1)
+                                            <span class="badge bg-black">Packet</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{!! $item->getBadgeHtml($item->is_active) !!}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="openEditModal({{ $item->id }})">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="text-center text-gray-500 py-3">Tidak ada data tiket</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             {{-- Pagination --}}
             @if ($packageCombos->hasPages())
                 <div class="mt-4 flex justify-center">
@@ -325,7 +329,8 @@
                                 </div>
                                 <div class="col-md-6" id="edit_dateEndGroup" style="display: none;">
                                     <label for="edit_end_date" class="form-label fw-semibold">End Date</label>
-                                    <input type="date" name="end_date" id="edit_end_date" class="form-control shadow-sm">
+                                    <input type="date" name="end_date" id="edit_end_date"
+                                        class="form-control shadow-sm">
                                 </div>
 
                                 {{-- Qty --}}
@@ -442,7 +447,7 @@
             const durationGroup = document.getElementById('durationInputGroup');
             const dateStartGroup = document.getElementById('dateStartGroup');
             const dateEndGroup = document.getElementById('dateEndGroup');
-            
+
             const durationInput = document.getElementById('expired_duration');
             const startDateInput = document.getElementById('start_date');
             const endDateInput = document.getElementById('end_date');
@@ -459,7 +464,7 @@
                     durationInput.setAttribute('required', 'required');
                     startDateInput.removeAttribute('required');
                     endDateInput.removeAttribute('required');
-                    
+
                     // Reset values
                     startDateInput.value = '';
                     endDateInput.value = '';
@@ -472,7 +477,7 @@
                     durationInput.removeAttribute('required');
                     startDateInput.setAttribute('required', 'required');
                     endDateInput.setAttribute('required', 'required');
-                    
+
                     // Reset value
                     durationInput.value = '';
                 }
@@ -483,7 +488,7 @@
             });
 
             // Init state
-            if(modeRadios.length > 0) {
+            if (modeRadios.length > 0) {
                 toggleExpiredMode();
             }
 
@@ -496,7 +501,7 @@
                 function toggleAddExtraQty() {
                     if (addItemSelect.value == '2') { // Tiket Anak
                         addExtraGroup.style.display = 'block';
-                        addExtraInput.value = 1; 
+                        addExtraInput.value = 1;
                     } else {
                         addExtraGroup.style.display = 'none';
                         addExtraInput.value = 0;
@@ -511,7 +516,7 @@
             const editDurationGroup = document.getElementById('edit_durationInputGroup');
             const editDateStartGroup = document.getElementById('edit_dateStartGroup');
             const editDateEndGroup = document.getElementById('edit_dateEndGroup');
-            
+
             const editDurationInput = document.getElementById('edit_expired_duration');
             const editStartDateInput = document.getElementById('edit_start_date');
             const editEndDateInput = document.getElementById('edit_end_date');
@@ -519,7 +524,8 @@
             function toggleEditExpiredMode() {
                 // Cari radio yang checked di dalam modal edit
                 // Karena name sama dengan modal add, kita persempit scope atau cari ID spesifik
-                const selectedMode = document.querySelector('input[name="expired_mode"][id^="edit_mode"]:checked').value;
+                const selectedMode = document.querySelector('input[name="expired_mode"][id^="edit_mode"]:checked')
+                    .value;
 
                 if (selectedMode === 'duration') {
                     editDurationGroup.style.display = 'block';
@@ -529,7 +535,7 @@
                     editDurationInput.setAttribute('required', 'required');
                     editStartDateInput.removeAttribute('required');
                     editEndDateInput.removeAttribute('required');
-                    
+
                     editStartDateInput.value = '';
                     editEndDateInput.value = '';
                 } else {
@@ -540,7 +546,7 @@
                     editDurationInput.removeAttribute('required');
                     editStartDateInput.setAttribute('required', 'required');
                     editEndDateInput.setAttribute('required', 'required');
-                    
+
                     editDurationInput.value = '';
                 }
             }
@@ -570,7 +576,7 @@
                 document.getElementById('edit_expired_duration').value = data.expired_duration ?? '';
                 document.getElementById('edit_is_active').value = data.is_active ?? 1;
                 document.getElementById('edit_tipe_khusus').value = data.tipe_khusus ?? 1;
-                
+
                 document.getElementById('edit_start_date').value = data.start_date ?? '';
                 document.getElementById('edit_end_date').value = data.end_date ?? '';
 
@@ -580,7 +586,7 @@
                 } else {
                     document.getElementById('edit_mode_duration').checked = true;
                 }
-                
+
                 // Trigger change event agar UI menyesuaikan (karena listener ada di DOMContentLoaded)
                 document.getElementById('edit_mode_duration').dispatchEvent(new Event('change'));
                 document.getElementById('edit_mode_date').dispatchEvent(new Event('change'));

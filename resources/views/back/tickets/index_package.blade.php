@@ -135,21 +135,21 @@
                                 <div class="col-md-6">
                                     <label for="name" class="form-label fw-semibold">Nama Package</label>
                                     <input type="text" name="name" id="name" class="form-control shadow-sm"
-                                        required>
+                                        required placeholder="Masukkan nama">
                                 </div>
 
                                 {{-- Weight --}}
                                 <div class="col-md-6">
                                     <label for="weight" class="form-label fw-semibold">Weight / Urutan</label>
                                     <input type="number" name="weight" id="weight" class="form-control shadow-sm"
-                                        required>
+                                        required placeholder="Masukkan urutan tampilan">
                                 </div>
 
                                 {{-- Harga --}}
                                 <div class="col-md-6">
                                     <label for="price" class="form-label fw-semibold">Harga</label>
                                     <input type="number" name="price" id="price" class="form-control shadow-sm"
-                                        required>
+                                        required placeholder="Masukkan harga">
                                 </div>
 
                                 {{-- Pilihan Mode Expired --}}
@@ -178,7 +178,7 @@
                                     <label for="expired_duration" class="form-label fw-semibold">Expired Duration
                                         (hari)</label>
                                     <input type="number" name="expired_duration" id="expired_duration"
-                                        class="form-control shadow-sm">
+                                        class="form-control shadow-sm" placeholder="Masukkan durasi expired">
                                 </div>
 
                                 {{-- Tanggal Start & End (Input Date) --}}
@@ -196,7 +196,7 @@
                                 <div class="col-md-6">
                                     <label for="tempQty" class="form-label fw-semibold">Jumlah Tiket (Qty)</label>
                                     <input type="number" name="tempQty" id="tempQty" class="form-control shadow-sm"
-                                        required>
+                                        required placeholder="Masukkan jumlah tiket">
                                 </div>
 
                                 {{-- Tipe Khusus --}}
@@ -659,6 +659,46 @@
                 }, 2500);
             });
         @endif
+
+        // Function aler error Exception
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
+                document.body.appendChild(alertDiv);
+
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                // show
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+
+                // auto hide
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 4000);
+            }
+
+            @if (session('error'))
+                console.log('Session Error:', @json(session('error')));
+                showAlert('error', @json(session('error')));
+            @endif
+
+            @if (session('success'))
+                showAlert('success', @json(session('success')));
+            @endif
+        });
     </script>
 
 

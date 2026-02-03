@@ -28,48 +28,48 @@ class PackageComboController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'weight' => 'integer',
-            'price' => 'required|integer|min:1',
-            'expired_duration' => 'nullable|integer|min:1',
-            'is_active' => 'required|integer',
-            'tempQty' => 'required|integer|min:1',
-            'item_id' => 'required|integer|min:1',
-
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ]);
-
-        // Validasi Custom: Salah satu harus diisi (Duration atau Date Range)
-        if (empty($request->expired_duration) && (empty($request->start_date) || empty($request->end_date))) {
-            return redirect()->back()->withErrors(['expired_duration' => 'Harap isi Durasi atau Tanggal Mulai & Akhir'])->withInput();
-        }
-
-        // ===== ITEM LOGIC =====
-        if ($request->item_id == 1) {
-            $request->merge(['qty_extra' => 0]);
-        } elseif ($request->item_id == 2) {
-            $request->merge(['qty_extra' => 1]);
-        }
-
-        // ===== EXPIRED DURATION LOGIC =====
-        $expiredDuration = $request->expired_duration;
-
-        if (
-            empty($expiredDuration) &&
-            $request->filled('start_date') &&
-            $request->filled('end_date')
-        ) {
-            $start = Carbon::parse($request->start_date);
-            $end = Carbon::parse($request->end_date);
-
-            // +1 jika mau inclusive (misal 1–7 = 7 hari)
-            $expiredDuration = $start->diffInDays($end);
-        }
-
         try {
             DB::beginTransaction();
+
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'weight' => 'nullable|integer',
+                'price' => 'required|integer|min:1',
+                'expired_duration' => 'nullable|integer|min:1',
+                'is_active' => 'required|integer',
+                'tempQty' => 'required|integer|min:1',
+                'item_id' => 'required|integer|min:1',
+
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+            ]);
+
+            // Validasi Custom: Salah satu harus diisi (Duration atau Date Range)
+            if (empty($request->expired_duration) && (empty($request->start_date) || empty($request->end_date))) {
+                throw new \Exception('Harap isi Durasi atau Tanggal Mulai & Akhir');
+            }
+
+            // ===== ITEM LOGIC =====
+            if ($request->item_id == 1) {
+                $request->merge(['qty_extra' => 0]);
+            } elseif ($request->item_id == 2) {
+                $request->merge(['qty_extra' => 1]);
+            }
+
+            // ===== EXPIRED DURATION LOGIC =====
+            $expiredDuration = $request->expired_duration;
+
+            if (
+                empty($expiredDuration) &&
+                $request->filled('start_date') &&
+                $request->filled('end_date')
+            ) {
+                $start = Carbon::parse($request->start_date);
+                $end = Carbon::parse($request->end_date);
+
+                // +1 jika mau inclusive (misal 1–7 = 7 hari)
+                $expiredDuration = $start->diffInDays($end);
+            }
 
             $packageCombo = new PackageCombo();
             $packageCombo->name = $request->name;
@@ -79,7 +79,10 @@ class PackageComboController extends Controller
             $packageCombo->start_date = $request->start_date;
             $packageCombo->end_date = $request->end_date;
             $packageCombo->is_active = $request->is_active;
-            $packageCombo->save();
+            
+            if (!$packageCombo->save()) {
+                throw new \Exception("Gagal menyimpan data Package Combo.");
+            }
 
             $comboDetail = new PackageComboDetail();
             $comboDetail->package_combo_id = $packageCombo->id;
@@ -87,7 +90,10 @@ class PackageComboController extends Controller
             $comboDetail->item_id = $request->item_id;
             $comboDetail->qty = $request->tempQty;
             $comboDetail->qty_extra = $request->qty_extra;
-            $comboDetail->save();
+            
+            if (!$comboDetail->save()) {
+                throw new \Exception("Gagal menyimpan detail Package Combo.");
+            }
 
             DB::commit();
 
@@ -96,13 +102,10 @@ class PackageComboController extends Controller
                 'action' => 'add'
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->route('package-combo')->with([
-                'success' => false,
-                'action' => 'add'
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
@@ -116,48 +119,47 @@ class PackageComboController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'weight' => 'integer',
-            'price' => 'required|integer|min:1',
-            'expired_duration' => 'nullable|integer|min:1',
-            'is_active' => 'required|integer',
-            'tempQty' => 'required|integer|min:1',
-            'item_id' => 'required|integer|min:1',
-
-
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ]);
-
-        // Validasi Custom: Salah satu harus diisi (Duration atau Date Range)
-        if (empty($request->expired_duration) && (empty($request->start_date) || empty($request->end_date))) {
-            return redirect()->back()->withErrors(['expired_duration' => 'Harap isi Durasi atau Tanggal Mulai & Akhir'])->withInput();
-        }
-
-        if ($request->item_id == 1) {
-            $request->merge(['qty_extra' => 0]);
-        } else if ($request->item_id == 2) {
-            $request->merge(['qty_extra' => 1]);
-        }
-
-        // ===== EXPIRED DURATION LOGIC =====
-        $expiredDuration = $request->expired_duration;
-
-        if (
-            empty($expiredDuration) &&
-            $request->filled('start_date') &&
-            $request->filled('end_date')
-        ) {
-            $start = Carbon::parse($request->start_date);
-            $end = Carbon::parse($request->end_date);
-
-            // +1 jika mau inclusive (misal 1–7 = 7 hari)
-            $expiredDuration = $start->diffInDays($end);
-        }
-
         try {
             DB::beginTransaction();
+
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'weight' => 'integer',
+                'price' => 'required|integer|min:1',
+                'expired_duration' => 'nullable|integer|min:1',
+                'is_active' => 'required|integer',
+                'tempQty' => 'required|integer|min:1',
+                'item_id' => 'required|integer|min:1',
+
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+            ]);
+
+            // Validasi Custom: Salah satu harus diisi (Duration atau Date Range)
+            if (empty($request->expired_duration) && (empty($request->start_date) || empty($request->end_date))) {
+                throw new \Exception('Harap isi Durasi atau Tanggal Mulai & Akhir');
+            }
+
+            if ($request->item_id == 1) {
+                $request->merge(['qty_extra' => 0]);
+            } else if ($request->item_id == 2) {
+                $request->merge(['qty_extra' => 1]);
+            }
+
+            // ===== EXPIRED DURATION LOGIC =====
+            $expiredDuration = $request->expired_duration;
+
+            if (
+                empty($expiredDuration) &&
+                $request->filled('start_date') &&
+                $request->filled('end_date')
+            ) {
+                $start = Carbon::parse($request->start_date);
+                $end = Carbon::parse($request->end_date);
+
+                // +1 jika mau inclusive (misal 1–7 = 7 hari)
+                $expiredDuration = $start->diffInDays($end);
+            }
 
             $packageCombo = PackageCombo::findOrFail($id);
             $packageCombo->name = $request->name;
@@ -167,14 +169,27 @@ class PackageComboController extends Controller
             $packageCombo->start_date = $request->start_date;
             $packageCombo->end_date = $request->end_date;
             $packageCombo->is_active = $request->is_active;
-            $packageCombo->save();
+            
+            if (!$packageCombo->save()) {
+                throw new \Exception("Gagal memperbarui data Package Combo.");
+            }
 
             $comboDetail = PackageComboDetail::where('package_combo_id', $id)->first();
+            
+            // Safety check: Create if not exists (though it should)
+            if (!$comboDetail) {
+                $comboDetail = new PackageComboDetail();
+                $comboDetail->package_combo_id = $packageCombo->id;
+            }
+
             $comboDetail->type = 1;
             $comboDetail->item_id = $request->item_id;
             $comboDetail->qty = $request->tempQty;
             $comboDetail->qty_extra = $request->qty_extra;
-            $comboDetail->save();
+            
+            if (!$comboDetail->save()) {
+                throw new \Exception("Gagal memperbarui detail Package Combo.");
+            }
 
             DB::commit();
 
@@ -183,12 +198,9 @@ class PackageComboController extends Controller
                 'action' => 'edit'
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('package-combo')->with([
-                'success' => false,
-                'action' => 'edit'
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 

@@ -240,7 +240,10 @@
             {{-- SINGLE TABLE --}}
             <section class="tab-pane" data-content="single">
                 @if ($logPrintSingles->count() > 0)
-                    <table class="log-table">
+                    <div class="table-section mt-2 relative">
+                        <div class="table-scroll-container">
+                            <div class="table-wrapper">
+                                <table class="log-table">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -300,6 +303,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <div class="alert-info">Tidak ada tiket member yang di-print pada tanggal ini.</div>
                 @endif
@@ -333,6 +339,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <div class="alert-info">Tidak ada tiket pelatih yang di-print pada tanggal ini.</div>
                 @endif

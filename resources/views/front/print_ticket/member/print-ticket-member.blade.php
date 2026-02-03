@@ -3,7 +3,7 @@
     @vite('resources/css/front/print-ticket-member.css')
     <div class="ticket-wrapper">
         <!-- Tombol Print -->
-        <div class="print-btn" style="display: flex; gap: 10px; justify-content: center;">
+        <div class="print-btn" style="display: flex; gap: 10px; justify-content: center; margin-top: 150px;">
             <button onclick="window.print()">Print Tiket</button>
 
             <button onclick="window.location.href='{{ route('main') }}'"

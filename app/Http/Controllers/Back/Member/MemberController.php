@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Clubhouse;
+use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
@@ -90,57 +91,75 @@ class MemberController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'dob' => 'nullable|date',
-            'awal_masa_berlaku' => 'nullable|date',
-            'akhir_masa_berlaku' => 'nullable|date',
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $member = Customer::findOrFail($id);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'phone' => 'nullable|string|max:20',
+                'dob' => 'nullable|date',
+                'awal_masa_berlaku' => 'nullable|date',
+                'akhir_masa_berlaku' => 'nullable|date',
+            ]);
 
-        // Update data member dasar
-        $member->name = $request->name;
-        $member->phone = $request->phone;
-        $member->dob = $request->dob;
-        $member->save();
+            $member = Customer::findOrFail($id);
 
-        // Ambil tiket terbaru berdasarkan created_at DESC
-        $ticket = Ticket::where('customer_id', $member->id)
-            ->where('ticket_kode_ref', 'like', 'M%')
-            ->latest('created_at')
-            ->first();
-
-        if ($ticket) {
-            $today = now()->startOfDay();
-            $end = $request->akhir_masa_berlaku
-                ? Carbon::parse($request->akhir_masa_berlaku)->startOfDay()
-                : null;
-
-            // Update tanggal start & end
-            $ticket->date_start = $request->awal_masa_berlaku;
-            $ticket->date_end = $request->akhir_masa_berlaku;
-
-            // Validasi tambahan: set is_active sesuai date_end
-            if ($end && $end->gte($today)) {
-                $ticket->is_active = true;   // masih berlaku
-            } else {
-                $ticket->is_active = false;  // expired otomatis
+            // Update data member dasar
+            $member->name = $request->name;
+            $member->phone = $request->phone;
+            $member->dob = $request->dob;
+            
+            if (!$member->save()) {
+                throw new \Exception("Gagal memperbarui data Member.");
             }
 
-            $ticket->save();
+            // Ambil tiket terbaru berdasarkan created_at DESC
+            $ticket = Ticket::where('customer_id', $member->id)
+                ->where('ticket_kode_ref', 'like', 'M%')
+                ->latest('created_at')
+                ->first();
 
-            // Sinkronkan juga ke customer
-            $member->awal_masa_berlaku = $request->awal_masa_berlaku;
-            $member->akhir_masa_berlaku = $request->akhir_masa_berlaku;
-            $member->save();
+            if ($ticket) {
+                $today = now()->startOfDay();
+                $end = $request->akhir_masa_berlaku
+                    ? Carbon::parse($request->akhir_masa_berlaku)->startOfDay()
+                    : null;
+
+                // Update tanggal start & end
+                $ticket->date_start = $request->awal_masa_berlaku;
+                $ticket->date_end = $request->akhir_masa_berlaku;
+
+                // Validasi tambahan: set is_active sesuai date_end
+                if ($end && $end->gte($today)) {
+                    $ticket->is_active = true;   // masih berlaku
+                } else {
+                    $ticket->is_active = false;  // expired otomatis
+                }
+
+                if (!$ticket->save()) {
+                    throw new \Exception("Gagal memperbarui data Tiket Member.");
+                }
+
+                // Sinkronkan juga ke customer
+                $member->awal_masa_berlaku = $request->awal_masa_berlaku;
+                $member->akhir_masa_berlaku = $request->akhir_masa_berlaku;
+                
+                if (!$member->save()) {
+                    throw new \Exception("Gagal sinkronisasi data masa berlaku Member.");
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('member')->with([
+                'success' => true,
+                'action' => 'edit'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
-
-        return redirect()->route('member')->with([
-            'success' => true,
-            'action' => 'edit'
-        ]);
     }
 
     public function delete($id)

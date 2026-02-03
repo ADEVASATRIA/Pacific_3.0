@@ -36,29 +36,32 @@ class CustomerController extends Controller
 
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15|unique:customers,phone',
-            'dob' => 'nullable|date',
-            'tipe_customer' => 'required|in:1,2,3',
-            'kategory_customer' => 'required|in:1,2,3',
-            'id_club_renang' => 'required|exists:clubhouses,id',
-            'catatan' => 'nullable|string|max:255',
-            'awal_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
-            'akhir_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
-        ], [
-            'phone.unique' => 'Nomor telepon ini sudah terdaftar!',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Gagal menambahkan data! Pastikan semua input sudah sesuai.');
-        }
-
         try {
             DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'phone' => 'required|string|max:15|unique:customers,phone',
+                'dob' => 'nullable|date',
+                'tipe_customer' => 'required|in:1,2,3',
+                'kategory_customer' => 'required|in:1,2,3',
+                'id_club_renang' => 'required|exists:clubhouses,id',
+                'catatan' => 'nullable|string|max:255',
+                'awal_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
+                'akhir_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
+            ], [
+                'phone.unique' => 'Nomor telepon ini sudah terdaftar!',
+                'name.required' => 'Nama harus diisi!',
+                'tipe_customer.required' => 'Tipe Customer harus dipilih!',
+                'kategory_customer.required' => 'Kategori Customer harus dipilih!',
+                'id_club_renang.required' => 'Club Renang harus dipilih!',
+                'awal_masa_berlaku.required_if' => 'Awal Masa Berlaku wajib diisi untuk kategori Coach!',
+                'akhir_masa_berlaku.required_if' => 'Akhir Masa Berlaku wajib diisi untuk kategori Coach!',
+            ]);
+
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
 
             $customer = new Customer();
 
@@ -78,7 +81,10 @@ class CustomerController extends Controller
             $customer->id_club_renang = $request->id_club_renang;
             $customer->clubhouse_id = $request->id_club_renang;
             $customer->catatan = $request->catatan;
-            $customer->save();
+            
+            if (!$customer->save()) {
+                throw new \Exception("Gagal menyimpan data Customer.");
+            }
 
             DB::commit();
 
@@ -87,14 +93,9 @@ class CustomerController extends Controller
                 'action' => 'add'
             ]);
 
-
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with([
-                'success' => false,
-                'action' => 'add',
-                'error' => 'Terjadi kesalahan: ' . $th->getMessage()
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
@@ -112,31 +113,34 @@ class CustomerController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15|unique:customers,phone,' . $id,
-            'dob' => 'nullable|date',
-            'tipe_customer' => 'nullable|in:1,2,3',
-            'kategory_customer' => 'nullable|in:1,2,3',
-            'id_club_renang' => 'nullable|exists:clubhouses,id',
-            'catatan' => 'nullable|string|max:255',
-            'awal_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
-            'akhir_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
-        ], [
-            'phone.unique' => 'Nomor telepon ini sudah terdaftar!',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Gagal mengedit data! Pastikan semua input sudah sesuai.');
-        }
-
         try {
             DB::beginTransaction();
 
-            $customer = Customer::find($id);
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'phone' => 'required|string|max:15|unique:customers,phone,' . $id,
+                'dob' => 'nullable|date',
+                'tipe_customer' => 'nullable|in:1,2,3',
+                'kategory_customer' => 'nullable|in:1,2,3',
+                'id_club_renang' => 'nullable|exists:clubhouses,id',
+                'catatan' => 'nullable|string|max:255',
+                'awal_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
+                'akhir_masa_berlaku' => 'nullable|date|required_if:kategory_customer,2',
+            ], [
+                'phone.unique' => 'Nomor telepon ini sudah terdaftar!',
+                'name.required' => 'Nama harus diisi!',
+                'tipe_customer.required' => 'Tipe Customer harus dipilih!',
+                'kategory_customer.required' => 'Kategori Customer harus dipilih!',
+                'id_club_renang.required' => 'Club Renang harus dipilih!',
+                'awal_masa_berlaku.required_if' => 'Awal Masa Berlaku wajib diisi untuk kategori Coach!',
+                'akhir_masa_berlaku.required_if' => 'Akhir Masa Berlaku wajib diisi untuk kategori Coach!',
+            ]);
+
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
+
+            $customer = Customer::findOrFail($id);
 
             if ($request->kategory_customer == 2) {
                 $customer->is_pelatih = 1;
@@ -154,7 +158,10 @@ class CustomerController extends Controller
             $customer->id_club_renang = $request->id_club_renang;
             $customer->clubhouse_id = $request->id_club_renang;
             $customer->catatan = $request->catatan;
-            $customer->save();
+            
+            if (!$customer->save()) {
+                throw new \Exception("Gagal memperbarui data Customer.");
+            }
 
             DB::commit();
 
@@ -162,13 +169,10 @@ class CustomerController extends Controller
                 'success' => 'Berhasil mengedit data customer!',
                 'action' => 'edit'
             ]);
-        } catch (\Throwable $th) {
+
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with([
-                'success' => false,
-                'action' => 'edit',
-                'error' => 'Terjadi kesalahan: ' . $th->getMessage()
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 

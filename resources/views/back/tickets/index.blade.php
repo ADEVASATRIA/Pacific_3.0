@@ -181,7 +181,8 @@
 
                                         {{-- Durasi Tiket --}}
                                         <div class="col-md-6" id="durationGroup">
-                                            <label for="duration" class="form-label fw-semibold">Durasi (hari)</label>
+                                            <label for="duration" class="form-label fw-semibold">Durasi (hari)</label><span
+                                                class="text-danger">*</span>
                                             <input type="number" id="duration" name="duration" class="form-control shadow-sm"
                                                 min="1">
                                         </div>
@@ -599,6 +600,46 @@
                 }, 2500);
             });
         @endif
+
+        // Function aler error Exception
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
+                document.body.appendChild(alertDiv);
+
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                // show
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+
+                // auto hide
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 4000);
+            }
+
+            @if (session('error'))
+                console.log('Session Error:', @json(session('error')));
+                showAlert('error', @json(session('error')));
+            @endif
+
+            @if (session('success'))
+                showAlert('success', @json(session('success')));
+            @endif
+        });
     </script>
 
     <script>

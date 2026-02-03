@@ -17,11 +17,11 @@
         <div class="ticket-card customer-info">
             <h3 class="section-title">Informasi Customer</h3>
             <div class="info-row">
-                <span>Nama Customer</span>
+                <span>Customer</span>
                 <span>{{ $customer->name }}</span>
             </div>
             <div class="info-row">
-                <span>Nama Club House</span>
+                <span>Swimming Club</span>
                 <span>{{ $customer->clubhouse->name ?? ($customer->clubhouse2->name ?? 'Tidak Ada') }}</span>
             </div>
         </div>
@@ -45,13 +45,13 @@
                             @if($entry->type == 1)
                                 <p class="ticket-desc screen-only">
                                     Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                    Berlaku Sampai Tanggal
+                                    Berlaku Tanggal
                                     <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                                 </p>
                             @elseif($entry->type == 2)
                                 <p class="ticket-desc screen-only">
                                     Tiket Pengantar Tambahan Gratis <br>
-                                    Berlaku Sampai Tanggal
+                                    Berlaku Tanggal
                                     <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
                                 </p>
                             @endif

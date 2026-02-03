@@ -10,18 +10,18 @@
 }
 
 .section-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #000;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
 }
 
 .info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 15px;
-  margin-bottom: 8px;
-  color: #333;
+    display: flex;
+    justify-content: space-between;
+    font-size: 25px;
+    margin-bottom: 1px;
+    color: #333;
 }
 
 .divider {
@@ -36,17 +36,19 @@
   align-items: center;
   min-height: 100vh;
   flex-direction: column;
+  padding-top: 0px;
+  margin-top: 0px;;
 }
 
 .ticket-card,
 .customer-info {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  padding: 20px;
-  width: 500px;
-  text-align: center;
-  margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    width: 600px;
+    text-align: center;
+    margin: 10px auto 10px auto;
 }
 
 .qr-section {
@@ -62,7 +64,7 @@
 }
 
 .ticket-title {
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 8px;
 }
@@ -74,37 +76,42 @@
 }
 
 .ticket-desc {
-  font-size: 13px;
+  font-size: 20px;
   color: #333;
   margin-bottom: 15px;
   line-height: 1.4em;
 }
 
 .ticket-price {
-  font-size: 16px;
+  font-size: 40px;
   font-weight: bold;
   color: #000;
 }
 
 .print-btn {
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .print-btn button {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background: limegreen;
-  color: black;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s ease;
-  font-weight: bolder;
+
+    width: 90%; /* Ubah dari 100% menjadi lebar yang lebih kecil */
+    margin: 0px auto; /* Tambahkan properti ini untuk menengahkan tombol */
+
+    background: #007aff;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    font-size: 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 200px;
+    height: 60px;
+    transition: all 0.3s ease;
 }
 
 .print-btn button:hover {
-  background: limegreen;
+    background: #005bb5;
+    transform: scale(1.05);
 }
 
 /* Animasi */

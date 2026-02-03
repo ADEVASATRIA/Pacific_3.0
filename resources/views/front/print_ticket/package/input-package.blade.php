@@ -13,7 +13,7 @@
                     <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="qty_redeem">Jumlah Paket yang di-redeem</label>
+                    <label for="qty_redeem">Jumlah Tiket yang di Pakai</label>
                     <input type="text" id="qty_redeem" name="qty_redeem" value="{{ old('qty_redeem') }}" required>
                 </div>
 

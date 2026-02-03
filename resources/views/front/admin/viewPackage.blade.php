@@ -62,8 +62,11 @@
                     @forelse ($purchases ?? [] as $purchase)
                         @foreach ($purchase->purchaseDetails as $detail)
                             @php
-                                $redeem = $detail->packageComboRedeem;
-                            @endphp
+                            $redeem = $detail->packageComboRedeem;
+                            // dd($redeem->details);
+
+                        @endphp
+
                             <tr>
                                 <td>{{ $purchase->created_at?->locale('id')->translatedFormat('d F Y') }}</td>
                                 <td>{{ $purchase->invoice_no }}</td>

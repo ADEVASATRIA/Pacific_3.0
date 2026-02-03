@@ -17,6 +17,9 @@ class TransactionViewController extends Controller
     public function transactionIndex(Request $request)
     {
         $today = Carbon::today();
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : $today;
+        $endDate = $request->end_date ? Carbon::parse($request->end_date) : $today;
+
         $staff = Auth::guard('fo')->user();
 
         // Get cash session FIRST
@@ -118,6 +121,8 @@ class TransactionViewController extends Controller
     public function export(Request $request)
     {
         $staff = Auth::guard('fo')->user();
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : Carbon::today();
+        $endDate = $request->end_date ? Carbon::parse($request->end_date) : Carbon::today();
         $today = Carbon::today();
 
         // 1. Get Cash Session logic (same as index)
@@ -146,6 +151,11 @@ class TransactionViewController extends Controller
         }
 
         $transactions = $query->orderBy('created_at', 'desc')->get();
+
+        $filename = 'Report-Transaksi-' . $startDate->format('d-m-Y');
+        if ($startDate->format('Y-m-d') !== $endDate->format('Y-m-d')) {
+            $filename .= '-sd-' . $endDate->format('d-m-Y');
+        }
 
         return Excel::download(
             new TransactionsExport($transactions, $staff),

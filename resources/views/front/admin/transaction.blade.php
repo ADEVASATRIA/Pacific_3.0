@@ -1,22 +1,26 @@
 @extends('front.admin.index')
 
-@section('title', 'Data Transaksi Hari ini')
-@section('page-title', 'Daftar Transaksi Hari ini')
+@section('title', 'Data Transaksi')
+@section('page-title', 'Daftar Transaksi')
 @vite(['resources/css/admin/transaction.css', 'resources/css/front/checkout_finish.css'])
 
 
 @section('top-controls')
     <form method="GET" action="{{ route('admin.transaksi') }}" class="filter-form">
-        <div class="filter-box">
-            <strong>Filter Payment:</strong>
-            @foreach ($paymentOptions as $key => $label)
-                <label class="checkbox-inline">
-                    <input type="checkbox" name="payment[]" value="{{ $key }}"
-                        {{ in_array($key, $filterPayments ?? []) ? 'checked' : '' }} onchange="this.form.submit()">
-                    {{ $label }}
-                </label>
-            @endforeach
-        </div>
+        <div class="filter-wrapper">
+            <!-- Payment Filter Section -->
+            <div class="filter-section payment-section">
+                <div class="filter-label">Filter Payment:</div>
+                <div class="payment-options">
+                    @foreach ($paymentOptions as $key => $label)
+                        <label class="checkbox-chip">
+                            <input type="checkbox" name="payment[]" value="{{ $key }}"
+                                {{ in_array($key, $filterPayments ?? []) ? 'checked' : '' }} onchange="this.form.submit()">
+                            <span class="chip-label">{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
 
         {{-- Tombol Export --}}
         <button type="submit" formaction="{{ route('admin.transaction.export') }}" class="btn primary">Export</button>

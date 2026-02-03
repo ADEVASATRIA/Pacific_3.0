@@ -1,4 +1,4 @@
-@extends('main.blank')
+@extends('main.second_blank')
 
 @section('content')
     @vite('resources/css/front/checkout_finish.css')

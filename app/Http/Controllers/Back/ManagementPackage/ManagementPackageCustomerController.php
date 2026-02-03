@@ -95,38 +95,47 @@ class ManagementPackageCustomerController extends Controller
     // Logika edit package
     public function editPackage(Request $request, $id)
     {
-        DB::beginTransaction();
         try {
-            $validated = $request->validate([
+            DB::beginTransaction();
+
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'total_redeemed' => 'required|integer|min:0',
                 'remaining_qty' => 'required|integer|min:0',
                 'expired_date' => 'required|date',
+            ], [
+                'name.required' => 'Nama Package harus diisi!',
+                'total_redeemed.required' => 'Total Redeemed harus diisi!',
+                'remaining_qty.required' => 'Sisa Qty harus diisi!',
+                'expired_date.required' => 'Tanggal Expired harus diisi!',
             ]);
-            // dd($validated);
+
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors()->first());
+            }
 
             $package = PackageComboRedeem::with(['packageCombo', 'details', 'customer'])->find($id);
         
             if (!$package) {
-                return back()->with('error', 'Package Tidak Ditemukan');
+                throw new \Exception('Package Tidak Ditemukan');
             }
 
             if ($package->fully_redeemed_at) {
                 $package->fully_redeemed_at = null;
             }
 
-            $package->name = $validated['name'];
-            $package->expired_date = $validated['expired_date'];
+            $package->name = $request->name;
+            $package->expired_date = $request->expired_date;
             $package->push();
 
             $detail = $package->details->first();
             if ($detail) {
                 $maxQty = $detail->qty;
-                $totalRedeemed = (int) $validated['total_redeemed'];
-                $remainingQty = (int) $validated['remaining_qty'];
+                $totalRedeemed = (int) $request->total_redeemed;
+                $remainingQty = (int) $request->remaining_qty;
 
                 if ($totalRedeemed > $maxQty || $remainingQty > $maxQty) {
-                    return back()->with('error', 'Total Redeem atau Sisa Redeem Melebihi Qty.');
+                    throw new \Exception('Total Redeem atau Sisa Redeem Melebihi Qty.');
                 }
 
                 $detail->qty_printed = $totalRedeemed;
@@ -137,9 +146,10 @@ class ManagementPackageCustomerController extends Controller
                     $package->fully_redeemed_at = now();
                 }
 
-                $package->save();
-                $detail->save();
-
+                if (!$package->save() || !$detail->save()) {
+                     throw new \Exception("Gagal memperbarui data Package.");
+                }
+                
                 // dd('masuk sini', $package, $detail);
             }
 
@@ -155,14 +165,14 @@ class ManagementPackageCustomerController extends Controller
 
             $ticketsToInsert = [];
 
-            for ($i = 0; $i < $validated['remaining_qty']; $i++) {
+            for ($i = 0; $i < $request->remaining_qty; $i++) {
                 $ticketsToInsert[] = [
                     'package_combo_redeem_detail_id' => $id,
                     'customer_id' => $customerId,
                     'code' => Ticket::generateCodeFast($ticketType->ticket_kode_ref),
                     'ticket_kode_ref' => $ticketType->ticket_kode_ref,
                     'date_start' => $today,
-                    'date_end' => $validated['expired_date'],
+                    'date_end' => $request->expired_date,
                     'is_active' => 1,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -228,12 +238,9 @@ class ManagementPackageCustomerController extends Controller
                 ]);
 
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('view-update-package-home')->with([
-                'error' => true,
-                'action' => 'edit'
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 

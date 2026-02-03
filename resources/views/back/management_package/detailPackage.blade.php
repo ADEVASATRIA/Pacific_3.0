@@ -86,9 +86,9 @@
                         </table>
                     </div>
                 </div>
-                <div class="mt-4">
+                {{-- <div class="mt-4">
                     {{ $viewDetailsData->links() }}
-                </div>
+                </div> --}}
             </div>
         @else
             <p class="text-center mt-4">Tidak ada data untuk ditampilkan.</p>

@@ -54,38 +54,31 @@ class BackCoachController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'required|string|max:255',
-                'phone' => 'required',
-                'awal_masa_berlaku' => 'required|date',
-                'akhir_masa_berlaku' => 'required|date',
-                'clubhouse_id' => 'required|integer',
-            ],
-            [
-                'name.required' => 'Nama pelatih harus diisi!',
-                'phone.required' => 'Nomor Telepon pelatih harus diisi!',
-                'awal_masa_berlaku.required' => 'Awal Masa Berlaku pelatih harus diisi!',
-                'akhir_masa_berlaku.required' => 'Akhir Masa Berlaku pelatih harus diisi!',
-                'clubhouse_id.required' => 'Clubhouse harus dipilih!',
-            ]
-        );
-
-        if ($request->awal_masa_berlaku > $request->akhir_masa_berlaku) {
-            return back()->withErrors("Tanggal Awal Masa Berlaku harus sebelum / sama dengan Akhir Masa Berlaku!");
-        } else if ($request->akhir_masa_berlaku < $request->awal_masa_berlaku) {
-            return back()->withErrors("Tanggal Akhir Masa Berlaku harus sesudah / sama dengan Awal Masa Berlaku!");
-        }
-
         try {
             DB::beginTransaction();
 
+            $request->validate(
+                [
+                    'name' => 'required|string|max:255',
+                    'phone' => 'required',
+                    'awal_masa_berlaku' => 'required|date',
+                    'akhir_masa_berlaku' => 'required|date',
+                    'clubhouse_id' => 'required|integer',
+                ],
+                [
+                    'name.required' => 'Nama pelatih harus diisi!',
+                    'phone.required' => 'Nomor Telepon pelatih harus diisi!',
+                    'awal_masa_berlaku.required' => 'Awal Masa Berlaku pelatih harus diisi!',
+                    'akhir_masa_berlaku.required' => 'Akhir Masa Berlaku pelatih harus diisi!',
+                    'clubhouse_id.required' => 'Clubhouse harus dipilih!',
+                ]
+            );
 
-            $pelatih = Customer::find($request->id);
+            if ($request->awal_masa_berlaku > $request->akhir_masa_berlaku) {
+                throw new \Exception("Tanggal Awal Masa Berlaku harus sebelum / sama dengan Akhir Masa Berlaku!");
+            }
 
-            if (empty($pelatih))
-                $pelatih = new Customer();
-
+            $pelatih = new Customer();
             $pelatih->name = $request->name;
             $pelatih->phone = $request->phone;
             $pelatih->awal_masa_berlaku = $request->awal_masa_berlaku;
@@ -93,7 +86,10 @@ class BackCoachController extends Controller
             $pelatih->clubhouse_id = $request->clubhouse_id;
             $pelatih->id_club_renang = $request->clubhouse_id;
             $pelatih->is_pelatih = true;
-            $pelatih->save();
+            
+            if (!$pelatih->save()) {
+                throw new \Exception("Gagal menyimpan data Pelatih.");
+            }
 
             DB::commit();
 
@@ -104,7 +100,7 @@ class BackCoachController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['Database error: ' . $e->getMessage()])->withInput();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
@@ -120,38 +116,31 @@ class BackCoachController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $request->validate(
-            [
-                'name' => 'required|string|max:255',
-                'phone' => 'required',
-                'awal_masa_berlaku' => 'required|date',
-                'akhir_masa_berlaku' => 'required|date',
-                'clubhouse_id' => 'required|integer',
-            ],
-            [
-                'name.required' => 'Nama pelatih harus diisi!',
-                'phone.required' => 'Nomor Telepon pelatih harus diisi!',
-                'awal_masa_berlaku.required' => 'Awal Masa Berlaku pelatih harus diisi!',
-                'akhir_masa_berlaku.required' => 'Akhir Masa Berlaku pelatih harus diisi!',
-                'clubhouse_id.required' => 'Clubhouse harus dipilih!',
-            ]
-        );
-
-        if ($request->awal_masa_berlaku > $request->akhir_masa_berlaku) {
-            return back()->withErrors("Tanggal Awal Masa Berlaku harus sebelum / sama dengan Akhir Masa Berlaku!");
-        } else if ($request->akhir_masa_berlaku < $request->awal_masa_berlaku) {
-            return back()->withErrors("Tanggal Akhir Masa Berlaku harus sesudah / sama dengan Awal Masa Berlaku!");
-        }
-
         try {
             DB::beginTransaction();
 
+            $request->validate(
+                [
+                    'name' => 'required|string|max:255',
+                    'phone' => 'required',
+                    'awal_masa_berlaku' => 'required|date',
+                    'akhir_masa_berlaku' => 'required|date',
+                    'clubhouse_id' => 'required|integer',
+                ],
+                [
+                    'name.required' => 'Nama pelatih harus diisi!',
+                    'phone.required' => 'Nomor Telepon pelatih harus diisi!',
+                    'awal_masa_berlaku.required' => 'Awal Masa Berlaku pelatih harus diisi!',
+                    'akhir_masa_berlaku.required' => 'Akhir Masa Berlaku pelatih harus diisi!',
+                    'clubhouse_id.required' => 'Clubhouse harus dipilih!',
+                ]
+            );
 
-            $pelatih = Customer::find($request->id);
+            if ($request->awal_masa_berlaku > $request->akhir_masa_berlaku) {
+                throw new \Exception("Tanggal Awal Masa Berlaku harus sebelum / sama dengan Akhir Masa Berlaku!");
+            }
 
-            if (empty($pelatih))
-                $pelatih = new Customer();
-
+            $pelatih = Customer::findOrFail($id);
             $pelatih->name = $request->name;
             $pelatih->phone = $request->phone;
             $pelatih->awal_masa_berlaku = $request->awal_masa_berlaku;
@@ -159,18 +148,21 @@ class BackCoachController extends Controller
             $pelatih->clubhouse_id = $request->clubhouse_id;
             $pelatih->id_club_renang = $request->clubhouse_id;
             $pelatih->is_pelatih = true;
-            $pelatih->save();
+            
+            if (!$pelatih->save()) {
+                throw new \Exception("Gagal memperbarui data Pelatih.");
+            }
 
             DB::commit();
 
             return redirect()->route('coach')->with([
                 'success' => true,
-                'action' => 'add'
+                'action' => 'edit'
             ]);
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['Database error: ' . $e->getMessage()])->withInput();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 

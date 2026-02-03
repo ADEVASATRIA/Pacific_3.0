@@ -16,20 +16,28 @@ class ClubhouseController extends Controller
     }
 
     public function add(Request $request){
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'phone' => 'required|regex:/^08[1-9][0-9]{6,10}$/',
-        ]);
-
         try {
             DB::beginTransaction();
+
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'location' => 'required|string|max:255',
+                'phone' => 'required|regex:/^08[1-9][0-9]{6,10}$/',
+            ], [
+                'name.required' => 'Nama Clubhouse harus diisi!',
+                'location.required' => 'Lokasi Clubhouse harus diisi!',
+                'phone.required' => 'Nomor Telepon harus diisi!',
+                'phone.regex' => 'Format Nomor Telepon tidak valid! (Gunakan format 08...)'
+            ]);
 
             $clubhouse = new Clubhouse();
             $clubhouse->name = $request->name;
             $clubhouse->location = $request->location;
             $clubhouse->phone = $request->phone;
-            $clubhouse->save();
+            
+            if (!$clubhouse->save()) {
+                throw new \Exception("Gagal menyimpan data Clubhouse.");
+            }
 
             DB::commit();
 
@@ -38,13 +46,9 @@ class ClubhouseController extends Controller
                 'action' => 'add'
             ]);
 
-
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('clubhouse')->with([
-                'error' => true,
-                'action' => 'add'
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
@@ -54,20 +58,28 @@ class ClubhouseController extends Controller
     }
 
     public function edit(Request $request, $id){
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'phone' => 'required|regex:/^08[1-9][0-9]{6,10}$/',
-        ]);
-
         try {
             DB::beginTransaction();
 
-            $clubhouse = Clubhouse::find($id);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'location' => 'required|string|max:255',
+                'phone' => 'required|regex:/^08[1-9][0-9]{6,10}$/',
+            ], [
+                'name.required' => 'Nama Clubhouse harus diisi!',
+                'location.required' => 'Lokasi Clubhouse harus diisi!',
+                'phone.required' => 'Nomor Telepon harus diisi!',
+                'phone.regex' => 'Format Nomor Telepon tidak valid! (Gunakan format 08...)'
+            ]);
+
+            $clubhouse = Clubhouse::findOrFail($id);
             $clubhouse->name = $request->name;
             $clubhouse->location = $request->location;
             $clubhouse->phone = $request->phone;
-            $clubhouse->save();
+            
+            if (!$clubhouse->save()) {
+                throw new \Exception("Gagal memperbarui data Clubhouse.");
+            }
 
             DB::commit();
 
@@ -76,12 +88,9 @@ class ClubhouseController extends Controller
                 'action' => 'edit'
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('clubhouse')->with([
-                'error' => true,
-                'action' => 'edit'
-            ]);
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 

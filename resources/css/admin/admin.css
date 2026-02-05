@@ -368,7 +368,7 @@ tbody td {
 /* FIX FINAL: Pastikan konten dapat diklik dan tidak tertutup header */
 .topbar {
     position: relative;
-    z-index: 5 !important;
+    z-index: 110 !important; /* Higher than content-layer * (100) */
 }
 
 .content-layer {

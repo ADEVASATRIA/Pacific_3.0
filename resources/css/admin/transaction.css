@@ -35,36 +35,53 @@
 .payment-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
+    margin-top: 4px;
 }
 
 /* Checkbox Chip Styling */
 .checkbox-chip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
-    padding: 8px 16px;
-    border-radius: 50px;
-    /* Pill shape */
+    gap: 6px;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    padding: 6px 12px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 0.85rem;
+    color: #4b5563;
+    font-weight: 500;
     transition: all 0.2s ease;
     user-select: none;
 }
 
 .checkbox-chip:hover {
-    background: #f1f3f5;
-    border-color: #ced4da;
+    background: #f9fafb;
+    border-color: #6b7280;
+}
+
+/* Selected State using :has() */
+.checkbox-chip:has(input:checked) {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+    box-shadow: 0 1px 2px rgba(59, 130, 246, 0.1);
 }
 
 .checkbox-chip input[type="checkbox"] {
-    accent-color: #007bff;
+    accent-color: #2563eb;
     width: 16px;
     height: 16px;
     margin: 0;
+    cursor: pointer;
+    /* Reset inherited styles from .filter-group input */
+    min-width: auto !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* Actions Section (Date + Export) */
@@ -197,6 +214,18 @@
     text-decoration: none;
     color: white;
     transition: 0.2s;
+}
+
+/* Layout Alignment with viewMember */
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  color: #444;
 }
 
 .btn-print.receipt {

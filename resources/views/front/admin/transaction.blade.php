@@ -2,15 +2,14 @@
 
 @section('title', 'Data Transaksi')
 @section('page-title', 'Daftar Transaksi')
-@vite(['resources/css/admin/transaction.css', 'resources/css/front/checkout_finish.css'])
+@vite(['resources/css/admin/transaction.css'])
 
 
 @section('top-controls')
-    <form method="GET" action="{{ route('admin.transaksi') }}" class="filter-form">
-        <div class="filter-wrapper">
-            <!-- Payment Filter Section -->
-            <div class="filter-section payment-section">
-                <div class="filter-label">Filter Payment:</div>
+    <form method="GET" action="{{ route('admin.transaksi') }}" class="filter-bar">
+        <div class="filter-group">
+            <div class="form-field">
+                <label>Filter Payment</label>
                 <div class="payment-options">
                     @foreach ($paymentOptions as $key => $label)
                         <label class="checkbox-chip">
@@ -21,6 +20,7 @@
                     @endforeach
                 </div>
             </div>
+        </div>
 
         {{-- Tombol Export --}}
         <button type="submit" formaction="{{ route('admin.transaction.export') }}" class="btn primary">Export</button>

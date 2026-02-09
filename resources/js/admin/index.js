@@ -123,14 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 🔹 Tombol export excel
-    const btnExport = document.getElementById('btnExportReport');
-    if (btnExport) {
-        btnExport.addEventListener('click', () => {
-            window.location.href = window.CashierRoutes.exportReport;
-        });
-    }
-
     // 🔹 Tombol export pdf
     const btnExportPdf = document.getElementById('btnExportPdf');
     if (btnExportPdf) {

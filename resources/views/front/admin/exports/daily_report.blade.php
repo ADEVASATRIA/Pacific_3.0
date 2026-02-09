@@ -2,6 +2,14 @@
     use Carbon\Carbon;
 @endphp
 
+{{-- Add style for page break control --}}
+<style>
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; page-break-after: auto; }
+    thead { display: table-header-group; }
+    tfoot { display: table-footer-group; }
+</style>
+
 <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11pt; margin: 0; padding: 0;">
     {{-- ===== HEADER TITLE ===== --}}
     <tr>
@@ -58,19 +66,20 @@
         @foreach($groupedTransactions as $paymentMethod => $transactions)
             @php 
                 $subtotal = 0;
-                $rowCount = count($transactions);
-                $isFirst = true;
             @endphp
 
-            @foreach($transactions as $tx)
+            @foreach($transactions as $index => $tx)
                 @php $subtotal += $tx->total; @endphp
-                <tr>
-                    @if($isFirst)
-                        <td rowspan="{{ $rowCount }}" style="border: 1px solid #000; padding: 10px 8px; vertical-align: top; font-weight: bold;">
+                <tr style="page-break-inside: avoid;">
+                    {{-- Display payment method on every row instead of using rowspan to prevent PDF page break issues --}}
+                    <td style="border: 1px solid #000; padding: 10px 8px; vertical-align: top; font-weight: bold;">
+                        @if($index === 0)
                             {{ $paymentMethod }}
-                        </td>
-                        @php $isFirst = false; @endphp
-                    @endif
+                        @else
+                            {{-- Empty cell but keep border for visual consistency --}}
+                            &nbsp;
+                        @endif
+                    </td>
                     
                     <td style="border: 1px solid #000; padding: 10px 8px; vertical-align: top;">{{ $tx->customer?->name ?? 'Guest' }}</td>
                     <td style="border: 1px solid #000; padding: 10px 8px; vertical-align: top;">{{ $tx->customer?->phone ?? '-' }}</td>
@@ -91,14 +100,14 @@
             @endforeach
 
             {{-- SUBTOTAL ROW --}}
-            <tr style="background-color: #f5f5f5;">
+            <tr style="background-color: #f5f5f5; page-break-inside: avoid;">
                 <td colspan="6" style="border: 1px solid #000; padding: 12px 10px; font-weight: bold;">SUB TOTAL {{ strtoupper($paymentMethod) }}</td>
                 <td style="border: 1px solid #000; padding: 12px 10px; text-align: right; font-weight: bold;">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
             </tr>
         @endforeach
 
         {{-- GRAND TOTAL ROW --}}
-        <tr style="background-color: #2c3e50; color: #ffffff;">
+        <tr style="background-color: #2c3e50; color: #ffffff; page-break-inside: avoid;">
             <td colspan="6" style="border: 1px solid #000; padding: 14px 10px; font-weight: bold; font-size: 12pt;">GRAND TOTAL</td>
             <td style="border: 1px solid #000; padding: 14px 10px; text-align: right; font-weight: bold; font-size: 12pt;">Rp {{ number_format($totalAll, 0, ',', '.') }}</td>
         </tr>

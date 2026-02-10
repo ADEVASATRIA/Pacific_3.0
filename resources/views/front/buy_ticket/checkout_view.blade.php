@@ -8,7 +8,7 @@
                 @foreach ($sponsor as $item)
                     @if ($item->image)
                         <img src="{{ asset('storage/' . $item->image) }}" alt="Sponsor {{ $item->name }}"
-                            style="width: 100%; height: 100%; object-fit: cover;">
+                            class="ads-img">
                     @endif
                 @endforeach
             </div>

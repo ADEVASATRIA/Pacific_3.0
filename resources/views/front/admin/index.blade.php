@@ -104,7 +104,6 @@
                         <div class="closecashier-report">
                             <p><strong>Report:</strong></p>
                             <div style="display: flex; gap: 10px;">
-                                <button id="btnExportReport" class="btn-secondary">Export Excel</button>
                                 <button id="btnExportPdf" class="btn-secondary">Export PDF</button>
                             </div>
                         </div>

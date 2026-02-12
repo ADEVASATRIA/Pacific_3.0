@@ -333,7 +333,7 @@
                 setTimeout(() => {
                     alertDiv.classList.remove('show');
                     setTimeout(() => alertDiv.remove(), 300);
-                }, 4000);
+                }, 20000);
             }
 
             @if (session('error'))

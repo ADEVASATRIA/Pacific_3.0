@@ -431,10 +431,10 @@
     }
 
     @page {
-        size: 58mm auto;
-        /* Set paper size */
-        margin: 0;
-        /* Remove default page margins */
+        /* Auto size to let printer/browser detect paper size (58mm or 80mm) */
+        size: auto;
+        /* Minimal margins - actual content padding handles spacing */
+        margin: 2mm 0mm 2mm 0mm;
     }
 
     #print-area {
@@ -442,20 +442,22 @@
         left: 0;
         top: 0;
         width: 100%;
-        /* Or 58mm specifically if needed */
         display: block;
-        padding: 5px;
-        /* Minimal padding */
+        /* Increased left padding to prevent text cutoff on thermal printers */
+        /* Most thermal printers have built-in margins, especially on the left */
+        padding: 5px 8px 5px 12px;
         margin: 0;
         font-family: Arial, sans-serif;
-        /* Changed to Arial */
         color: black;
         background: white;
+        box-sizing: border-box;
     }
 
     .print-header {
         text-align: center;
         margin-bottom: 10px;
+        /* Add some padding to keep header centered better */
+        padding: 0 5px;
     }
 
     .print-header h3 {
@@ -470,6 +472,8 @@
         font-size: 10px;
         /* Smaller body font */
         line-height: 1.2;
+        /* Add left padding to prevent cutoff on 80mm printers */
+        padding-left: 3px;
     }
 
     .print-row {
@@ -479,6 +483,8 @@
         /* Tighter spacing */
         flex-wrap: wrap;
         /* Allow wrapping if text is long */
+        padding-left: 2px;
+        /* Extra left padding for safety */
     }
 
     .print-row span:first-child {
@@ -503,6 +509,7 @@
         text-decoration: none;
         /* Removed underline to save space/cleaner look */
         font-size: 11px;
+        padding-left: 2px;
     }
 
     .print-row.bold {
@@ -513,7 +520,7 @@
 
     /* Rincian Cash In / Out */
     .print-details {
-        margin-left: 8px;
+        margin-left: 12px;
         margin-bottom: 5px;
         border-left: 1px solid #ccc;
         padding-left: 6px;

@@ -20,7 +20,7 @@
     <!-- Modal Expired -->
     <div id="memberExpiredModal" class="member-modal" style="display:none;">
         <div class="member-modal-content">
-            <h3>Ticket Anda sudah expired</h3>
+            <h3>Member Anda sudah expired</h3>
             <p>Silakan perpanjang membership Anda untuk tetap bisa digunakan.</p>
             <div class="member-modal-actions">
                 <form action="{{ route('member.extend') }}" method="POST" style="display:inline;">
@@ -109,7 +109,7 @@
                 setTimeout(() => {
                     alertDiv.classList.remove('show');
                     setTimeout(() => alertDiv.remove(), 300);
-                }, 4000);
+                }, 20000);
             }
 
 

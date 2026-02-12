@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Use existing formatRupiah
             if (document.getElementById('printCashIn')) document.getElementById('printCashIn').innerText = formatRupiah(cashInTotal);
-            if (document.getElementById('printCashOut')) document.getElementById('printCashOut').innerText = formatRupiah(cashOutTotal);
+            if (document.getElementById('printCashOut')) document.getElementById('printCashOut').innerText = '- ' + formatRupiah(cashOutTotal);
 
             // 🔹 Populate Cash In Details
             const cashInDetailsEl = document.getElementById('printCashInDetails');
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         cashOutDetailsEl.innerHTML += `
                             <div class="print-detail-row">
                                 <span class="detail-desc">• ${notes}</span>
-                                <span class="detail-amount">${formatRupiah(amount)}</span>
+                                <span class="detail-amount">- ${formatRupiah(amount)}</span>
                             </div>
                         `;
                     }
@@ -120,14 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             window.print();
-        });
-    }
-
-    // 🔹 Tombol export excel
-    const btnExport = document.getElementById('btnExportReport');
-    if (btnExport) {
-        btnExport.addEventListener('click', () => {
-            window.location.href = window.CashierRoutes.exportReport;
         });
     }
 

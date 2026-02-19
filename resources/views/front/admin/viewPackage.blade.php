@@ -1,7 +1,7 @@
 @extends('front.admin.index')
 
 @section('title', 'Data Package')
-@section('page-title', 'Daftar Package Pacific')
+@section('page-title', 'History Paket Per Customer')
 
 @vite('resources/css/admin/package.css')
 @stack('styles')

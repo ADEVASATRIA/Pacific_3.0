@@ -38,7 +38,13 @@
                 <a href="{{ route('admin.package') }}"
                     class="nav-item @if (request()->routeIs('admin.package')) active @endif">
                     <i data-lucide="package"></i>
-                    <span>Package</span>
+                    <span>History Package</span>
+                </a>
+
+                <a href="{{ route('admin.viewActivePackageCustomer') }}"
+                    class="nav-item @if (request()->routeIs('admin.viewActivePackageCustomer')) active @endif">
+                    <i data-lucide="package"></i>
+                    <span>Package Active</span>
                 </a>
 
                 <a href="{{ route('admin.member') }}"

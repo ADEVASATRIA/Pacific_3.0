@@ -93,6 +93,7 @@ Route::middleware('fo.auth')->group(function () {
     Route::get('/admin/close', [CashSessionController::class, 'close'])->name('admin.close');
 
     Route::get('/admin/package', [PackageViewController::class, 'index'])->name('admin.package');
+    Route::get('/admin/view-active-package-customer', [PackageViewController::class, 'viewActivePackageCustomer'])->name('admin.viewActivePackageCustomer');
     Route::get('/admin/log-history-redeem-customer-package', [PackageViewController::class, 'logHistoryRedeemCustomerPackage'])->name('admin.logHistoryRedeemCustomerPackage');
     Route::get('/admin/log-history-redeem-customer-package-detail', [PackageViewController::class, 'logHistoryRedeemCustomerPackageDetail'])->name('admin.logHistoryRedeemCustomerPackageDetail');
 

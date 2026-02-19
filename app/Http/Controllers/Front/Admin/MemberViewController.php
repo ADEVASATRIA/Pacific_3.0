@@ -51,6 +51,7 @@ class MemberViewController extends Controller
             ->when($request->name, fn($q, $name) => $q->where('name', 'LIKE', "%$name%"))
             ->when($request->dob, fn($q, $dob) => $q->whereDate('dob', Carbon::parse($dob)->startOfDay()))
             ->when($request->phone, fn($q, $phone) => $q->where('phone', $phone))
+            ->orderBy('akhir_masa_berlaku', 'asc')
             ->with([
                 'tiketTerbaru',
                 'tickets' => fn($q) => $q->where('code', 'LIKE', 'M%')->orderBy('created_at', 'desc'),

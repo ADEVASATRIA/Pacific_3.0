@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\Clubhouse\ClubhouseController;
 use App\Http\Controllers\Back\Coach\BackCoachController;
 use App\Http\Controllers\Back\ManagementPackage\ManagementPackageCustomerController;
+use App\Http\Controllers\Back\PaymentMethod\PaymentMethodController;
 use App\Http\Controllers\Back\Promo\PromoController;
 use App\Http\Controllers\Back\Staff\StaffController;
 use App\Http\Controllers\Back\Tickets\PackageComboController;
@@ -202,6 +203,13 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/edit-customer/{id}', [BackCustomerController::class, 'edit'])->name('edit.customer');
     Route::delete('/delete-customer/{id}', [BackCustomerController::class, 'delete'])->name('delete.customer');
     Route::get('/export-customer', [BackCustomerController::class, 'export'])->name('export.customer');
+
+    //Route for management payment method
+    Route::get('/payment-method', [PaymentMethodController::class, 'index'])->name('payment-method');
+    Route::get('/get-payment-method/{id}', [PaymentMethodController::class, 'getPaymentMethod']);
+    Route::post('/add-payment-method', [PaymentMethodController::class, 'add'])->name('add.payment-method');
+    Route::post('/edit-payment-method/{id}', [PaymentMethodController::class, 'edit'])->name('edit.payment-method');
+    Route::delete('/delete-payment-method/{id}', [PaymentMethodController::class, 'delete'])->name('delete.payment-method');
 
     //Route halaman report
     Route::get('/report', [BackReportHomeController::class, 'index'])->name('report');

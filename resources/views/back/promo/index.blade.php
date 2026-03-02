@@ -10,6 +10,14 @@
         {{-- Filter --}}
         <div class="filter-section mb-4">
             <form method="GET" action="{{ route('promo') }}" class="filter-form flex items-end gap-4 flex-wrap">
+
+                {{-- Filter nama --}}
+                <div class="form-group">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Code Promo</label>
+                    <input type="text" name="name" id="name" value="{{ request('name') }}"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="masukkan code..">
+                </div>
+
                 <div class="form-group">
                     <label for="is_active" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="is_active" id="is_active"

@@ -209,5 +209,46 @@
                 closeContactModal();
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            function showAlert(type, message) {
+                const existing = document.querySelector('.alert-slide');
+                if (existing) existing.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-slide ${type}`;
+                alertDiv.innerHTML = `
+            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+            <div style="flex:1;">${message}</div>
+            <button class="alert-close" aria-label="close">&times;</button>
+        `;
+                document.body.appendChild(alertDiv);
+
+                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 250);
+                });
+
+                setTimeout(() => alertDiv.classList.add('show'), 50);
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 20000);
+            }
+
+            @if ($errors->any())
+                showAlert('error', '{{ addslashes($errors->first()) }}');
+            @endif
+
+            @if (session('alert_message'))
+                showAlert('{{ session('alert_type', 'error') }}', '{{ session('alert_message') }}');
+            @endif
+
+            @if (session('redirect_to_register'))
+                setTimeout(function() {
+                    window.location.href = '{{ route('registrasi_new_customer') }}';
+                }, 2000);
+            @endif
+        });
     </script>
 @endsection

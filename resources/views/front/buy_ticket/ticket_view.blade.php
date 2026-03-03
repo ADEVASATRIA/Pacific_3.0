@@ -59,7 +59,7 @@
                 {{-- Tiket Regular --}}
                 @if ($ticketRegular->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Tiket Satuan</h3>
+                        <h3 class="section-title">TIKET SATUAN</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketRegular as $ticket)
                                 <div class="ticket-item">
@@ -95,7 +95,7 @@
                 {{-- Tiket Pengantar --}}
                 @if ($ticketPengantar->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Tiket Pengantar</h3>
+                        <h3 class="section-title">TIKET PENGANTAR</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketPengantar as $ticket)
                                 <div class="ticket-item">
@@ -127,7 +127,7 @@
                 {{-- Tiket Pelatih --}}
                 @if ($ticketPelatih->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Tiket Pelatih</h3>
+                        <h3 class="section-title">TIKET PELATIH</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketPelatih as $ticket)
                                 <div class="ticket-item">
@@ -160,7 +160,7 @@
                 {{-- Member --}}
                 @if ($ticketMember->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Member Bulanan</h3>
+                        <h3 class="section-title">MEMBER BULANAN</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketMember as $ticket)
                                 <div class="ticket-item">
@@ -193,7 +193,7 @@
                 {{-- Paket --}}
                 @if ($ticketPackage->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Paket Tiket</h3>
+                        <h3 class="section-title">PAKET TIKET</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketPackage as $pack)
                                 <div class="ticket-item">
@@ -227,7 +227,7 @@
                                 {{-- Biaya Pelatih --}}
                 @if ($ticketBiayaPelatih->count())
                     <div class="ticket-section">
-                        <h3 class="section-title">Biaya Pelatih</h3>
+                        <h3 class="section-title">BIAYA PELATIH</h3>
                         <div class="ticket-grid">
                             @foreach ($ticketBiayaPelatih as $ticket)
                                 <div class="ticket-item">

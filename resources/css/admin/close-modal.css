@@ -445,7 +445,7 @@
         display: block;
         /* Increased left padding to prevent text cutoff on thermal printers */
         /* Most thermal printers have built-in margins, especially on the left */
-        padding: 5px 8px 5px 12px;
+        padding: 5px 20px 5px 12px;
         margin: 0;
         font-family: Arial, sans-serif;
         color: black;

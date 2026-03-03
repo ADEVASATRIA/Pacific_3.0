@@ -301,4 +301,67 @@ class PackageViewController extends Controller
 
         return view('front.admin.package', compact('cashSession', 'staff', 'purchaseToday'));
     }
+
+    public function viewActivePackageCustomer(Request $request){
+        $staff = Auth::guard('fo')->user();
+
+        $today = Carbon::today();
+
+        // Ambil cash session aktif
+        $cashSession = null;
+        if ($staff) {
+            $cashSession = CashSession::where('staff_id', $staff->id)
+                ->where('status', 1)
+                ->latest()
+                ->first();
+        }
+
+        // Determine session start time
+        $sessionStartTime = $cashSession?->waktu_buka;
+
+        // Helper to apply filter
+        $applySessionFilter = function ($query) use ($sessionStartTime, $today) {
+            if ($sessionStartTime) {
+                $query->where('created_at', '>=', $sessionStartTime);
+            } else {
+                $query->whereDate('created_at', $today);
+            }
+        };
+
+        $purchaseToday = Purchase::where('status', '2')
+            ->where('payment', '1')
+            ->tap($applySessionFilter)
+            ->sum('total');
+
+        if (!$cashSession) {
+            $cashSession = new CashSession([
+                'saldo_awal' => 0,
+                'waktu_buka' => null,
+                'status' => 0,
+            ]);
+        }
+
+        $phone = $request->input('phone');
+        $query = PackageComboRedeem::with(['customer', 'details'])
+            ->where('expired_date', '>=', now())
+            ->whereNull('fully_redeemed_at')
+            ->orderBy('expired_date', 'asc'); // Urutkan berdasarkan tanggal kadaluarsa terdekat
+
+        // Filter berdasarkan nomor telepon jika ada input 'phone'
+        if ($request->has('phone') && !empty($request->phone)) {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('phone', 'like', '%' . $request->phone . '%');
+            });
+        }
+
+        $activePackages = $query->get();
+
+        return view('front.admin.viewActivePackage', compact([
+            'activePackages',
+            'phone',
+            'cashSession',
+            'staff',
+            'purchaseToday',
+        ]));
+    }
 }

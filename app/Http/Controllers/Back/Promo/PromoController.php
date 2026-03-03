@@ -29,6 +29,7 @@ class PromoController extends Controller
     public function index(Request $request)
     {
         $isActive = $request->input('is_active');
+        $name = $request->input('name');
 
         $query = Promo::query();
         $tickets = TicketType::all();
@@ -36,6 +37,11 @@ class PromoController extends Controller
         // Filter status aktif / tidak aktif
         if ($isActive !== null && $isActive !== '') {
             $query->where('is_active', (bool) $isActive);
+        }
+
+        // Filter nama promo
+        if ($name !== null && $name !== '') {
+            $query->where('code', 'like', '%' . $name . '%');
         }
 
         // Ambil data dengan pagination (10 per halaman)

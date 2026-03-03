@@ -29,7 +29,7 @@ class PromoController extends Controller
         if ($promo->start_date && $now->lt(Carbon::parse($promo->start_date))) {
             return response()->json(['success' => false, 'message' => 'Promo belum aktif.']);
         }
-        if ($promo->expired_date && $now->gt(Carbon::parse($promo->expired_date))) {
+        if ($promo->expired_date && $now->gt(Carbon::parse($promo->expired_date)->endOfDay())) {
             return response()->json(['success' => false, 'message' => 'Promo telah berakhir.']);
         }
         if ($promo->quota <= 0) {

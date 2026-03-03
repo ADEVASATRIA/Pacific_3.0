@@ -62,4 +62,9 @@ class Purchase extends Model
         return $labels[$this->payment] ?? 'Tidak Diketahui';
     }
 
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
 }

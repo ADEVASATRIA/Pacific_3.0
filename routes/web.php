@@ -5,6 +5,7 @@ use App\Http\Controllers\Back\Clubhouse\ClubhouseController;
 use App\Http\Controllers\Back\Coach\BackCoachController;
 use App\Http\Controllers\Back\ManagementPackage\ManagementPackageCustomerController;
 use App\Http\Controllers\Back\PaymentMethod\PaymentMethodController;
+use App\Http\Controllers\Back\PaymentMethod\PaymentMethodTypeController;
 use App\Http\Controllers\Back\Promo\PromoController;
 use App\Http\Controllers\Back\Staff\StaffController;
 use App\Http\Controllers\Back\Tickets\PackageComboController;
@@ -204,6 +205,13 @@ Route::middleware('bo.auth')->group(function () {
     Route::delete('/delete-customer/{id}', [BackCustomerController::class, 'delete'])->name('delete.customer');
     Route::get('/export-customer', [BackCustomerController::class, 'export'])->name('export.customer');
 
+    //Route for management payment types
+    Route::get('/payment-types', [PaymentMethodTypeController::class, 'index'])->name('payment-types');
+    Route::get('/get-payment-types/{id}', [PaymentMethodTypeController::class, 'getPaymentMethodTypes']);
+    Route::post('/add-payment-type', [PaymentMethodTypeController::class, 'add'])->name('add.payment-types');
+    Route::post('/edit-payment-type/{id}', [PaymentMethodTypeController::class, 'edit'])->name('edit.payment-types');
+    Route::delete('/delete-payment-type/{id}', [PaymentMethodTypeController::class, 'delete'])->name('delete.payment-types');
+    
     //Route for management payment method
     Route::get('/payment-method', [PaymentMethodController::class, 'index'])->name('payment-method');
     Route::get('/get-payment-method/{id}', [PaymentMethodController::class, 'getPaymentMethod']);

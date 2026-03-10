@@ -21,6 +21,7 @@ class Purchase extends Model
         'kembalian',
         'uangDiterima',
         'payment',
+        'payment_method_id',
         'payment_info',
         'approval_code',
         'status'
@@ -64,7 +65,7 @@ class Purchase extends Model
 
     public function paymentMethod()
     {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
 
 }

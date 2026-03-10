@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
+        $this->call(PaymentMethodTypeSeeder::class);
         $this->call(PaymentMethodSeeder::class);
+        
     }
 }

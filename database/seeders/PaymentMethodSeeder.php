@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,87 +10,66 @@ class PaymentMethodSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('payment_methods')->insertOrIgnore([
+
+        DB::table('payment_methods')->insert([
+
             [
-                'id' => 1,
-                'name' => 'Cash',
-                // 'img_thumbnail' => 'payments/cash.png',
-                'type' => 'cash',
-                'provider' => null,
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>1,
+                'name'=>'Cash',
+                'payment_method_type_id'=>1,
+                'provider'=>null
             ],
+
             [
-                'id' => 2,
-                'name' => 'QRIS BCA',
-                // 'img_thumbnail' => 'payments/qris_bca.png',
-                'type' => 'qris',
-                'provider' => 'BCA',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>2,
+                'name'=>'QRIS BCA',
+                'payment_method_type_id'=>2,
+                'provider'=>'bca'
             ],
+
             [
-                'id' => 3,
-                'name' => 'QRIS Mandiri',
-                // 'img_thumbnail' => 'payments/qris_mandiri.png',
-                'type' => 'qris',
-                'provider' => 'Mandiri',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>3,
+                'name'=>'QRIS Mandiri',
+                'payment_method_type_id'=>2,
+                'provider'=>'mandiri'
             ],
+
             [
-                'id' => 4,
-                'name' => 'Debit BCA',
-                // 'img_thumbnail' => 'payments/debit_bca.png',
-                'type' => 'debit',
-                'provider' => 'BCA',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>4,
+                'name'=>'Debit BCA',
+                'payment_method_type_id'=>3,
+                'provider'=>'bca'
             ],
+
             [
-                'id' => 5,
-                'name' => 'Debit Mandiri',
-                // 'img_thumbnail' => 'payments/debit_mandiri.png',
-                'type' => 'debit',
-                'provider' => 'Mandiri',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>5,
+                'name'=>'Debit Mandiri',
+                'payment_method_type_id'=>3,
+                'provider'=>'mandiri'
             ],
+
             [
-                'id' => 6,
-                'name' => 'Transfer',
-                // 'img_thumbnail' => 'payments/transfer.png',
-                'type' => 'bank_transfer',
-                'provider' => null,
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>6,
+                'name'=>'Transfer Bank',
+                'payment_method_type_id'=>4,
+                'provider'=>null
             ],
+
             [
-                'id' => 7,
-                'name' => 'QRIS BRI',
-                // 'img_thumbnail' => 'payments/qris_bri.png',
-                'type' => 'qris',
-                'provider' => 'BRI',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id'=>7,
+                'name'=>'QRIS BRI',
+                'payment_method_type_id'=>2,
+                'provider'=>'bri'
             ],
+
             [
-                'id' => 8,
-                'name' => 'Debit BRI',
-                // 'img_thumbnail' => 'payments/debit_bri.png',
-                'type' => 'debit',
-                'provider' => 'BRI',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+                'id'=>8,
+                'name'=>'Debit BRI',
+                'payment_method_type_id'=>3,
+                'provider'=>'bri'
+            ]
+
         ]);
+
     }
 }

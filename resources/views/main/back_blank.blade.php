@@ -172,15 +172,21 @@
 
 
                     {{-- Management Payment method --}}
-                    {{-- <li class="menu-group {{ request()->is('payment-method') ? 'open' : '' }}">
+                    <li class="menu-group {{ request()->is('payment-types') || request()->is('payment-method') ? 'open' : '' }}">
                         <div class="menu-group-header">
                             <div class="menu-group-title">
-                                <i data-feather="user-check" class="menu-icon"></i>
+                                <i data-feather="credit-card" class="menu-icon"></i>
                                 <span class="menu-text">Management Payment</span>
                             </div>
                             <i data-feather="chevron-down" class="arrow-icon"></i>
                         </div>
-                        <ul class="submenu">
+                        <ul class="submenu"></ul>
+                            <li class="submenu-item {{ request()->is('payment-types') ? 'active' : '' }}">
+                                <a href="{{ route('payment-types') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Management Payment Types</span>
+                                </a>
+                            </li>
                             <li class="submenu-item {{ request()->is('payment-method') ? 'active' : '' }}">
                                 <a href="{{ route('payment-method') }}" class="menu-link">
                                     <span class="submenu-dot"></span>
@@ -188,7 +194,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li> --}}
+                    </li>
 
                     <!-- Divider -->
                     <li class="menu-divider"></li>

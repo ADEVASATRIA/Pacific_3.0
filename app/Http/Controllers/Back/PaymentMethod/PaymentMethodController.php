@@ -4,16 +4,21 @@ namespace App\Http\Controllers\Back\PaymentMethod;
 
 use App\Http\Controllers\Controller;
 use App\Models\PaymentMethod;
+use App\Models\PaymentMethodType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaymentMethodController extends Controller
 {
+    // Alur management Payment Method
     public function index(Request $request)
     {
         // Filter nama payment method
         $name = $request->input('name');
         $query = PaymentMethod::query();
+
+        // Query all type
+        $paymentMethodTypes = PaymentMethodType::all();
 
         if ($name) {
             $query->where('name', 'like', '%' . $name . '%');
@@ -21,7 +26,12 @@ class PaymentMethodController extends Controller
 
         $paymentMethods = $query->get();
 
-        return view('back.management_payment.index', compact('paymentMethods'));
+        return view('back.management_payment.index', compact('paymentMethods', 'paymentMethodTypes'));
+    }
+
+    public function getPaymentMethod($id){
+        $paymentMethod = PaymentMethod::findOrFail($id);
+        return response()->json($paymentMethod);
     }
 
     public function add(Request $request){
@@ -32,14 +42,14 @@ class PaymentMethodController extends Controller
                 [
                     'name' => 'required|string|max:255',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                    'type' => 'required|string|max:255',
+                    'payment_method_type_id' => 'required|string|max:255',
                     'provider' => 'required|string|max:255',
                     'is_active' => 'required|boolean',
                 ],
                 [
                     'name.required' => 'Nama payment method harus diisi!',
                     'image.required' => 'Gambar payment method harus diisi!',
-                    'type.required' => 'Tipe payment method harus diisi!',
+                    'payment_method_type_id.required' => 'Tipe payment method harus diisi!',
                     'provider.required' => 'Provider payment method harus diisi!',
                     'is_active.required' => 'Status payment method harus diisi!',
                 ]
@@ -54,8 +64,8 @@ class PaymentMethodController extends Controller
 
             $paymentMethod = new PaymentMethod();
             $paymentMethod->name = $request->name;
-            $paymentMethod->image = $imagePath;
-            $paymentMethod->type = $request->type;
+            $paymentMethod->img_thumbnail = $imagePath;
+            $paymentMethod->payment_method_type_id = $request->payment_method_type_id;
             $paymentMethod->provider = $request->provider;
             $paymentMethod->is_active = $request->is_active;
 
@@ -78,6 +88,7 @@ class PaymentMethodController extends Controller
     {
         try {
             DB::beginTransaction();
+            // dd($request->all());
 
             $request->validate(
                 [
@@ -105,8 +116,10 @@ class PaymentMethodController extends Controller
 
             $paymentMethod = PaymentMethod::find($id);
             $paymentMethod->name = $request->name;
-            $paymentMethod->image = $imagePath;
-            $paymentMethod->type = $request->type;
+            if ($request->hasFile('image')) {
+                $paymentMethod->img_thumbnail = $imagePath;
+            }
+            $paymentMethod->payment_method_type_id = $request->type;
             $paymentMethod->provider = $request->provider;
             $paymentMethod->is_active = $request->is_active;
 

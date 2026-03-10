@@ -45,6 +45,8 @@ class PaymentMethodController extends Controller
                     'payment_method_type_id' => 'required|string|max:255',
                     'provider' => 'required|string|max:255',
                     'is_active' => 'required|boolean',
+                    'is_approval_code_required' => 'required|boolean',
+                    'is_number_card_required' => 'required|boolean'
                 ],
                 [
                     'name.required' => 'Nama payment method harus diisi!',
@@ -52,6 +54,8 @@ class PaymentMethodController extends Controller
                     'payment_method_type_id.required' => 'Tipe payment method harus diisi!',
                     'provider.required' => 'Provider payment method harus diisi!',
                     'is_active.required' => 'Status payment method harus diisi!',
+                    'is_approval_code_required.required' => 'Req Approval Code harus diisi!',
+                    'is_number_card_required.required' => 'Req Number Card harus diisi!'
                 ]
             );
 
@@ -68,6 +72,8 @@ class PaymentMethodController extends Controller
             $paymentMethod->payment_method_type_id = $request->payment_method_type_id;
             $paymentMethod->provider = $request->provider;
             $paymentMethod->is_active = $request->is_active;
+            $paymentMethod->is_approval_code_required = $request->is_approval_code_required;
+            $paymentMethod->is_number_card_required = $request->is_number_card_required;
 
             if (!$paymentMethod->save()) {
                 throw new \Exception("Gagal menyimpan data Payment Method.");
@@ -97,6 +103,8 @@ class PaymentMethodController extends Controller
                     'type' => 'required|string|max:255',
                     'provider' => 'required|string|max:255',
                     'is_active' => 'required|boolean',
+                    'is_approval_code_required' => 'required|boolean',
+                    'is_number_card_required' => 'required|boolean'
                 ],
                 [
                     'name.required' => 'Nama payment method harus diisi!',
@@ -104,6 +112,8 @@ class PaymentMethodController extends Controller
                     'type.required' => 'Tipe payment method harus diisi!',
                     'provider.required' => 'Provider payment method harus diisi!',
                     'is_active.required' => 'Status payment method harus diisi!',
+                    'is_approval_code_required.required' => 'Req Approval Code harus diisi!',
+                    'is_number_card_required.required' => 'Req Number Card harus diisi!'
                 ]
             );
 
@@ -122,6 +132,8 @@ class PaymentMethodController extends Controller
             $paymentMethod->payment_method_type_id = $request->type;
             $paymentMethod->provider = $request->provider;
             $paymentMethod->is_active = $request->is_active;
+            $paymentMethod->is_approval_code_required = $request->is_approval_code_required;
+            $paymentMethod->is_number_card_required = $request->is_number_card_required;
 
             if (!$paymentMethod->save()) {
                 throw new \Exception("Gagal menyimpan data Payment Method.");

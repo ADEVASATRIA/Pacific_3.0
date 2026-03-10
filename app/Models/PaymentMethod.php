@@ -13,6 +13,8 @@ class PaymentMethod extends Model
         'payment_method_type_id',
         'provider',
         'is_active',
+        'is_approval_code_required',
+        'is_number_card_required'
     ];
 
     public $incrementing = false;

@@ -7,8 +7,8 @@
         <div class="checkout-card">
             <h1 class="title">Terimakasih</h1>
             <p class="subtitle">
-                Pembayaran sudah diterima, silahkan cetak struk dan tiket 
-                (untuk Tiket Paket silahkan cetak tiket melalui tombol 
+                Pembayaran sudah diterima, silahkan cetak struk dan tiket
+                (untuk Tiket Paket silahkan cetak tiket melalui tombol
                 <b>"Cetak Tiket"</b> di halaman depan)
             </p>
 
@@ -45,7 +45,8 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Transaksi</span>
-                    <span class="info-value">: {{ \Carbon\Carbon::parse($purchase->created_at)->translatedFormat('d F Y H:i') }}</span>
+                    <span class="info-value">:
+                        {{ \Carbon\Carbon::parse($purchase->created_at)->translatedFormat('d F Y H:i') }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Pelanggan</span>
@@ -56,7 +57,7 @@
             <hr class="receipt-divider">
 
             <ul class="purchase-detail">
-                @foreach($purchase->purchaseDetails as $detail)
+                @foreach ($purchase->purchaseDetails as $detail)
                     <li>
                         <span class="item-name">({{ $detail->qty }}x) {{ $detail->name }}</span>
                         <span class="item-price">{{ number_format($detail->price * $detail->qty, 0, ',', '.') }}</span>
@@ -64,39 +65,36 @@
                 @endforeach
             </ul>
 
-            @if($purchase->promo)
+            @if ($purchase->promo)
                 <div class="receipt-row">
                     <span>Diskon ( {{ $purchase->promo->code }} ):</span>
-                    <span>- Rp.{{ number_format($purchase->discount,0,',','.') }}</span>
+                    <span>- Rp.{{ number_format($purchase->discount, 0, ',', '.') }}</span>
                 </div>
             @endif
 
             <div class="receipt-total">
                 <span>Total</span>
-                <span>Rp. {{ number_format($purchase->total,0,',','.') }}</span>
+                <span>Rp. {{ number_format($purchase->total, 0, ',', '.') }}</span>
             </div>
 
             <div class="receipt-payment">
                 <span>Uang Diterima</span>
-                <span>Rp. {{ number_format($purchase->uangDiterima,0,',','.') }}</span>
+                <span>Rp. {{ number_format($purchase->uangDiterima, 0, ',', '.') }}</span>
             </div>
 
             <div class="receipt-payment">
                 <span>Kembalian</span>
-                <span>Rp. {{ number_format($purchase->kembalian,0,',','.') }}</span>
+                <span>Rp. {{ number_format($purchase->kembalian, 0, ',', '.') }}</span>
             </div>
 
             <div class="payment-method">
-                @switch($purchase->payment)
-                    @case(1) Tunai @break
-                    @case(2) Qris BCA | {{ $purchase->approval_code }} @break
-                    @case(3) Qris Mandiri | {{ $purchase->approval_code }} @break
-                    @case(4) Debit BCA | {{ $purchase->approval_code }} @break
-                    @case(5) Debit Mandiri | {{ $purchase->approval_code }} @break
-                    @case(6) Transfer @break
-                    @case(7) Qris BRI @break
-                    @case(8) Debit BRI @break
-                @endswitch
+                {{-- Ambil nama dari relasi paymentMethod --}}
+                {{ $purchase->paymentMethod->name ?? 'Metode Tidak Diketahui' }}
+
+                {{-- Cek apakah metode ini membutuhkan Approval Code berdasarkan kolom baru kita --}}
+                @if ($purchase->paymentMethod && $purchase->paymentMethod->is_approval_code_required)
+                    | {{ $purchase->approval_code ?? '-' }}
+                @endif
             </div>
 
             <p class="thank-you">Thank You For Coming</p>
@@ -123,7 +121,8 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Transaksi</span>
-                    <span class="info-value">: {{ \Carbon\Carbon::parse($purchase->created_at)->translatedFormat('d F Y H:i') }}</span>
+                    <span class="info-value">:
+                        {{ \Carbon\Carbon::parse($purchase->created_at)->translatedFormat('d F Y H:i') }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Pelanggan</span>
@@ -138,7 +137,7 @@
             <hr class="receipt-divider">
 
             <ul class="purchase-detail">
-                @foreach($purchase->purchaseDetails as $detail)
+                @foreach ($purchase->purchaseDetails as $detail)
                     <li>
                         <span class="item-name">({{ $detail->qty }}x) {{ $detail->name }}</span>
                         <span class="item-price">{{ number_format($detail->price * $detail->qty, 0, ',', '.') }}</span>
@@ -146,39 +145,36 @@
                 @endforeach
             </ul>
 
-            @if($purchase->promo)
+            @if ($purchase->promo)
                 <div class="receipt-row">
                     <span>Diskon ( {{ $purchase->promo->code }} ):</span>
-                    <span>- Rp.{{ number_format($purchase->discount,0,',','.') }}</span>
+                    <span>- Rp.{{ number_format($purchase->discount, 0, ',', '.') }}</span>
                 </div>
             @endif
 
             <div class="receipt-total">
                 <span>Total</span>
-                <span>Rp. {{ number_format($purchase->total,0,',','.') }}</span>
+                <span>Rp. {{ number_format($purchase->total, 0, ',', '.') }}</span>
             </div>
 
             <div class="receipt-payment">
                 <span>Uang Diterima</span>
-                <span>Rp. {{ number_format($purchase->uangDiterima,0,',','.') }}</span>
+                <span>Rp. {{ number_format($purchase->uangDiterima, 0, ',', '.') }}</span>
             </div>
 
             <div class="receipt-payment">
                 <span>Kembalian</span>
-                <span>Rp. {{ number_format($purchase->kembalian,0,',','.') }}</span>
+                <span>Rp. {{ number_format($purchase->kembalian, 0, ',', '.') }}</span>
             </div>
 
             <div class="payment-method">
-                @switch($purchase->payment)
-                    @case(1) Tunai @break
-                    @case(2) Qris BCA | {{ $purchase->approval_code }} @break
-                    @case(3) Qris Mandiri | {{ $purchase->approval_code }} @break
-                    @case(4) Debit BCA | {{ $purchase->approval_code }} @break
-                    @case(5) Debit Mandiri | {{ $purchase->approval_code }} @break
-                    @case(6) Transfer @break
-                    @case(7) Qris BRI @break
-                    @case(8) Debit BRI @break
-                @endswitch
+                {{-- Ambil nama dari relasi paymentMethod --}}
+                {{ $purchase->paymentMethod->name ?? 'Metode Tidak Diketahui' }}
+
+                {{-- Cek apakah metode ini membutuhkan Approval Code berdasarkan kolom baru kita --}}
+                @if ($purchase->paymentMethod && $purchase->paymentMethod->is_approval_code_required)
+                    | {{ $purchase->approval_code ?? '-' }}
+                @endif
             </div>
 
             <p class="thank-you">Thank You For Coming</p>

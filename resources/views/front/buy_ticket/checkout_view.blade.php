@@ -7,8 +7,7 @@
             <div class="ads-slider">
                 @foreach ($sponsor as $item)
                     @if ($item->image)
-                        <img src="{{ asset('storage/' . $item->image) }}" alt="Sponsor {{ $item->name }}"
-                            class="ads-img">
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="Sponsor {{ $item->name }}" class="ads-img">
                     @endif
                 @endforeach
             </div>
@@ -51,7 +50,9 @@
                                                 <span class="item-name">{{ $it['name'] }}</span>
 
                                                 {{-- Jika item butuh pilihan Clubhouse & Coach --}}
-                                                @if ((!empty($it['is_coach_club_require']) && $it['is_coach_club_require'] == 1) || (isset($it['tipe_khusus']) && in_array($it['tipe_khusus'], [4, 5])))
+                                                @if (
+                                                    (!empty($it['is_coach_club_require']) && $it['is_coach_club_require'] == 1) ||
+                                                        (isset($it['tipe_khusus']) && in_array($it['tipe_khusus'], [4, 5])))
                                                     <div class="dropdown-group-inline">
                                                         {{-- Dropdown Clubhouse --}}
                                                         <div class="clubhouse-select">
@@ -152,16 +153,24 @@
                         <div class="custom-select">
                             <div class="selected">-- Pilih Metode --</div>
                             <div class="options">
-                                <div data-value="1"><span>💵</span> Cash</div>
-                                <div data-value="2"><img src="/aset/img/logo-bca.png" alt="BCA"> QRIS BCA</div>
-                                <div data-value="3"><img src="/aset/img/logo-mandiri.png" alt="Mandiri"> QRIS Mandiri
-                                </div>
-                                <div data-value="4"><img src="/aset/img/logo-bca.png" alt="BCA"> Debit BCA</div>
-                                <div data-value="5"><img src="/aset/img/logo-mandiri.png" alt="Mandiri"> Debit Mandiri
-                                </div>
-                                <div data-value="6"><span>🏦</span> Transfer Bank</div>
-                                <div data-value="7"><img src="/aset/img/logo-bri.png" alt="BRI"> QRIS BRI</div>
-                                <div data-value="8"><img src="/aset/img/logo-bri.png" alt="BRI"> Debit BRI</div>
+                                @foreach ($paymentMethods as $method)
+                                    <div data-value="{{ $method->id }}">
+                                        @if ($method->img_thumbnail)
+                                            <img src="{{ asset('storage/' . $method->img_thumbnail) }}" alt="{{ $method->name }}">
+                                        @else
+                                            {{-- Menggunakan helper str() --}}
+                                            @if (str($method->name)->contains('Cash', true))
+                                                <span>💵</span>
+                                            @elseif(str($method->name)->contains(['Transfer', 'Bank'], true))
+                                                <span>🏦</span>
+                                            @else
+                                                <span>💳</span>
+                                            @endif
+                                        @endif
+
+                                        {{ $method->name }}
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
 
@@ -218,6 +227,9 @@
     {{-- SCRIPT VALIDASI + ALERT --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            // === DATA FROM PHP ===
+            const paymentMethodsData = @json($paymentMethods->keyBy('id'));
 
             // === HANDLE CLUBHOUSE ID & COACH ID SELECTION ===
             const clubhouseSelects = document.querySelectorAll('.clubhouse-dropdown');
@@ -296,7 +308,7 @@
                         if (data.success) {
                             showAlert('success', data.message);
                             document.querySelector('input[name="promo_id"]').value = data.promo_id ||
-                            '';
+                                '';
 
                             // === UPDATE HARGA ITEM YANG KENA PROMO ===
                             if (data.discounted_items && Array.isArray(data.discounted_items)) {
@@ -334,7 +346,7 @@
 
                             // === UPDATE TOTAL KESELURUHAN DI UI ===
                             const totalBox = document.querySelector(
-                            '.totals-section .highlight strong');
+                                '.totals-section .highlight strong');
                             if (totalBox && data.formatted_total) {
                                 totalBox.textContent = `Rp ${data.formatted_total}`;
                             }
@@ -348,7 +360,7 @@
                         } else {
                             showAlert('error', data.message);
                             promoMessage.innerHTML =
-                            `<div class="promo-error">⚠️ ${data.message}</div>`;
+                                `<div class="promo-error">⚠️ ${data.message}</div>`;
                             document.querySelector('input[name="promo_id"]').value = '';
                         }
                     })
@@ -404,19 +416,27 @@
                 opt.addEventListener('click', function() {
                     const value = this.getAttribute('data-value');
                     const text = this.textContent.trim();
+                    const selectedMethod = paymentMethodsData[value];
 
                     selected.textContent = text;
                     paymentInput.value = value;
 
+                    // Reset all boxes
                     approvalBox.classList.add('hidden');
                     cardBox.classList.add('hidden');
                     moneyBox.classList.add('hidden');
 
-                    if (value === '1') {
-                        moneyBox.classList.remove('hidden');
-                    } else if (['2', '3', '4', '5', '7', '8'].includes(value)) {
-                        approvalBox.classList.remove('hidden');
-                        cardBox.classList.remove('hidden');
+                    if (selectedMethod) {
+                        if (selectedMethod.is_approval_code_required) {
+                            approvalBox.classList.remove('hidden');
+                        }
+                        if (selectedMethod.is_number_card_required) {
+                            cardBox.classList.remove('hidden');
+                        }
+                        // Specific case for cash
+                        if (value == 1) { // Assuming '1' is always cash
+                            moneyBox.classList.remove('hidden');
+                        }
                     }
                 });
             });
@@ -439,21 +459,25 @@
                     return;
                 }
 
-                if (payment === '1') {
-                    const uangDiterima = parseFloat(document.getElementById('uangDiterima_hidden').value);
-                    if (!uangDiterima || uangDiterima <= 0) {
-                        e.preventDefault();
-                        showAlert('error', 'Masukkan jumlah uang yang diterima untuk pembayaran tunai.');
-                        return;
-                    }
-                }
-
-                if (['2', '3', '4', '5', '7', '8'].includes(payment)) {
-                    const approval = document.getElementById('approval_code').value.trim();
-                    if (!approval) {
-                        e.preventDefault();
-                        showAlert('error', 'Kode approval wajib diisi untuk metode non-tunai.');
-                        return;
+                if (payment) {
+                    const selectedMethod = paymentMethodsData[payment];
+                    if (selectedMethod) {
+                        if (selectedMethod.is_approval_code_required) {
+                            const approval = document.getElementById('approval_code').value.trim();
+                            if (!approval) {
+                                e.preventDefault();
+                                showAlert('error', 'Kode approval wajib diisi untuk metode ini.');
+                                return;
+                            }
+                        }
+                        if (selectedMethod.is_number_card_required) {
+                            const card = document.getElementById('number_card').value.trim();
+                            if (!card) {
+                                e.preventDefault();
+                                showAlert('error', 'Nomor kartu wajib diisi untuk metode ini.');
+                                return;
+                            }
+                        }
                     }
                 }
             });
@@ -481,12 +505,6 @@
                 uangDiterimaHidden.value = uang;
                 kembalianHidden.value = kembali > 0 ? kembali : 0;
                 kembalianInput.value = formatRupiah(kembalianHidden.value);
-
-                console.log('=== DEBUG KEMBALIAN ===');
-                console.log('Total Input:', total);
-                console.log('Uang Diterima:', uang);
-                console.log('Kembalian:', kembali);
-                console.log('Kembalian Hidden:', kembalianHidden.value);
             }
 
             uangDiterimaInput.addEventListener('input', () => {

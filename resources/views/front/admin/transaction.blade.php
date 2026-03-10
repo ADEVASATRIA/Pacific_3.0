@@ -87,7 +87,7 @@
                             </ul>
                         </td>
                         <td>Rp {{ number_format($tx->total, 0, ',', '.') }}</td>
-                        <td>{{ $tx->payment_label }}</td>
+                        <td>{{ $tx->paymentMethod->name ?? '-' }}</td>
                         <td>
                             @if ($tx->status == 0)
                                 <span class="status new">Baru</span>

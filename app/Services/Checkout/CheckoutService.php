@@ -229,6 +229,7 @@ class CheckoutService
             $purchase->kembalian = $request->input('kembalian') ?? 0;
             $purchase->uangDiterima = $request->input('uangDiterima') ?? 0;
             $purchase->payment = $request->input('payment');
+            $purchase->payment_method_id = $request->input('payment');
             $purchase->payment_info = $request->input('payment_info');
             $purchase->approval_code = $request->input('approval_code');
             $purchase->status = Purchase::STATUS_PAID;

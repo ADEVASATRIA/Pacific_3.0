@@ -29,6 +29,8 @@
                                 <th class="text-center">Type</th>
                                 <th class="text-center">Provider</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Req Approval Code</th>
+                                <th class="text-center">Req Number Card</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -52,6 +54,8 @@
                                         @endif
                                     </td>
                                     <td class="text-center">{!! $paymentMethod->getBadgeHtml($paymentMethod->is_active) !!}</td>
+                                    <td class="text-center">{!! $paymentMethod->getBadgeHtml($paymentMethod->is_approval_code_required) !!}</td>
+                                    <td class="text-center">{!! $paymentMethod->getBadgeHtml($paymentMethod->is_number_card_required) !!}</td>
                                     <td class="text-center">
                                         <button class="btn btn-primary btn-sm"
                                             onclick="openEditModal({{ $paymentMethod->id }})">
@@ -147,6 +151,28 @@
                                     <div class="invalid-feedback">Status harus dipilih!</div>
                                 </div>
 
+                                {{-- Req Approval Code --}}
+                                <div class="col-md-6">
+                                    <label for="add_is_approval_code_required" class="form-label fw-semibold">Req Approval Code</label>
+                                    <select name="is_approval_code_required" id="add_is_approval_code_required" class="form-select" required>
+                                        <option value="" disabled selected>Pilih Req Approval Code</option>
+                                        <option value="1">Ya</option>
+                                        <option value="0">Tidak</option>
+                                    </select>
+                                    <div class="invalid-feedback">Req Approval Code harus dipilih!</div>
+                                </div>
+
+                                {{-- Req number card --}}
+                                <div class="col-md-6">
+                                    <label for="add_is_number_card_required" class="form-label fw-semibold">Req Number Card</label>
+                                    <select name="is_number_card_required" id="add_is_number_card_required" class="form-select" required>
+                                        <option value="" disabled selected>Pilih Req Number Card</option>
+                                        <option value="1">Ya</option>
+                                        <option value="0">Tidak</option>
+                                    </select>
+                                    <div class="invalid-feedback">Req Number Card harus dipilih!</div>
+                                </div>
+
                             </div>
                         </div>
                     </form>
@@ -237,6 +263,28 @@
                                     </select>
                                     <div class="invalid-feedback">Status harus dipilih!</div>
                                 </div>
+
+                                {{-- Req Approval Code --}}
+                                <div class="col-md-6">
+                                    <label for="edit_is_approval_code_required" class="form-label fw-semibold">Req Approval Code</label>
+                                    <select name="is_approval_code_required" id="edit_is_approval_code_required" class="form-select" required>
+                                        <option value="" disabled selected>Pilih Req Approval Code</option>
+                                        <option value="1" {{ old('is_approval_code_required', $paymentMethod->is_approval_code_required ?? '') == 1 ? 'selected' : '' }}>Ya</option>
+                                        <option value="0" {{ old('is_approval_code_required', $paymentMethod->is_approval_code_required ?? '') == 0 ? 'selected' : '' }}>Tidak</option>
+                                    </select>
+                                    <div class="invalid-feedback">Req Approval Code harus dipilih!</div>
+                                </div>
+
+                                {{-- Req Number Card --}}
+                                <div class="col-md-6">
+                                    <label for="edit_is_number_card_required" class="form-label fw-semibold">Req Number Card</label>
+                                    <select name="is_number_card_required" id="edit_is_number_card_required" class="form-select" required>
+                                        <option value="" disabled selected>Pilih Req Number Card</option>
+                                        <option value="1" {{ old('is_number_card_required', $paymentMethod->is_number_card_required ?? '') == 1 ? 'selected' : '' }}>Ya</option>
+                                        <option value="0" {{ old('is_number_card_required', $paymentMethod->is_number_card_required ?? '') == 0 ? 'selected' : '' }}>Tidak</option>
+                                    </select>
+                                    <div class="invalid-feedback">Req Number Card harus dipilih!</div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -319,6 +367,8 @@
                 document.getElementById('edit_payment_method_type').value = data.payment_method_type_id ?? '';
                 document.getElementById('edit_payment_method_provider').value = data.provider ?? '';
                 document.getElementById('edit_is_active').value = data.is_active ?? '';
+                document.getElementById('edit_is_approval_code_required').value = data.is_approval_code_required ?? '';
+                document.getElementById('edit_is_number_card_required').value = data.is_number_card_required ?? '';
 
 
                 const editModal = new bootstrap.Modal(document.getElementById('modalEditPaymentMethod'));

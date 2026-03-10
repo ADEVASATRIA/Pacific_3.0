@@ -118,6 +118,7 @@ class CheckoutController extends Controller
     {
         // Ambil purchase dengan relasi
         $purchase = Purchase::with(['customer.clubhouse', 'purchaseDetails', 'staff'])->findOrFail($id);
+        // $paymentMethod = $purchase->paymentMethod;
 
         // Buat instance DNS1D
         $barcodeGenerator = new DNS1D();

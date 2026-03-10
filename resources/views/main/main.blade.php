@@ -45,11 +45,9 @@
             <div class="payment-section">
                 <p class="payment-title">Menerima pembayaran secara tunai dan non tunai</p>
                 <div class="payment-logos">
-                    <img src="aset/img/logo-qris.png" alt="QRIS" class="payment-logo">
-                    <img src="aset/img/logo-bca.png" alt="BCA" class="payment-logo">
-                    <img src="aset/img/logo-mandiri.png" alt="MANDIRI" class="payment-logo">
-                    <img src="aset/img/logo-bni.png" alt="BNI" class="payment-logo">
-                    <img src="aset/img/logo-bri.png" alt="BRI" class="payment-logo">
+                    @foreach ($paymentMethod as $item)
+                        <img src="{{ asset('storage/' . $item->img_thumbnail) }}" alt="{{ $item->name }}" class="payment-logo">
+                    @endforeach
                 </div>
             </div>
         </div>

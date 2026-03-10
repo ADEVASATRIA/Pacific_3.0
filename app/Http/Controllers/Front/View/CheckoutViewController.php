@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front\View;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clubhouse;
+use App\Models\PaymentMethod;
 use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use App\Models\Customer;
@@ -45,6 +46,10 @@ class CheckoutViewController extends Controller
             ->whereNull('deleted_at')
             ->get(['id', 'name']);
 
+        // Query Payment Method
+        $paymentMethods = PaymentMethod::where('is_active', 1)
+            ->get();
+
         return view("front.buy_ticket.checkout_view", [
             "items" => $items,
             "subTotal" => session("subTotal"),
@@ -55,7 +60,8 @@ class CheckoutViewController extends Controller
             "checkoutToken" => $token,
             "sponsor" => $sponsor,
             "clubhouses" => $clubhouses,
-            "coaches" => $coaches
+            "coaches" => $coaches,
+            "paymentMethods" => $paymentMethods,
         ]);
     }
 

@@ -44,6 +44,10 @@ class Customer extends Model
                 ->latest('created_at'); // ambil ticket terbaru by created_at desc
     }
 
+    public function voucherLog(){
+        return $this->hasMany(VoucherLog::class);
+    }
+
     public function generateMemberId()
     {
         $ctr = 0;

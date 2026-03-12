@@ -3,7 +3,7 @@
 @vite('resources/css/admin/close-modal.css')
 
 @section('content')
-    <div class="cloubhouse-page">
+    <div class="payment-method-page">
         <h2 class="page-title mb-4">Data Payment Method</h2>
         <div class="filter-section mb-4">
             <div class="filter-form flex items-end gap-4 flex-wrap">
@@ -348,7 +348,7 @@
         </div>
     </div>
 
-        <script>
+    <script>
         // --- Fungsi Utama untuk Membuka Modal Edit Payment Method ---
         async function openEditModal(id) {
             try {

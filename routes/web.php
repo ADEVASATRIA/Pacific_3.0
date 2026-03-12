@@ -18,6 +18,7 @@ use App\Http\Controllers\Back\Report\HomeController as BackReportHomeController;
 use App\Http\Controllers\Back\Report\Customer\CustomerReportController;
 
 use App\Http\Controllers\Back\ViewLog\ViewLogTicketController;
+use App\Http\Controllers\Back\Voucher\VoucherController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
@@ -237,5 +238,13 @@ Route::middleware('bo.auth')->group(function () {
     Route::get('/get-edit-package/{id}', [ManagementPackageCustomerController::class, 'getEditPackage'])->name('get-edit-package');
     Route::post('/edit-package/{id}', [ManagementPackageCustomerController::class, 'editPackage'])->name('edit-package');
     Route::delete('/delete-package/{id}', [ManagementPackageCustomerController::class, 'deletePackage'])->name('delete-package');
+
+
+    // Route Halaman management voucher
+    Route::get('/voucher', [VoucherController::class, 'index'])->name('voucher');
+    Route::get('/get-voucher/{id}', [VoucherController::class, 'getVoucher']);
+    Route::post('/add-voucher', [VoucherController::class, 'add'])->name('add.voucher');
+    Route::post('/edit-voucher/{id}', [VoucherController::class, 'edit'])->name('edit.voucher');
+    Route::delete('/delete-voucher/{id}', [VoucherController::class, 'delete'])->name('delete.voucher');
 });
 

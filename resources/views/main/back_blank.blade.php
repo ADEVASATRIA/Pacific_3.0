@@ -47,12 +47,12 @@
                     </li>
 
                     <!-- Promo -->
-                    <li class="menu-item {{ request()->is('promo') ? 'active' : '' }}">
+                    {{-- <li class="menu-item {{ request()->is('promo') ? 'active' : '' }}">
                         <a href="{{ route('promo') }}" class="menu-link">
                             <i data-feather="tag" class="menu-icon"></i>
                             <span class="menu-text">Promo</span>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <!-- Divider -->
                     <li class="menu-divider"></li>
@@ -170,8 +170,7 @@
                         </ul>
                     </li>
 
-
-                    {{-- Management Payment method --}}
+                    <!-- Management Payment Method -->
                     <li class="menu-group {{ request()->is('payment-types') || request()->is('payment-method') ? 'open' : '' }}">
                         <div class="menu-group-header">
                             <div class="menu-group-title">
@@ -180,21 +179,49 @@
                             </div>
                             <i data-feather="chevron-down" class="arrow-icon"></i>
                         </div>
-                        <ul class="submenu"></ul>
+                        <ul class="submenu">
                             <li class="submenu-item {{ request()->is('payment-types') ? 'active' : '' }}">
                                 <a href="{{ route('payment-types') }}" class="menu-link">
                                     <span class="submenu-dot"></span>
-                                    <span class="menu-text">Management Payment Types</span>
+                                    <span class="menu-text">Payment Types</span>
                                 </a>
                             </li>
+
                             <li class="submenu-item {{ request()->is('payment-method') ? 'active' : '' }}">
                                 <a href="{{ route('payment-method') }}" class="menu-link">
                                     <span class="submenu-dot"></span>
-                                    <span class="menu-text">Management Payment Method</span>
+                                    <span class="menu-text">Payment Method</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
+
+                    <!-- Management Promo & Voucher -->
+                    <li class="menu-group {{ request()->is('promo') || request()->is('voucher') ? 'open' : '' }}">
+                        <div class="menu-group-header">
+                            <div class="menu-group-title">
+                                <i data-feather="tag" class="menu-icon"></i>
+                                <span class="menu-text">Management Promo & Voucher</span>
+                            </div>
+                            <i data-feather="chevron-down" class="arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li class="submenu-item {{ request()->is('promo') ? 'active' : '' }}">
+                                <a href="{{ route('promo') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Promo</span>
+                                </a>
+                            </li>
+
+                            <li class="submenu-item {{ request()->is('voucher') ? 'active' : '' }}">
+                                <a href="{{ route('voucher') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Voucher</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
 
                     <!-- Divider -->
                     <li class="menu-divider"></li>

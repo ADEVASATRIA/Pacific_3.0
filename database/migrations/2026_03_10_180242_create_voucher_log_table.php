@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('voucher_log', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('voucher_id');
-            $table->unsignedInteger('customer_id');
+            $table->unsignedInteger('customer_id')->nullable();
             $table->string('code')->unique();
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();

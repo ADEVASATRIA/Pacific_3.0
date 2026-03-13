@@ -6,15 +6,34 @@ use App\Http\Controllers\Controller;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Back\Voucher\VoucherLogController;
 
 class VoucherController extends Controller
 {
     public function index(Request $request){
         $name = $request->input('name');
+        $isActive = $request->input('is_active');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $query = Voucher::query();
 
         if($name){
             $query->where('name', 'like', '%' . $name . '%');
+        }
+
+        // Filter status aktif / tidak aktif
+        if ($isActive !== null && $isActive !== '') {
+            $query->where('is_active', (bool) $isActive);
+        }
+
+        // Filter tanggal mulai
+        if ($startDate) {
+            $query->where('start_date', '>=', $startDate);
+        }
+
+        // Filter tanggal selesai
+        if ($endDate) {
+            $query->where('end_date', '<=', $endDate);
         }
 
         $vouchers = $query->get();
@@ -71,6 +90,9 @@ class VoucherController extends Controller
             if(!$voucher->save()){
                 throw new \Exception('Gagal menyimpan data voucher.');
             }
+
+            // Generate log voucher
+            VoucherLogController::generateLogs($voucher);
 
             DB::commit();
             return redirect()->route('voucher')->with([
@@ -135,6 +157,9 @@ class VoucherController extends Controller
             if(!$voucher->save()){
                 throw new \Exception('Gagal menyimpan data voucher.');
             }
+            
+            VoucherLogController::generateLogs($voucher);
+            
             DB::commit();
             return redirect()->route('voucher')->with([
                 'success' => true,

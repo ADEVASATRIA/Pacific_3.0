@@ -19,6 +19,7 @@ use App\Http\Controllers\Back\Report\Customer\CustomerReportController;
 
 use App\Http\Controllers\Back\ViewLog\ViewLogTicketController;
 use App\Http\Controllers\Back\Voucher\VoucherController;
+use App\Http\Controllers\Back\Voucher\VoucherLogController;
 use App\Http\Controllers\Front\Admin\AdminAuthController;
 use App\Http\Controllers\Front\Admin\CashSessionController;
 use App\Http\Controllers\Front\Admin\MemberViewController;
@@ -246,5 +247,9 @@ Route::middleware('bo.auth')->group(function () {
     Route::post('/add-voucher', [VoucherController::class, 'add'])->name('add.voucher');
     Route::post('/edit-voucher/{id}', [VoucherController::class, 'edit'])->name('edit.voucher');
     Route::delete('/delete-voucher/{id}', [VoucherController::class, 'delete'])->name('delete.voucher');
+
+
+    // Route Halaman Detail Voucher Log
+    Route::get('/get-voucher-log/{id}', [VoucherLogController::class, 'indexLog'])->name('voucher.log');
 });
 

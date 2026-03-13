@@ -6,16 +6,50 @@
     <div class="voucher-page">
         <h2 class="page-title mb-4">Data Voucher</h2>
         <div class="filter-section mb-4">
-            <div class="filter-form flex items-end gap-4 flex-wrap">
+            <form method="GET" action="{{ route('voucher') }}" class="filter-form flex items-end gap-4 flex-wrap">
+
+                {{-- Filter nama --}}
+                <div class="form-group">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nama Voucher</label>
+                    <input type="text" name="name" id="name" value="{{ request('name') }}"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="masukkan nama voucher..">
+                </div>
+
+                {{-- Filter Start Date --}}
+                <div class="form-group">
+                    <label for="start_date" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
+                    <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                </div>
+
+                {{-- Filter End Date --}}
+                <div class="form-group">
+                    <label for="end_date" class="block text-sm font-medium text-gray-700">Tanggal Selesai</label>
+                    <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}"
+                        class="form-input mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                </div>
+
+                <div class="form-group">
+                    <label for="is_active" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="is_active" id="is_active"
+                        class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        <option value="">Semua</option>
+                        <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Aktif</option>
+                        <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <div class="flex items-center gap-2">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
+                            Filter
+                        </button>
                         <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
                             data-bs-toggle="modal" data-bs-target="#modalTambahVoucher">
                             Tambah Voucher
                         </button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
         <div class="table-section mt-2 relative">
@@ -54,6 +88,10 @@
                                         <button class="btn btn-danger btn-sm"
                                             onclick="openConfirmModal({{ $item->id }}, '{{ $item->name }}')">
                                             Delete
+                                        </button>
+                                        <button type="button" class="row-edit btn btn-secondary btn-sm"
+                                            onclick="window.location.href='{{ route('voucher.log', $item->id) }}'">
+                                            Log
                                         </button>
                                     </td>
                                 </tr>

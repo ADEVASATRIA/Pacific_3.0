@@ -28,4 +28,13 @@ class VoucherLog extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function getBadgeHtml($value)
+    {
+        if ($value) {
+            return '<span class="badge bg-success">YES</span>';
+        }
+
+        return '<span class="badge bg-danger">NO</span>';
+    }
+
 }

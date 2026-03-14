@@ -29,4 +29,14 @@ class CashSession extends Model
     public function cashInOut(){
         return $this->hasMany(CashInOut::class);
     }
+
+    public function getBadgeHtml($value)
+    {
+        // dd($value);
+        if ($value == 0) {
+            return '<span class="badge bg-success">Tutup</span>';
+        }
+
+        return '<span class="badge bg-danger">Buka</span>';
+    }
 }

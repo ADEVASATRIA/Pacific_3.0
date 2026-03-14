@@ -7,6 +7,7 @@ use App\Http\Controllers\Back\ManagementPackage\ManagementPackageCustomerControl
 use App\Http\Controllers\Back\PaymentMethod\PaymentMethodController;
 use App\Http\Controllers\Back\PaymentMethod\PaymentMethodTypeController;
 use App\Http\Controllers\Back\Promo\PromoController;
+use App\Http\Controllers\Back\Report\Shift\ShiftBackController;
 use App\Http\Controllers\Back\Staff\StaffController;
 use App\Http\Controllers\Back\Tickets\PackageComboController;
 use App\Http\Controllers\Back\Tickets\TicketTypeController;
@@ -251,5 +252,9 @@ Route::middleware('bo.auth')->group(function () {
 
     // Route Halaman Detail Voucher Log
     Route::get('/get-voucher-log/{id}', [VoucherLogController::class, 'indexLog'])->name('voucher.log');
+
+    // Route Halaman management shift report
+    Route::get('/shift-report', [ShiftBackController::class, 'index'])->name('shift-report');
+    Route::get('/shift-report/detail/{id}', [ShiftBackController::class, 'showCashInOut'])->name('shift-report.detail');
 });
 

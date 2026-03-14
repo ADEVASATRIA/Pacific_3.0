@@ -24,6 +24,7 @@ export default defineConfig({
                 'resources/css/back/back_blank.css',
                 'resources/css/back/partial.css',
                 'resources/js/back/transaction-filter.js',
+                'resources/css/back/report/detail_shift_session.css',
 
                 // === Front Office Assets ===
                 'resources/css/front/checkout_finish.css',

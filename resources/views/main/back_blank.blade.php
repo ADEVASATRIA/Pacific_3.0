@@ -221,10 +221,34 @@
                             </li>
                         </ul>
                     </li>
-                    
-
                     <!-- Divider -->
                     <li class="menu-divider"></li>
+
+                    <!-- Management Report -->
+                    <li class="menu-group {{ request()->is('shift-report') ? 'open' : '' }}">
+                        <div class="menu-group-header">
+                            <div class="menu-group-title">
+                                <i data-feather="bar-chart-2" class="menu-icon"></i>
+                                <span class="menu-text">Management Report</span>
+                            </div>
+                            <i data-feather="chevron-down" class="arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li class="submenu-item {{ request()->is('shift-report') ? 'active' : '' }}">
+                                <a href="{{ route('shift-report') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Shift Report</span>
+                                </a>
+                            </li>
+
+                            {{-- <li class="submenu-item {{ request()->is('voucher') ? 'active' : '' }}">
+                                <a href="{{ route('voucher') }}" class="menu-link">
+                                    <span class="submenu-dot"></span>
+                                    <span class="menu-text">Voucher</span>
+                                </a>
+                            </li> --}}
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </aside>

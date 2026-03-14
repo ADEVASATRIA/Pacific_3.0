@@ -51,10 +51,9 @@
     <div id="sessionConfirmModal" class="saldo-modal">
         <div class="saldo-content">
             <h3>Session terakhir masih belum tertutup</h3>
-            <p>Apakah ingin memakai session terakhir atau membuat baru?</p>
             <div class="button-group">
                 <button id="useLatestSession">Pakai Session Terakhir</button>
-                <button id="createNewSession" class="cancel-btn">Buat Session Baru</button>
+                {{-- <button id="createNewSession" class="cancel-btn">Buat Session Baru</button> --}}
             </div>
         </div>
     </div>

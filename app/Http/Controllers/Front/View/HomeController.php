@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front\View;
 
 use App\Http\Controllers\Controller;
 use App\Models\PaymentMethod;
+use App\Models\Sponsor;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,6 +14,11 @@ class HomeController extends Controller
         $paymentMethods = PaymentMethod::where('is_active', 1)
             ->whereNotNull('img_thumbnail')
             ->orderBy('payment_method_type_id', 'asc')
+            ->get();
+
+        // Alur Show sponsor di home
+        $sponsor = Sponsor::where('status', 1)
+            ->whereNull('deleted_at')
             ->get();
 
         // Kita filter koleksinya:
@@ -33,6 +39,6 @@ class HomeController extends Controller
             // supaya tidak ada yang terbuang.
         });
 
-        return view('main.main', ['paymentMethod' => $filteredMethods]);
+        return view('main.main', ['paymentMethod' => $filteredMethods, 'sponsor' => $sponsor]);
     }
 }

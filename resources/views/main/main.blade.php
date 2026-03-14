@@ -22,19 +22,17 @@
         </a>
     </nav>
 
-    {{-- <div class="header-section">
-        <div class="logo-container">
-            <i class="fas fa-water turtle-icon"></i>
+    <div class="main-content-wrapper">
+        <div class="sponsor-sidebar">
+            <div class="sponsor-slider">
+                @foreach ($sponsor as $index => $item)
+                    <img src="{{ asset('storage/' . $item->image) }}" alt="Sponsor {{ $item->name }}"
+                        class="ads-img {{ $index === 0 ? 'active' : '' }}">
+                @endforeach
+            </div>
         </div>
-        <div class="header-text">
-            <h1 class="welcome-title">Welcome to Pacific Pool</h1>
-            <p class="subtitle">Selamat Datang di Kolam Renang Pacific Pool</p>
-        </div>
-    </div> --}}
 
-    {{-- <h2 class="main-title">Welcome To Pacific Pool</h2> --}}
-
-    <div class="cards-grid">
+        <div class="cards-grid">
         <div class="service-card" style="--delay: 0.1s;" onclick="handleBuyTicket()">
             <div class="card-header">
                 <i class="fas fa-ticket-alt card-icon"></i>
@@ -76,6 +74,7 @@
                 <h3 class="card-title">Cetak Tiket Pelatih</h3>
             </div>
             <p class="card-description">Masukkan Nomor Telephone anda untuk cetak tiket pelatih</p>
+        </div>
         </div>
     </div>
     <footer class="footer">
@@ -154,6 +153,92 @@
         </div>
     </div>
 
+    <script>
+        // Sponsor Slider Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const posters = document.querySelectorAll('.sponsor-slider .ads-img');
+            if (posters.length > 1) {
+                let currentIndex = 0;
+
+                setInterval(() => {
+                    posters[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex + 1) % posters.length;
+                    posters[currentIndex].classList.add('active');
+                }, 5000); // Change poster every 5 seconds
+            }
+        });
+
+        function handleBuyTicket() {
+            window.location.href = "{{ route('input_telephone') }}";
+        }
+
+        function handlePrintPackage() {
+            window.location.href = "{{ route('input_package') }}";
+        }
+
+        function handlePrintMemberTicket() {
+            window.location.href = "{{ route('input_member') }}";
+        }
+
+        function handlePrintTrainerTicket() {
+            window.location.href = "{{ route('input_coach') }}";
+        }
+
+        function handleAdminLogin() {
+            document.getElementById('adminPinModal').classList.remove('hidden');
+            document.getElementById('adminPinInput').focus();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminPinModal').classList.add('hidden');
+            document.getElementById('adminPinInput').value = '';
+            document.getElementById('pin-error').style.display = 'none';
+        }
+
+        function submitPin() {
+            const pin = document.getElementById('adminPinInput').value;
+            const errorMsg = document.getElementById('pin-error');
+
+            if (pin.length < 4) return;
+
+            fetch("{{ route('admin.check_pin') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        pin: pin
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "{{ route('admin.index') }}";
+                    } else {
+                        errorMsg.style.display = 'block';
+                        document.getElementById('adminPinInput').value = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Auto submit when 4 digits entered
+        document.getElementById('adminPinInput').addEventListener('input', function(e) {
+            if (this.value.length === 4) {
+                submitPin();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAdminModal();
+            }
+        });
+    </script>
 </body>
 
 </html>

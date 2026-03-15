@@ -28,6 +28,13 @@ class VoucherLog extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function purchase()
+    {
+        return $this->hasOne(Purchase::class);
+    }
+
+
+
     public function getBadgeHtml($value)
     {
         if ($value) {

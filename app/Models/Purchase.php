@@ -13,6 +13,8 @@ class Purchase extends Model
     protected $fillable = [
         'customer_id',
         'promo_id',
+        'voucher_id',
+        'voucher_log_id',
         'staff_id',
         'invoice_no',
         'sub_total',
@@ -66,6 +68,16 @@ class Purchase extends Model
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
+    }
+
+    public function voucherLog()
+    {
+        return $this->belongsTo(VoucherLog::class);
     }
 
 }

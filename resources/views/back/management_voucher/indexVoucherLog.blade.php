@@ -75,7 +75,7 @@
                                 <tr>
                                     <td>{{ $item->voucher_id }}</td>
                                     <td>{{ $item->voucher->name }}</td>
-                                    <td class="text-center">{{ $item->customer_id ?? '-' }}</td>
+                                    <td class="text-center">{{ $item->customer->name ?? '-' }}</td>
                                     <td>{{ $item->code }}</td>
                                     <td>{{ $item->start_at }}</td>
                                     <td>{{ $item->end_at }}</td>

@@ -81,6 +81,10 @@ class CheckoutController extends Controller
             // Promo Validate if data promo is valid
             'promo_id' => 'nullable|integer',
 
+            // Voucher Validate if data voucher is valid
+            'voucher_id' => 'nullable|integer',
+            'voucher_log_id' => 'nullable|integer',
+
             // Validate the staff that doing purchase complete
             'staff_pin' => 'required|string',
 

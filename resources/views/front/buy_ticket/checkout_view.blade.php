@@ -72,25 +72,6 @@
                                                                 id="clubhouse_hidden_{{ $i }}"
                                                                 value="{{ $it['clubhouse_id'] ?? '' }}">
                                                         </div>
-
-                                                        {{-- Dropdown Coach --}}
-                                                        {{-- <div class="coach-select">
-                                                            <select name="items[{{ $i }}][coach_select]"
-                                                                class="coach-dropdown" data-index="{{ $i }}"
-                                                                data-type="coach">
-                                                                <option value="">Pilih Coach</option>
-                                                                @foreach ($coaches as $coach)
-                                                                    <option value="{{ $coach->id }}"
-                                                                        {{ isset($it['coach_id']) && $it['coach_id'] == $coach->id ? 'selected' : '' }}>
-                                                                        {{ $coach->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                            <input type="hidden"
-                                                                name="items[{{ $i }}][coach_id]"
-                                                                id="coach_hidden_{{ $i }}"
-                                                                value="{{ $it['coach_id'] ?? '' }}">
-                                                        </div> --}}
                                                     </div>
                                                 @endif
                                             </div>
@@ -116,6 +97,8 @@
 
                                 <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                                 <input type="hidden" name="promo_id" value="{{ $promoId ?? '' }}">
+                                <input type="hidden" name="voucher_id" value="{{ $voucherId ?? '' }}">
+                                <input type="hidden" name="voucher_log_id" value="{{ $voucherLogId ?? '' }}">
                             </tbody>
                         </table>
                     </div>
@@ -137,14 +120,13 @@
 
                     {{-- Promo Code --}}
                     <div class="promo-section">
-                        <h2 class="section-title">🎟️ Gunakan Kode Promo</h2>
+                        <h2 class="section-title">🎟️ Gunakan Kode Promo / Kode Voucher</h2>
                         <div class="promo-box">
-                            <input type="text" id="promo_code" name="promo_code" placeholder="Masukkan kode promo">
+                            <input type="text" id="promo_code" name="promo_code" placeholder="Masukkan kode / Kode Voucher">
                             <button type="button" id="applyPromo" class="apply-btn">Terapkan</button>
                         </div>
                         <div id="promoMessage" class="promo-message"></div>
                     </div>
-
 
                     {{-- Payment Method --}}
                     <div class="payment-method">
@@ -307,11 +289,28 @@
 
                         if (data.success) {
                             showAlert('success', data.message);
-                            document.querySelector('input[name="promo_id"]').value = data.promo_id ||
-                                '';
+
+                            // Reset hidden fields dahulu
+                            document.querySelector('input[name="promo_id"]').value = '';
+                            document.querySelector('input[name="voucher_id"]').value = '';
+                            document.querySelector('input[name="voucher_log_id"]').value = '';
+
+                            if (data.type === 'promo') {
+                                document.querySelector('input[name="promo_id"]').value = data.promo_id || '';
+                            } else if (data.type === 'voucher') {
+                                document.querySelector('input[name="voucher_id"]').value = data.voucher_id || '';
+                                document.querySelector('input[name="voucher_log_id"]').value = data.voucher_log_id || '';
+                            }
 
                             // === UPDATE HARGA ITEM YANG KENA PROMO ===
-                            if (data.discounted_items && Array.isArray(data.discounted_items)) {
+                            // Hapus class discounted dari semua row dahulu
+                            document.querySelectorAll('tr[data-item-id]').forEach(row => {
+                                row.classList.remove('discounted');
+                                // Kembalikan ke harga asli jika sebelumnya ada diskon per item
+                                // (Logika ini opsional tergantung apakah promo bisa ditumpuk/diganti)
+                            });
+
+                            if (data.discounted_items && Array.isArray(data.discounted_items) && data.discounted_items.length > 0) {
                                 data.discounted_items.forEach(disc => {
                                     const row = document.querySelector(
                                         `tr[data-item-id="${disc.id}"]`);
@@ -342,6 +341,10 @@
                                         }
                                     }
                                 });
+                            } else {
+                                // Jika voucher (tidak ada discounted_items), pastikan tampilan harga kembali normal
+                                // (Jika sebelumnya user pakai promo lalu ganti ke voucher)
+                                // Anda mungkin perlu reload atau simpan harga asli di data attribute
                             }
 
                             // === UPDATE TOTAL KESELURUHAN DI UI ===

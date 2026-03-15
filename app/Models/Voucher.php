@@ -30,6 +30,10 @@ class Voucher extends Model
         return $this->hasMany(VoucherLog::class);
     }
 
+    public function purchase(){
+        return $this->hasMany(Purchase::class);
+    }
+
     public function getBadgeHtml($value)
     {
         if ($value) {

@@ -2,6 +2,7 @@
 
 namespace App\Services\Checkout;
 
+use App\Models\VoucherLog;
 use App\Services\Tickets\CreateTickets;
 
 use Illuminate\Http\Request;
@@ -220,6 +221,8 @@ class CheckoutService
             $purchase = new Purchase();
             $purchase->customer_id = $request->input('customer_id');
             $purchase->promo_id = $request->input('promo_id') ?? null;
+            $purchase->voucher_id = $request->input('voucher_id') ?? null;
+            $purchase->voucher_log_id = $request->input('voucher_log_id') ?? null;
             $purchase->staff_id = $staff->id;
             $purchase->invoice_no = $invoice;
             $purchase->sub_total = $request->input('sub_total');
@@ -234,6 +237,18 @@ class CheckoutService
             $purchase->approval_code = $request->input('approval_code');
             $purchase->status = Purchase::STATUS_PAID;
             $purchase->save();
+
+            // 🔹 Update Quota Promo atau Status Voucher Log
+            if ($purchase->promo_id) {
+                \App\Models\Promo::where('id', $purchase->promo_id)->decrement('quota', 1);
+            }
+
+            if ($purchase->voucher_log_id) {
+                $voucherLog = VoucherLog::findOrFail($purchase->voucher_log_id);
+                $voucherLog->customer_id = $purchase->customer_id;
+                $voucherLog->is_active = 0;
+                $voucherLog->save();
+            }
 
             // 💾 Simpan purchase detail
             foreach ($preparedItems as $pi) {

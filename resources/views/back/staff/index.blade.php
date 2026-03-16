@@ -124,8 +124,13 @@
                                 {{-- Password --}}
                                 <div class="col-md-6">
                                     <label for="password" class="form-label fw-semibold">Password</label>
-                                    <input type="password" name="password" id="password" class="form-control"
-                                        placeholder="Password minimal 6 karakter" minlength="6" required>
+                                    <div class="input-group">
+                                        <input type="password" name="password" id="password" class="form-control"
+                                            placeholder="Password minimal 6 karakter" minlength="6" required>
+                                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
 
@@ -142,8 +147,13 @@
                                 {{-- PIN --}}
                                 <div class="col-md-6" id="pin_wrapper" style="display:none;">
                                     <label for="pin" class="form-label fw-semibold">PIN (4 Digit)</label>
-                                    <input type="number" name="pin" id="pin" class="form-control"
-                                        placeholder="Masukkan 4 digit PIN">
+                                    <div class="input-group">
+                                        <input type="password" name="pin" id="pin" class="form-control"
+                                            placeholder="Masukkan 4 digit PIN" maxlength="4" pattern="\d{4}">
+                                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {{-- Status --}}
@@ -203,8 +213,13 @@
                                 {{-- Password --}}
                                 <div class="col-md-6">
                                     <label for="edit_password" class="form-label fw-semibold">Password</label>
-                                    <input type="password" name="password" id="edit_password" class="form-control"
-                                        placeholder="Masukkan password baru" minlength="6" required>
+                                    <div class="input-group">
+                                        <input type="password" name="password" id="edit_password" class="form-control"
+                                            placeholder="Masukkan password baru" minlength="6" required>
+                                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                    </div>
                                     <div class="invalid-feedback">Password minimal 6 karakter.</div>
                                 </div>
 
@@ -222,8 +237,13 @@
                                 {{-- PIN --}}
                                 <div class="col-md-6" id="edit_pin_wrapper" style="display:none;">
                                     <label for="edit_pin" class="form-label fw-semibold">PIN (4 Digit)</label>
-                                    <input type="text" name="pin" id="edit_pin" class="form-control"
-                                        placeholder="Masukkan 4 digit PIN" maxlength="4" pattern="\d{4}">
+                                    <div class="input-group">
+                                        <input type="text" name="pin" id="edit_pin" class="form-control"
+                                            placeholder="Masukkan 4 digit PIN" maxlength="4" pattern="\d{4}">
+                                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                    </div>
                                     <div class="invalid-feedback">PIN harus terdiri dari 4 digit angka.</div>
                                 </div>
 
@@ -305,24 +325,6 @@
     </div>
 
     <script>
-        // --- Modal Tambah Staff: tampilkan PIN jika tipe == 1
-        document.addEventListener('DOMContentLoaded', function() {
-            const tipeSelectAdd = document.getElementById('tipe');
-            const pinWrapperAdd = document.getElementById('pin_wrapper');
-            const pinInputAdd = document.getElementById('pin');
-
-            tipeSelectAdd.addEventListener('change', function() {
-                if (this.value == '1') {
-                    pinWrapperAdd.style.display = 'block';
-                    pinInputAdd.setAttribute('required', 'required');
-                } else {
-                    pinWrapperAdd.style.display = 'none';
-                    pinInputAdd.removeAttribute('required');
-                    pinInputAdd.value = '';
-                }
-            });
-        });
-
         // --- Modal Edit Staff ---
         async function openEditModal(id) {
             try {
@@ -340,14 +342,14 @@
 
                 const pinWrapper = document.getElementById('edit_pin_wrapper');
                 const tipeVal = document.getElementById('edit_tipe').value;
-                const pinInput = document.getElementById('edit_pin'); // Dapatkan input PIN
-                
+                const pinInput = document.getElementById('edit_pin');
+
                 if (tipeVal == '1') {
                     pinWrapper.style.display = 'block';
-                    pinInput.setAttribute('required', 'required'); // <-- TAMBAHKAN INI
+                    pinInput.setAttribute('required', 'required');
                 } else {
                     pinWrapper.style.display = 'none';
-                    pinInput.removeAttribute('required'); // <-- TAMBAHKAN INI
+                    pinInput.removeAttribute('required');
                 }
 
                 const editModal = new bootstrap.Modal(document.getElementById('modalEditStaff'));
@@ -358,25 +360,7 @@
             }
         }
 
-        // Logic tampil/sembunyi PIN saat ubah tipe akun di modal edit
-        document.addEventListener('DOMContentLoaded', function() {
-            const tipeSelect = document.getElementById('edit_tipe');
-            const pinWrapper = document.getElementById('edit_pin_wrapper');
-            const pinInput = document.getElementById('edit_pin');
-
-            tipeSelect.addEventListener('change', function() {
-                if (this.value == '1') {
-                    pinWrapper.style.display = 'block';
-                    pinInput.setAttribute('required', 'required');
-                } else {
-                    pinWrapper.style.display = 'none';
-                    pinInput.removeAttribute('required');
-                    pinInput.value = '';
-                }
-            });
-        });
-
-        // Logic untuk modal delete (tetap seperti sebelumnya)
+        // --- Modal Delete ---
         const confirmModal = document.getElementById('confirmDeleteModal');
         const deleteStaffForm = document.getElementById('deleteStaffForm');
         const deleteStaffInfo = document.getElementById('deleteStaffInfo');
@@ -389,58 +373,101 @@
             deleteStaffForm.action = `/delete-staff/${id}`;
         }
 
-        cancelBtn.addEventListener('click', () => {
-            confirmModal.style.display = 'none';
-        });
+        // --- Custom Alert Function ---
+        function showAlert(type, message) {
+            const existing = document.querySelector('.alert-slide');
+            if (existing) existing.remove();
 
-        // Modal success feedback
-        @if (session('success'))
-            window.addEventListener('load', () => {
-                const successModal = document.getElementById('successModal');
-                successModal.style.display = 'flex';
-                setTimeout(() => {
-                    successModal.style.display = 'none';
-                }, 2500);
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert-slide ${type}`;
+            alertDiv.innerHTML = `
+                <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
+                <div style="flex:1;">${message}</div>
+                <button class="alert-close" aria-label="close">&times;</button>
+            `;
+            document.body.appendChild(alertDiv);
+
+            alertDiv.querySelector('.alert-close').addEventListener('click', () => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 250);
             });
-        @endif
 
-        // Function aler error Exception
+            setTimeout(() => alertDiv.classList.add('show'), 50);
+
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 20000);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            function showAlert(type, message) {
-                const existing = document.querySelector('.alert-slide');
-                if (existing) existing.remove();
+            // --- Toggle Password Visibility ---
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const icon = this.querySelector('i');
 
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert-slide ${type}`;
-                alertDiv.innerHTML = `
-            <div style="font-weight:600; margin-right:.4rem;">${type === 'error' ? 'Gagal!' : 'Berhasil!'}</div>
-            <div style="flex:1;">${message}</div>
-            <button class="alert-close" aria-label="close">&times;</button>
-        `;
-                document.body.appendChild(alertDiv);
-
-                alertDiv.querySelector('.alert-close').addEventListener('click', () => {
-                    alertDiv.classList.remove('show');
-                    setTimeout(() => alertDiv.remove(), 250);
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
                 });
+            });
 
-                // show
-                setTimeout(() => alertDiv.classList.add('show'), 50);
+            // --- Modal Tambah Staff: PIN toggle ---
+            const tipeSelectAdd = document.getElementById('tipe');
+            const pinWrapperAdd = document.getElementById('pin_wrapper');
+            const pinInputAdd = document.getElementById('pin');
 
-                // auto hide
-                setTimeout(() => {
-                    alertDiv.classList.remove('show');
-                    setTimeout(() => alertDiv.remove(), 300);
-                }, 20000);
+            if (tipeSelectAdd) {
+                tipeSelectAdd.addEventListener('change', function() {
+                    if (this.value == '1') {
+                        pinWrapperAdd.style.display = 'block';
+                        pinInputAdd.setAttribute('required', 'required');
+                    } else {
+                        pinWrapperAdd.style.display = 'none';
+                        pinInputAdd.removeAttribute('required');
+                        pinInputAdd.value = '';
+                    }
+                });
             }
 
-            @if (session('error'))
-                console.log('Session Error:', @json(session('error')));
-                showAlert('error', @json(session('error')));
-            @endif
+            // --- Modal Edit Staff: PIN toggle ---
+            const tipeSelectEdit = document.getElementById('edit_tipe');
+            const pinWrapperEdit = document.getElementById('edit_pin_wrapper');
+            const pinInputEdit = document.getElementById('edit_pin');
 
+            if (tipeSelectEdit) {
+                tipeSelectEdit.addEventListener('change', function() {
+                    if (this.value == '1') {
+                        pinWrapperEdit.style.display = 'block';
+                        pinInputEdit.setAttribute('required', 'required');
+                    } else {
+                        pinWrapperEdit.style.display = 'none';
+                        pinInputEdit.removeAttribute('required');
+                        pinInputEdit.value = '';
+                    }
+                });
+            }
+
+            // --- Modal Delete: Cancel button ---
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    confirmModal.style.display = 'none';
+                });
+            }
+
+            // --- Session Feedback ---
             @if (session('success'))
                 showAlert('success', @json(session('success')));
+            @endif
+            @if (session('error'))
+                showAlert('error', @json(session('error')));
             @endif
         });
     </script>

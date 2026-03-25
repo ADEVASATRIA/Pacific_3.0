@@ -197,7 +197,7 @@
 
                 {{-- Body --}}
                 <div class="modal-body bg-light py-4">
-                    <form id="formEditStaff" method="POST" class="needs-validation" novalidate>
+                    <form id="formEditStaff" method="POST" class="needs-validation" novalidate autocomplete="off">
                         @csrf
                         <div class="container-fluid">
                             <div class="row g-3">

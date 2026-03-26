@@ -72,6 +72,13 @@
                 </div>
             @endif
 
+            @if ($purchase->voucherLog)
+                <div class="receipt-row">
+                    <span>Voucher ( {{ $purchase->voucherLog->code }} ):</span>
+                    <span>- Rp.{{ number_format($purchase->discount, 0, ',', '.') }}</span>
+                </div>
+            @endif
+
             <div class="receipt-total">
                 <span>Total</span>
                 <span>Rp. {{ number_format($purchase->total, 0, ',', '.') }}</span>
@@ -148,6 +155,13 @@
             @if ($purchase->promo)
                 <div class="receipt-row">
                     <span>Diskon ( {{ $purchase->promo->code }} ):</span>
+                    <span>- Rp.{{ number_format($purchase->discount, 0, ',', '.') }}</span>
+                </div>
+            @endif
+
+            @if ($purchase->voucherLog)
+                <div class="receipt-row">
+                    <span>Voucher ( {{ $purchase->voucherLog->code }} ):</span>
                     <span>- Rp.{{ number_format($purchase->discount, 0, ',', '.') }}</span>
                 </div>
             @endif

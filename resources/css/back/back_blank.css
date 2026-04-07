@@ -5,8 +5,8 @@
 
 /* ===== CSS Variables ===== */
 :root {
-    --sidebar-width: 280px;
-    --header-height: 72px;
+    --sidebar-width: 320px;
+    --header-height: 80px;
     --primary-gradient: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
     --primary-blue: #3B82F6;
     --primary-purple: #8B5CF6;
@@ -92,7 +92,7 @@ body {
 }
 
 .logo-text h2 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
@@ -103,7 +103,7 @@ body {
 }
 
 .logo-text span {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--text-light);
     font-weight: 500;
     display: block;
@@ -159,7 +159,7 @@ body {
     color: var(--text-secondary);
     text-decoration: none;
     border-radius: 10px;
-    font-size: 0.9375rem;
+    font-size: 1.125rem;
     font-weight: 500;
     transition: var(--transition);
     position: relative;
@@ -190,8 +190,8 @@ body {
 
 /* ===== Menu Icons ===== */
 .menu-icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
     stroke-width: 2;
 }
@@ -232,14 +232,14 @@ body {
     align-items: center;
     gap: 0.875rem;
     color: var(--text-secondary);
-    font-size: 0.9375rem;
+    font-size: 1.125rem;
     font-weight: 600;
     flex: 1;
 }
 
 .arrow-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     color: var(--text-light);
     transition: transform 0.3s ease;
     flex-shrink: 0;
@@ -279,7 +279,7 @@ body {
     color: var(--text-secondary);
     text-decoration: none;
     border-radius: 8px;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
     transition: var(--transition);
 }
@@ -424,7 +424,7 @@ body {
 }
 
 .page-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
@@ -459,8 +459,8 @@ body {
 }
 
 .btn-icon i {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
 }
 
 .notification-badge {
@@ -520,14 +520,14 @@ body {
 }
 
 .user-name {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.2;
 }
 
 .user-role {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--text-light);
     line-height: 1.2;
 }

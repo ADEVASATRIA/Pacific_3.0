@@ -54,85 +54,74 @@
     </div>
 
     <script>
-        let customers = [];
+        // ─── State ───────────────────────────────────────────────────────────────
+        let customers        = [];   // cache hasil fetch terakhir
+        let customersLoaded  = false; // true setelah fetch awal (tanpa keyword) berhasil
+        let searchTimer      = null;  // referensi timer debounce
 
-        // Auto-fill nama ketika phone diisi
-        document.getElementById('phone').addEventListener('input', function(e) {
+        // ─── Auto-fill nama dari nomor telepon ────────────────────────────────────
+        document.getElementById('phone').addEventListener('input', function (e) {
             const phone = e.target.value;
-
             if (phone.length >= 10) {
-                fetch(`/api/customer/search-by-phone?phone=${phone}`)
-                    .then(response => response.json())
+                fetch(`/api/customer/search-by-phone?phone=${encodeURIComponent(phone)}`)
+                    .then(r => r.json())
                     .then(data => {
-                        // console.log('[DEBUG] 🔍 Hasil search-by-phone:', data);
-                        if (data.success && data.customer) {
-                            document.getElementById('name').value = data.customer.name;
-                        } else {
-                            document.getElementById('name').value = '';
-                        }
+                        document.getElementById('name').value =
+                            (data.success && data.customer) ? data.customer.name : '';
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                    .catch(() => {});
             } else {
                 document.getElementById('name').value = '';
             }
         });
 
-        // Fungsi untuk membuka modal
+        // ─── Modal open / close ───────────────────────────────────────────────────
         function openContactModal() {
             document.getElementById('contactModal').style.display = 'flex';
-            loadCustomers();
+            document.getElementById('searchContact').value = '';
+
+            if (customersLoaded) {
+                // Data sudah di-cache, tampilkan langsung tanpa fetch ulang
+                displayCustomers(customers);
+            } else {
+                fetchCustomers('');
+            }
         }
 
-        // Fungsi untuk menutup modal
         function closeContactModal() {
             document.getElementById('contactModal').style.display = 'none';
         }
 
-        // Fungsi escape untuk menghindari karakter bermasalah di HTML
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+        // ─── Search dengan debounce 300 ms ────────────────────────────────────────
+        function searchCustomers() {
+            const term = document.getElementById('searchContact').value.trim();
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => fetchCustomers(term), 300);
         }
 
-        // Load semua customers
-        function loadCustomers() {
-            fetch('/api/customer/all')
-                .then(response => response.json())
-                .then(data => {
-                    // console.log('[DEBUG] 📦 Data customer dari API:', data);
+        // ─── Fetch data dari server (server-side search + limit) ──────────────────
+        function fetchCustomers(search) {
+            const listContainer = document.getElementById('customerList');
+            listContainer.innerHTML = '<div class="loading">Memuat data...</div>';
 
+            fetch(`/api/customer/all?search=${encodeURIComponent(search)}`)
+                .then(r => r.json())
+                .then(data => {
                     if (!data.success) {
-                        console.warn('[DEBUG] ⚠️ Gagal ambil data customer!');
-                        document.getElementById('customerList').innerHTML =
-                        '<div class="error">Gagal memuat data</div>';
+                        listContainer.innerHTML = '<div class="error">Gagal memuat data</div>';
                         return;
                     }
-
                     customers = data.customers;
-
-                    // Debug tiap customer
-                    customers.forEach((c, i) => {
-                        if (isNaN(parseInt(c.phone))) {
-                            console.warn(`[DEBUG] ⚠️ Data aneh di index ${i}: phone bukan angka`, c);
-                        }
-                    });
-
+                    // Tandai cache hanya untuk load awal tanpa keyword
+                    if (search === '') customersLoaded = true;
                     displayCustomers(customers);
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('customerList').innerHTML = '<div class="error">Gagal memuat data</div>';
+                .catch(() => {
+                    listContainer.innerHTML = '<div class="error">Gagal memuat data</div>';
                 });
         }
 
-        // Display customers di modal
+        // ─── Render list dengan DocumentFragment (menghindari reflow berulang) ────
         function displayCustomers(customerList) {
             const listContainer = document.getElementById('customerList');
 
@@ -141,73 +130,58 @@
                 return;
             }
 
-            let html = '';
+            const fragment = document.createDocumentFragment();
+
             customerList.forEach(customer => {
-                html += `
-            <div class="customer-item" 
-                 data-phone="${escapeHtml(customer.phone)}" 
-                 data-name="${escapeHtml(customer.name)}"
-                 onclick="selectCustomerFromDataset(this)">
-                <div class="customer-info">
-                    <div class="customer-name">${escapeHtml(customer.name)}</div>
-                    <div class="customer-phone">${escapeHtml(customer.phone)}</div>
-                </div>
-                <div class="customer-select">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </div>
-            </div>
-        `;
-            });
-
-            listContainer.innerHTML = html;
-        }
-
-        // Search customers
-        function searchCustomers() {
-            const searchTerm = document.getElementById('searchContact').value.toLowerCase();
-
-            const filtered = customers.filter(customer => {
-                return (
-                    customer.name.toLowerCase().includes(searchTerm) ||
-                    customer.phone.includes(searchTerm)
-                );
-            });
-
-            displayCustomers(filtered);
-        }
-
-        // Select customer via dataset (fix bug nama & phone ketukar)
-        function selectCustomerFromDataset(element) {
-            const phone = element.dataset.phone;
-            const name = element.dataset.name;
-
-            // console.log('[DEBUG] ✅ Customer dipilih:', {
-            //     name,
-            //     phone
-            // });
-
-            // Deteksi kemungkinan terbalik
-            if (/^\d+$/.test(name) && !/^\d+$/.test(phone)) {
-                console.warn('[DEBUG] ⚠️ Deteksi data terbalik! Nama berisi angka, phone berisi teks:', {
-                    name,
-                    phone
+                const item = document.createElement('div');
+                item.className = 'customer-item';
+                item.dataset.phone = customer.phone || '';
+                item.dataset.name  = customer.name  || '';
+                item.addEventListener('click', function () {
+                    selectCustomerFromDataset(this);
                 });
-            }
+                item.innerHTML = `
+                    <div class="customer-info">
+                        <div class="customer-name">${escapeHtml(customer.name)}</div>
+                        <div class="customer-phone">${escapeHtml(customer.phone)}</div>
+                    </div>
+                    <div class="customer-select">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                `;
+                fragment.appendChild(item);
+            });
 
-            document.getElementById('phone').value = phone;
-            document.getElementById('name').value = name;
+            listContainer.innerHTML = '';       // satu reflow di sini …
+            listContainer.appendChild(fragment); // … lalu satu paint selesai
+        }
 
+        // ─── Pilih customer dari modal ────────────────────────────────────────────
+        function selectCustomerFromDataset(element) {
+            document.getElementById('phone').value = element.dataset.phone;
+            document.getElementById('name').value  = element.dataset.name;
             closeContactModal();
         }
 
-        // Close modal ketika klik di luar area
-        window.onclick = function(event) {
+        // ─── Tutup modal ketika klik di luar area ─────────────────────────────────
+        window.addEventListener('click', function (event) {
             const modal = document.getElementById('contactModal');
-            if (event.target === modal) {
-                closeContactModal();
-            }
+            if (event.target === modal) closeContactModal();
+        });
+
+        // ─── Escape helper ────────────────────────────────────────────────────────
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g,  '&amp;')
+                .replace(/</g,  '&lt;')
+                .replace(/>/g,  '&gt;')
+                .replace(/"/g,  '&quot;')
+                .replace(/'/g,  '&#039;');
         }
 
         document.addEventListener('DOMContentLoaded', function() {

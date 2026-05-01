@@ -10,24 +10,40 @@ use App\Models\Customer;
 class CustomerApiController extends Controller
 {
     /**
-     * Get all customers untuk contact book
+     * Get customers untuk contact book modal.
+     *
+     * Mendukung parameter ?search= untuk server-side filtering nama/telepon.
+     * Hasil dibatasi 100 baris untuk menjaga performa render di browser.
+     * Filter deleted_at ditangani otomatis oleh SoftDeletes pada model Customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllCustomers()
+    public function getAllCustomers(Request $request)
     {
         try {
+            $search = trim($request->query('search', ''));
+
             $customers = Customer::select('id', 'phone', 'name')
-                ->where('deleted_at', null)
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                          ->orWhere('phone', 'like', "%{$search}%");
+                    });
+                })
                 ->orderBy('name', 'asc')
+                ->limit(100)
                 ->get();
 
             return response()->json([
-                'success' => true,
-                'customers' => $customers
+                'success'   => true,
+                'customers' => $customers,
+                'count'     => $customers->count(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengambil data customer'
+                'message' => 'Gagal mengambil data customer',
             ], 500);
         }
     }

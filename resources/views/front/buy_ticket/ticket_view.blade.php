@@ -53,8 +53,9 @@
             </div>
 
             <form action="{{ route('submit_form_ticket') }}" method="POST" class="ticket-form">
-                {{-- <form action="" method="POST" class="ticket-form"> --}}
                 @csrf
+                {{-- FIX #4: customer_id cukup satu kali di sini, bukan diulang di setiap foreach --}}
+                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
 
                 {{-- Tiket Regular --}}
                 @if ($ticketRegular->count())
@@ -64,9 +65,9 @@
                             @foreach ($ticketRegular as $ticket)
                                 <div class="ticket-item">
                                     <h4>{{ $ticket->name }}
-                                        @if ($ticket->description)
+                                        <!-- @if ($ticket->description)
                                             <span>({{ $ticket->description }})</span>
-                                        @endif
+                                        @endif -->
                                     </h4>
                                     <p class="price">Rp {{ number_format($ticket->price, 0, ',', '.') }}</p>
                                     <div class="qty-control">
@@ -81,12 +82,9 @@
 
                                 {{-- hidden meta --}}
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
-                                    value="{{ $ticket->name }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
-                                    value="{{ $ticket->price }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]" value="{{ $ticket->name }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]" value="{{ $ticket->price }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][type_purchase]" value="1">
-                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                             @endforeach
                         </div>
                     </div>
@@ -111,14 +109,10 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
-                                    value="{{ $ticket->id }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
-                                    value="{{ $ticket->name }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
-                                    value="{{ $ticket->price }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]" value="{{ $ticket->name }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]" value="{{ $ticket->price }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][type_purchase]" value="1">
-                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                             @endforeach
                         </div>
                     </div>
@@ -144,14 +138,10 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
-                                    value="{{ $ticket->id }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
-                                    value="{{ $ticket->name }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
-                                    value="{{ $ticket->price }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]" value="{{ $ticket->name }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]" value="{{ $ticket->price }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][type_purchase]" value="1">
-                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                             @endforeach
                         </div>
                     </div>
@@ -177,14 +167,10 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
-                                    value="{{ $ticket->id }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
-                                    value="{{ $ticket->name }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
-                                    value="{{ $ticket->price }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]" value="{{ $ticket->name }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]" value="{{ $ticket->price }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][type_purchase]" value="1">
-                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                             @endforeach
                         </div>
                     </div>
@@ -210,15 +196,10 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="packages[{{ $pack->id }}][id]"
-                                    value="{{ $pack->id }}">
-                                <input type="hidden" name="packages[{{ $pack->id }}][name]"
-                                    value="{{ $pack->name }}">
-                                <input type="hidden" name="packages[{{ $pack->id }}][price]"
-                                    value="{{ $pack->price }}">
-                                <input type="hidden" name="packages[{{ $pack->id }}][type_purchase]"
-                                    value="3">
-                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
+                                <input type="hidden" name="packages[{{ $pack->id }}][id]" value="{{ $pack->id }}">
+                                <input type="hidden" name="packages[{{ $pack->id }}][name]" value="{{ $pack->name }}">
+                                <input type="hidden" name="packages[{{ $pack->id }}][price]" value="{{ $pack->price }}">
+                                <input type="hidden" name="packages[{{ $pack->id }}][type_purchase]" value="3">
                             @endforeach
                         </div>
                     </div>
@@ -244,14 +225,10 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]"
-                                    value="{{ $ticket->id }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]"
-                                    value="{{ $ticket->name }}">
-                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]"
-                                    value="{{ $ticket->price }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][id]" value="{{ $ticket->id }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][name]" value="{{ $ticket->name }}">
+                                <input type="hidden" name="tickets[{{ $ticket->id }}][price]" value="{{ $ticket->price }}">
                                 <input type="hidden" name="tickets[{{ $ticket->id }}][type_purchase]" value="1">
-                                <input type="hidden" name="customer_id" value="{{ $customerId ?? '' }}">
                             @endforeach
                         </div>
                     </div>

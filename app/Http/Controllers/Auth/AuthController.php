@@ -24,11 +24,36 @@ class AuthController extends Controller
 
         $user = Admin::where('username', $credentials['username'])->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['success' => false, 'message' => 'Login gagal, periksa username atau password.']);
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Login gagal, periksa username atau password/PIN.']);
         }
 
-        if ($user->is_admin == 0 && $user->is_root == 0 || $user->is_staff == 1) {
+        // 1. Validasi Password (cast ke string untuk mencegah TypeError di PHP 8+)
+        $isPasswordValid = false;
+        if (!empty($user->password)) {
+            $isPasswordValid = Hash::check($credentials['password'], (string) $user->password);
+        }
+        
+        // 2. Validasi PIN dengan pengaman null
+        $isPinValid = false;
+        if (!is_null($user->pin)) {
+            // PENTING: Pilih salah satu metode di bawah ini sesuai database Anda!
+            
+            // OPSI A: Jika PIN di database disimpan secara PLAIN TEXT (teks/angka biasa)
+            $isPinValid = ($credentials['password'] === (string) $user->pin);
+            
+            // OPSI B: Jika PIN di database di-HASH (Bcrypt, sama seperti password)
+            // Silakan hapus komentar baris di bawah ini dan komentari OPSI A:
+            // $isPinValid = Hash::check($credentials['password'], (string) $user->pin);
+        }
+
+        // 3. Jika keduanya salah
+        if (!$isPasswordValid && !$isPinValid) {
+            return response()->json(['success' => false, 'message' => 'Login gagal, periksa username atau password/PIN.']);
+        }
+
+        // 4. Pengecekan Role
+        if (($user->is_admin == 0 && $user->is_root == 0) || $user->is_staff == 1) {
             Auth::guard('fo')->login($user);
             return response()->json(['success' => true, 'role' => 'fo']);
         }
@@ -40,7 +65,6 @@ class AuthController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Role user tidak valid.']);
     }
-
 
     public function logoutFo()
     {

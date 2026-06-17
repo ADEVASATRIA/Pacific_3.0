@@ -59,116 +59,137 @@
     </div>
 
     <script>
-        const loginForm = document.getElementById('loginForm');
-        const saldoModal = document.getElementById('saldoModal');
-        const saldoInput = document.getElementById('saldoAwal');
-        const submitSaldo = document.getElementById('submitSaldo');
-        const loginError = document.getElementById('loginError');
-        const cancelSaldo = document.getElementById('cancelSaldo');
+        // ─── Element References ───────────────────────────────────────────────────
+        const loginForm           = document.getElementById('loginForm');
+        const saldoModal          = document.getElementById('saldoModal');
+        const saldoInput          = document.getElementById('saldoAwal');
+        const submitSaldo         = document.getElementById('submitSaldo');
+        const loginError          = document.getElementById('loginError');
+        const cancelSaldo         = document.getElementById('cancelSaldo');
         const sessionConfirmModal = document.getElementById('sessionConfirmModal');
-        const useLatestBtn = document.getElementById('useLatestSession');
-        const createNewBtn = document.getElementById('createNewSession');
+        const useLatestBtn        = document.getElementById('useLatestSession');
+        const createNewBtn        = document.getElementById('createNewSession'); // Mungkin null jika di-comment
 
-        // Saat tombol batalkan diklik
-        cancelSaldo.addEventListener('click', () => {
-            saldoModal.classList.remove('active'); // Tutup modal
-            window.location.href = '{{ route('login') }}'; // Redirect kembali ke halaman login
-        });
-
-
-        // Fungsi format ke rupiah saat mengetik
-        saldoInput.addEventListener('input', function(e) {
-            let value = this.value.replace(/[^0-9]/g, ''); // Hanya angka
-            if (value) {
-                this.value = formatRupiah(value);
-            } else {
-                this.value = '';
-            }
-        });
-
-        // Fungsi ubah angka ke format Rupiah
+        // ─── Helper: Format Rupiah ────────────────────────────────────────────────
         function formatRupiah(angka) {
             return 'Rp. ' + angka.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        // Handle login form
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(loginForm);
-            const response = await fetch('{{ route('login.do') }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: formData
+        // ─── Format input saldo saat mengetik ────────────────────────────────────
+        if (saldoInput) {
+            saldoInput.addEventListener('input', function () {
+                const value = this.value.replace(/[^0-9]/g, '');
+                this.value = value ? formatRupiah(value) : '';
             });
+        }
 
-            const data = await response.json();
+        // ─── Tombol Batalkan: tutup modal & kembali ke login ─────────────────────
+        if (cancelSaldo) {
+            cancelSaldo.addEventListener('click', () => {
+                if (saldoModal) saldoModal.classList.remove('active');
+                window.location.href = '{{ route('login') }}';
+            });
+        }
 
-            if (!data.success) {
-                loginError.textContent = data.message || 'Login gagal.';
-                return;
-            }
+        // ─── Handle login form submit ─────────────────────────────────────────────
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            if (data.role === 'fo') {
                 try {
-                    const checkResp = await fetch('{{ route('cash.checkLatest') }}', {
-                        method: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
+                    const formData = new FormData(loginForm);
+                    const response = await fetch('{{ route('login.do') }}', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: formData
                     });
-                    const checkData = await checkResp.json();
-                    if (!checkData.success) {
-                        sessionConfirmModal.classList.add('active');
-                    } else {
-                        saldoModal.classList.add('active');
+
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        if (loginError) loginError.textContent = data.message || 'Login gagal.';
+                        return;
+                    }
+
+                    if (data.role === 'fo') {
+                        try {
+                            const checkResp = await fetch('{{ route('cash.checkLatest') }}', {
+                                method: 'GET',
+                                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                            });
+                            const checkData = await checkResp.json();
+                            if (!checkData.success) {
+                                if (sessionConfirmModal) sessionConfirmModal.classList.add('active');
+                            } else {
+                                if (saldoModal) saldoModal.classList.add('active');
+                            }
+                        } catch (err) {
+                            console.error('Gagal memeriksa sesi terakhir:', err);
+                            if (saldoModal) saldoModal.classList.add('active');
+                        }
+                    } else if (data.role === 'bo') {
+                        window.location.href = '{{ route('dashboard') }}';
                     }
                 } catch (err) {
-                    saldoModal.classList.add('active');
+                    console.error('Login request gagal:', err);
+                    if (loginError) loginError.textContent = 'Terjadi kesalahan jaringan. Coba lagi.';
                 }
-            } else if (data.role === 'bo') {
-                window.location.href = '{{ route('dashboard') }}';
-            }
-        });
-
-        useLatestBtn.addEventListener('click', () => {
-            sessionConfirmModal.classList.remove('active');
-            window.location.href = '{{ route('main') }}';
-        });
-
-        createNewBtn.addEventListener('click', () => {
-            sessionConfirmModal.classList.remove('active');
-            saldoModal.classList.add('active');
-        });
-
-        // Handle submit saldo awal
-        submitSaldo.addEventListener('click', async () => {
-            const rawValue = saldoInput.value.replace(/[^0-9]/g, ''); // Ambil angka murni
-            if (!rawValue || rawValue < 0) {
-                alert('Masukkan saldo awal yang valid.');
-                return;
-            }
-
-            const response = await fetch('{{ route('cash.store') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    saldo_awal: parseInt(rawValue)
-                })
             });
+        }
 
-            const data = await response.json();
-            if (data.success) {
-                window.location.href = data.redirect;
-            } else {
-                alert('Gagal menyimpan saldo awal.');
-            }
-        });
+        // ─── Pakai Session Terakhir ───────────────────────────────────────────────
+        if (useLatestBtn) {
+            useLatestBtn.addEventListener('click', () => {
+                if (sessionConfirmModal) sessionConfirmModal.classList.remove('active');
+                window.location.href = '{{ route('main') }}';
+            });
+        }
+
+        // ─── Buat Session Baru (opsional, bisa di-comment di HTML) ───────────────
+        if (createNewBtn) {
+            createNewBtn.addEventListener('click', () => {
+                if (sessionConfirmModal) sessionConfirmModal.classList.remove('active');
+                if (saldoModal) saldoModal.classList.add('active');
+            });
+        }
+
+        // ─── Submit Saldo Awal: Mulai Shift ───────────────────────────────────────
+        if (submitSaldo) {
+            submitSaldo.addEventListener('click', async () => {
+                const rawValue = saldoInput ? saldoInput.value.replace(/[^0-9]/g, '') : '';
+                const numericValue = parseInt(rawValue, 10);
+
+                if (!rawValue || isNaN(numericValue) || numericValue < 0) {
+                    alert('Masukkan saldo awal yang valid.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('{{ route('cash.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ saldo_awal: numericValue })
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                    const data = await response.json();
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert(data.message || 'Gagal menyimpan saldo awal.');
+                    }
+                } catch (err) {
+                    console.error('Gagal menyimpan saldo awal:', err);
+                    alert('Terjadi kesalahan jaringan saat menyimpan saldo. Coba lagi.');
+                }
+            });
+        }
     </script>
 
 </body>

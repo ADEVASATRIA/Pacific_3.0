@@ -41,8 +41,12 @@ class PromoController extends Controller
             $validTicketIds = $promo->ticket_types ?? [];
             $items = collect($request->items);
 
-            // 🔹 Filter item yang eligible untuk promo
-            $eligibleItems = $items->filter(fn($item) => in_array($item['id'], $validTicketIds));
+            // 🔹 Filter item yang eligible untuk promo (harus bertipe tiket (1) dan ID tiket ada dalam daftar valid)
+            $eligibleItems = $items->filter(fn($item) => 
+                isset($item['type_purchase']) && 
+                intval($item['type_purchase']) === 1 && 
+                in_array($item['id'], $validTicketIds)
+            );
 
             if ($eligibleItems->isEmpty()) {
                 return response()->json(['success' => false, 'message' => 'Kode promo tidak berlaku untuk tipe tiket ini.']);

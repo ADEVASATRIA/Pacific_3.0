@@ -226,14 +226,17 @@
 
                     hiddenClub.value = this.value;
 
-                    if (this.value) {
-                        // Kalau clubhouse dipilih → disable coach
-                        coachSelect.value = '';
-                        coachSelect.disabled = true;
-                        document.querySelector(`#coach_hidden_${index}`).value = '';
-                    } else {
-                        // Kalau clubhouse dikosongkan → enable coach
-                        coachSelect.disabled = false;
+                    if (coachSelect) {
+                        if (this.value) {
+                            // Kalau clubhouse dipilih → disable coach
+                            coachSelect.value = '';
+                            coachSelect.disabled = true;
+                            const hiddenCoach = document.querySelector(`#coach_hidden_${index}`);
+                            if (hiddenCoach) hiddenCoach.value = '';
+                        } else {
+                            // Kalau clubhouse dikosongkan → enable coach
+                            coachSelect.disabled = false;
+                        }
                     }
                 });
             });
@@ -407,6 +410,18 @@
                 showAlert('success', @json(session('success')));
             @endif
 
+            // === ADS SLIDER ===
+            const slides = document.querySelectorAll(".ads-slider img");
+            let slideIndex = 0;
+            if (slides.length > 0) {
+                slides[slideIndex].classList.add("active");
+                setInterval(() => {
+                    slides[slideIndex].classList.remove("active");
+                    slideIndex = (slideIndex + 1) % slides.length;
+                    slides[slideIndex].classList.add("active");
+                }, 4000);
+            }
+
             // === HANDLE PEMBAYARAN ===
             const paymentInput = document.getElementById('payment-method');
             const approvalBox = document.getElementById('approval-code-box');
@@ -414,6 +429,21 @@
             const moneyBox = document.getElementById('money-box');
             const selected = document.querySelector('.custom-select .selected');
             const options = document.querySelectorAll('.custom-select .options div');
+            const selectEl = document.querySelector('.custom-select');
+
+            if (selected && selectEl) {
+                selected.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    selectEl.classList.toggle('open');
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!selectEl.contains(e.target)) {
+                        selectEl.classList.remove('open');
+                    }
+                });
+            }
 
             options.forEach(opt => {
                 opt.addEventListener('click', function() {
@@ -423,6 +453,11 @@
 
                     selected.textContent = text;
                     paymentInput.value = value;
+
+                    // Close dropdown
+                    if (selectEl) {
+                        selectEl.classList.remove('open');
+                    }
 
                     // Reset all boxes
                     approvalBox.classList.add('hidden');
@@ -506,8 +541,9 @@
                 const kembali = uang - total;
 
                 uangDiterimaHidden.value = uang;
-                kembalianHidden.value = kembali > 0 ? kembali : 0;
-                kembalianInput.value = formatRupiah(kembalianHidden.value);
+                const kembalian = kembali > 0 ? kembali : 0;
+                kembalianHidden.value = kembalian;
+                kembalianInput.value = formatRupiah(kembalian);
             }
 
             uangDiterimaInput.addEventListener('input', () => {

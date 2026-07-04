@@ -426,9 +426,9 @@
                                         </div>
 
                                         {{-- Tipe Khusus --}}
-                                        <div class="col-md-6" id="edit_tipeKhusus">
-                                            <label for="edit_tipeKhusus" class="form-label fw-semibold">Tipe Khusus</label>
-                                            <select name="tipe_khusus" id="edit_tipeKhusus" class="form-select shadow-sm"
+                                        <div class="col-md-6" id="edit_tipeKhususContainer">
+                                            <label for="edit_tipe_khusus" class="form-label fw-semibold">Tipe Khusus</label>
+                                            <select name="tipe_khusus" id="edit_tipe_khusus" class="form-select shadow-sm"
                                                 required>
                                                 <option value="1">Normal</option>
                                                 <option value="2">Pengantar</option>
@@ -506,17 +506,8 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const canBuyTiket = document.getElementById('can_buy_tiket_pengantar');
-            const tipeKhusus = document.getElementById('tipeKhusus');
-
-            function toggleTipeKhusus() {
-                tipeKhusus.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
-            }
-
-            toggleTipeKhusus();
-            canBuyTiket.addEventListener('change', toggleTipeKhusus);
-        });
+        // DOMContentLoaded sebelumnya untuk toggle Tipe Khusus (Tambah) dihapus 
+        // karena requirement baru: Tipe Khusus selalu ditampilkan.
 
         const confirmModal = document.getElementById('confirmDeleteModal');
         const successModal = document.getElementById('successModal');
@@ -556,14 +547,13 @@
                 document.getElementById('edit_is_active').value = data.is_active ?? 1;
                 document.getElementById('edit_can_buy_tiket_pengantar').value = data.can_buy_tiket_pengantar ?? 0;
                 document.getElementById('edit_is_coach_club_require').value = data.is_coach_club_require ?? 0;
-                document.getElementById('edit_tipeKhusus').value = data.tipe_khusus ?? 1;
+                document.getElementById('edit_tipe_khusus').value = data.tipe_khusus ?? 1;
 
                 // Tampilkan modal edit
                 const modal = new bootstrap.Modal(document.getElementById('modalEditTicketTypes'));
                 modal.show();
 
-                // Jalankan toggle visibilitas untuk "Tipe Khusus" (agar konsisten)
-                toggleEditTipeKhusus();
+                // Requirement baru: Tipe khusus selalu ditampilkan, sehingga toggle dihilangkan.
 
                 toggleEditDuration();
 
@@ -572,22 +562,6 @@
                 console.error('Error:', error);
             }
         }
-
-        // Fungsi untuk sembunyikan field "Tipe Khusus" jika can_buy_tiket_pengantar = 1
-        function toggleEditTipeKhusus() {
-            const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
-            const tipeKhususContainer = document.getElementById('edit_tipeKhusus').closest('div');
-
-            tipeKhususContainer.style.display = (canBuyTiket.value === '1') ? 'none' : 'block';
-        }
-
-        // Event listener agar toggle tetap aktif kalau user ubah dropdown
-        document.addEventListener('DOMContentLoaded', function() {
-            const canBuyTiket = document.getElementById('edit_can_buy_tiket_pengantar');
-            if (canBuyTiket) {
-                canBuyTiket.addEventListener('change', toggleEditTipeKhusus);
-            }
-        });
 
         cancelBtn.addEventListener('click', () => {
             confirmModal.style.display = 'none';

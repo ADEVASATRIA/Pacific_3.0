@@ -53,14 +53,18 @@
                             {{-- Versi web --}}
                             <p class="ticket-desc screen-only">
                                Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                Berlaku Sampai
-                                <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                @if ($ticket->date_end)
+                                    Berlaku Sampai
+                                    <strong>{{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}</strong>
+                                @else
+                                    <strong>Berlaku Lifetime</strong>
+                                @endif
                             </p>
 
                             {{-- Versi print --}}
                             <p class="ticket-subtitle print-only">
                                 Tiket {{ $ticket->purchaseDetail->ticketType->name ?? 'Tiket' }} <br>
-                                {{ \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') }}
+                                {{ $ticket->date_end ? \Carbon\Carbon::parse($ticket->date_end)->translatedFormat('d F Y') : 'Berlaku Lifetime' }}
                             </p>
                         </div>
                     </div>

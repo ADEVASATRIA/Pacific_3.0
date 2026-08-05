@@ -119,6 +119,10 @@
                                             </button>
                                             <a href="{{ route('view-detail-package', $data['id']) }}"
                                                 class="btn btn-primary">Detail</a>
+                                            <button class="btn btn-danger btn-sm"
+                                                onclick="openConfirmModal({{ $data['id'] }}, '{{ $data['package_name'] }}')">
+                                                Hapus
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach

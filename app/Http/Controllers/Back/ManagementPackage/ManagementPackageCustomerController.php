@@ -247,11 +247,13 @@ class ManagementPackageCustomerController extends Controller
     // Logika delete package
     public function deletePackage($id)
     {
-        $package = PackageComboRedeem::with('details.tickets')->find($id);
+        $package = PackageComboRedeem::with(['details.tickets', 'customer'])->find($id);
 
         if (!$package) {
             return redirect()->back()->with('error', 'Package Tidak Ditemukan');
         }
+
+        $phone = optional($package->customer)->phone;
 
         foreach ($package->details as $detail) {
             foreach ($detail->tickets as $ticket) {
@@ -265,7 +267,7 @@ class ManagementPackageCustomerController extends Controller
 
         $package->delete();
 
-        return redirect()->route('view-update-package-home')->with([
+        return redirect()->route('view-update-package-home', compact('phone'))->with([
             'success' => true,
             'action' => 'delete'
         ]);

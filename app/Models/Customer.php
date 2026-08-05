@@ -12,6 +12,8 @@ class Customer extends Model
             'id',
             'name',
             'phone',
+            'no_ktp',
+            'sertifikat_pelatih',
             'dob',
             'awal_masa_berlaku',
             'akhir_masa_berlaku',

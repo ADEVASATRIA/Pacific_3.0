@@ -27,6 +27,8 @@
                         <th class="text-center">Nama Clubhouse</th>
                         <th class="text-center">Lokasi</th>
                         <th class="text-center">Nomer Telephone</th>
+                        <th class="text-center">Dokumen</th>
+                        <th class="text-center">KTP Pengurus</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -36,6 +38,22 @@
                             <td>{{ $clubhouse->name }}</td>
                             <td>{{ $clubhouse->location }}</td>
                             <td>{{ $clubhouse->phone }}</td>
+                            <td class="text-center">
+                                @if ($clubhouse->dokumen_pdf)
+                                    <a href="{{ asset('storage/' . $clubhouse->dokumen_pdf) }}" target="_blank"
+                                        class="btn btn-outline-primary btn-sm">Lihat</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if ($clubhouse->ktp_pengurus)
+                                    <a href="{{ asset('storage/' . $clubhouse->ktp_pengurus) }}" target="_blank"
+                                        class="btn btn-outline-primary btn-sm">Lihat</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm" onclick="openEditModal({{ $clubhouse->id }})">
                                     Edit
@@ -48,8 +66,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-gray-500 py-3">
-                                Tidak ada data Pelatih
+                            <td colspan="6" class="text-center text-gray-500 py-3">
+                                Tidak ada data Clubhouse
                             </td>
                         </tr>
                     @endforelse
@@ -83,7 +101,7 @@
                 <div class="modal-body bg-light py-4">
                     {{-- Ganti formTambahPromo ke formTambahCoach --}}
                     <form action="{{ route('add.clubhouse') }}" method="POST" id="formTambahClubhouse" class="needs-validation"
-                        novalidate>
+                        enctype="multipart/form-data" novalidate>
                         @csrf
 
                         <div class="container-fluid">
@@ -114,9 +132,22 @@
                                     <div class="invalid-feedback">Nomor Telepon pelatih harus diisi!</div>
                                 </div>
 
-                                {{-- Placeholder untuk kolom kosong agar layout tetap rapi --}}
+                                {{-- Dokumen PDF --}}
                                 <div class="col-md-6">
-                                    {{-- Kosong --}}
+                                    <label for="add_dokumen_pdf" class="form-label fw-semibold">Dokumen Clubhouse
+                                        (PDF)</label>
+                                    <input type="file" name="dokumen_pdf" id="add_dokumen_pdf" class="form-control"
+                                        accept="application/pdf">
+                                    <div class="invalid-feedback">Dokumen Clubhouse harus berupa file PDF!</div>
+                                </div>
+
+                                {{-- KTP Pengurus --}}
+                                <div class="col-md-6">
+                                    <label for="add_ktp_pengurus" class="form-label fw-semibold">KTP Pengurus
+                                        Clubhouse</label>
+                                    <input type="file" name="ktp_pengurus" id="add_ktp_pengurus" class="form-control"
+                                        accept="application/pdf,image/jpeg,image/png">
+                                    <div class="invalid-feedback">KTP Pengurus harus berupa file PDF/JPG/PNG!</div>
                                 </div>
 
                             </div>
@@ -157,7 +188,8 @@
 
                 {{-- Body --}}
                 <div class="modal-body bg-light py-4">
-                    <form id="formEditClubhouse" method="POST" class="needs-validation" novalidate>
+                    <form id="formEditClubhouse" method="POST" class="needs-validation" enctype="multipart/form-data"
+                        novalidate>
                         @csrf
                         {{-- Field tersembunyi untuk ID Pelatih, penting untuk proses update --}}
                         <input type="hidden" name="id" id="edit_coach_id">
@@ -187,6 +219,26 @@
                                     <input type="text" name="phone" id="edit_clubhouse_phone" class="form-control"
                                         placeholder="Masukkan nomor telepon" required>
                                     <div class="invalid-feedback">Nomor Telepon Clubhouse harus diisi!</div>
+                                </div>
+
+                                {{-- Dokumen PDF --}}
+                                <div class="col-md-6">
+                                    <label for="edit_dokumen_pdf" class="form-label fw-semibold">Dokumen Clubhouse
+                                        (PDF)</label>
+                                    <input type="file" name="dokumen_pdf" id="edit_dokumen_pdf" class="form-control"
+                                        accept="application/pdf">
+                                    <small id="edit_dokumen_pdf_current" class="form-text"></small>
+                                    <div class="invalid-feedback">Dokumen Clubhouse harus berupa file PDF!</div>
+                                </div>
+
+                                {{-- KTP Pengurus --}}
+                                <div class="col-md-6">
+                                    <label for="edit_ktp_pengurus" class="form-label fw-semibold">KTP Pengurus
+                                        Clubhouse</label>
+                                    <input type="file" name="ktp_pengurus" id="edit_ktp_pengurus" class="form-control"
+                                        accept="application/pdf,image/jpeg,image/png">
+                                    <small id="edit_ktp_pengurus_current" class="form-text"></small>
+                                    <div class="invalid-feedback">KTP Pengurus harus berupa file PDF/JPG/PNG!</div>
                                 </div>
 
                             </div>
@@ -270,7 +322,15 @@
                 document.getElementById('edit_clubhouse_name').value = data.name ?? '';
                 document.getElementById('edit_clubhouse_location').value = data.location ?? '';
                 document.getElementById('edit_clubhouse_phone').value = data.phone ?? '';
-            
+
+                // Tampilkan link dokumen & KTP pengurus yang sudah ada (jika ada)
+                document.getElementById('edit_dokumen_pdf_current').innerHTML = data.dokumen_pdf_url
+                    ? `File saat ini: <a href="${data.dokumen_pdf_url}" target="_blank">Lihat Dokumen</a>`
+                    : '';
+                document.getElementById('edit_ktp_pengurus_current').innerHTML = data.ktp_pengurus_url
+                    ? `File saat ini: <a href="${data.ktp_pengurus_url}" target="_blank">Lihat KTP</a>`
+                    : '';
+
                 const editModal = new bootstrap.Modal(document.getElementById('modalEditClubhouse'));
                 editModal.show();
             } catch (error) {

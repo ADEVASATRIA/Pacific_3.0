@@ -75,6 +75,8 @@
                     <tr class="bg-gray-100">
                         <th class="text-center">Nama</th>
                         <th class="text-center">Nomer Telephone</th>
+                        <th class="text-center">No. KTP</th>
+                        <th class="text-center">Sertifikat</th>
                         <th class="text-center">Awal Masa Berlaku</th>
                         <th class="text-center">Akhir masa Berlaku</th>
                         <th class="text-center">Clubhouse</th>
@@ -87,6 +89,15 @@
                         <tr>
                             <td>{{ $coach->name }}</td>
                             <td>{{ $coach->phone }}</td>
+                            <td class="text-center">{{ $coach->no_ktp ?? '-' }}</td>
+                            <td class="text-center">
+                                @if ($coach->sertifikat_pelatih)
+                                    <a href="{{ asset('storage/' . $coach->sertifikat_pelatih) }}" target="_blank"
+                                        class="btn btn-outline-primary btn-sm">Lihat</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="text-center">
                                 {{ \Carbon\Carbon::parse($coach->awal_masa_berlaku)->format('d M Y') }}
                             </td>
@@ -117,7 +128,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-gray-500 py-3">
+                            <td colspan="9" class="text-center text-gray-500 py-3">
                                 Tidak ada data Pelatih
                             </td>
                         </tr>
@@ -152,7 +163,7 @@
                 <div class="modal-body bg-light py-4">
                     {{-- Ganti formTambahPromo ke formTambahCoach --}}
                     <form action="{{ route('add.coach') }}" method="POST" id="formTambahCoach" class="needs-validation"
-                        novalidate>
+                        enctype="multipart/form-data" novalidate>
                         @csrf
 
                         <div class="container-fluid">
@@ -211,9 +222,22 @@
                                     <div class="invalid-feedback">Clubhouse harus dipilih!</div>
                                 </div>
 
-                                {{-- Placeholder untuk kolom kosong agar layout tetap rapi --}}
+                                {{-- Nomor KTP --}}
                                 <div class="col-md-6">
-                                    {{-- Kosong --}}
+                                    <label for="add_no_ktp" class="form-label fw-semibold">Nomor KTP</label>
+                                    <input type="text" name="no_ktp" id="add_no_ktp" class="form-control"
+                                        placeholder="Masukkan 16 digit nomor KTP" maxlength="16"
+                                        value="{{ old('no_ktp') }}">
+                                    <div class="invalid-feedback">Nomor KTP harus 16 digit angka!</div>
+                                </div>
+
+                                {{-- Sertifikat Pelatih --}}
+                                <div class="col-md-6">
+                                    <label for="add_sertifikat_pelatih" class="form-label fw-semibold">Sertifikat
+                                        Pelatih (PDF)</label>
+                                    <input type="file" name="sertifikat_pelatih" id="add_sertifikat_pelatih"
+                                        class="form-control" accept="application/pdf">
+                                    <div class="invalid-feedback">Sertifikat pelatih harus berupa file PDF!</div>
                                 </div>
 
                             </div>
@@ -253,7 +277,8 @@
 
                 {{-- Body --}}
                 <div class="modal-body bg-light py-4">
-                    <form id="formEditCoach" method="POST" class="needs-validation" novalidate>
+                    <form id="formEditCoach" method="POST" class="needs-validation" enctype="multipart/form-data"
+                        novalidate>
                         @csrf
                         {{-- Field tersembunyi untuk ID Pelatih, penting untuk proses update --}}
                         <input type="hidden" name="id" id="edit_coach_id">
@@ -304,6 +329,24 @@
                                         <option value="" disabled selected>Memuat...</option>
                                     </select>
                                     <div class="invalid-feedback">Clubhouse harus dipilih!</div>
+                                </div>
+
+                                {{-- Nomor KTP --}}
+                                <div class="col-md-6">
+                                    <label for="edit_coach_no_ktp" class="form-label fw-semibold">Nomor KTP</label>
+                                    <input type="text" name="no_ktp" id="edit_coach_no_ktp" class="form-control"
+                                        placeholder="Masukkan 16 digit nomor KTP" maxlength="16">
+                                    <div class="invalid-feedback">Nomor KTP harus 16 digit angka!</div>
+                                </div>
+
+                                {{-- Sertifikat Pelatih --}}
+                                <div class="col-md-6">
+                                    <label for="edit_coach_sertifikat_pelatih" class="form-label fw-semibold">Sertifikat
+                                        Pelatih (PDF)</label>
+                                    <input type="file" name="sertifikat_pelatih" id="edit_coach_sertifikat_pelatih"
+                                        class="form-control" accept="application/pdf">
+                                    <small id="edit_coach_sertifikat_current" class="form-text"></small>
+                                    <div class="invalid-feedback">Sertifikat pelatih harus berupa file PDF!</div>
                                 </div>
 
                             </div>
@@ -424,10 +467,17 @@
                 // 3. Isi field input teks/tanggal
                 document.getElementById('edit_coach_name').value = coach.name ?? '';
                 document.getElementById('edit_coach_phone').value = coach.phone ?? '';
+                document.getElementById('edit_coach_no_ktp').value = coach.no_ktp ?? '';
 
                 // Mengisi tanggal dengan fungsi helper yang telah diperbaiki
                 document.getElementById('edit_coach_awal_masa_berlaku').value = formatDate(coach.awal_masa_berlaku);
                 document.getElementById('edit_coach_akhir_masa_berlaku').value = formatDate(coach.akhir_masa_berlaku);
+
+                // Tampilkan link sertifikat yang sudah ada (jika ada)
+                const certInfo = document.getElementById('edit_coach_sertifikat_current');
+                certInfo.innerHTML = coach.sertifikat_pelatih_url
+                    ? `File saat ini: <a href="${coach.sertifikat_pelatih_url}" target="_blank">Lihat Sertifikat</a>`
+                    : '';
 
                 // 4. Isi dropdown Clubhouse
                 selectClubhouse.innerHTML = ''; // Kosongkan opsi lama

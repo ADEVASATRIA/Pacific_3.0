@@ -7,6 +7,7 @@ use App\Models\Clubhouse;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class BackCoachController extends Controller
 {
@@ -64,6 +65,8 @@ class BackCoachController extends Controller
                     'awal_masa_berlaku' => 'required|date',
                     'akhir_masa_berlaku' => 'required|date',
                     'clubhouse_id' => 'required|integer',
+                    'no_ktp' => 'nullable|digits:16',
+                    'sertifikat_pelatih' => 'nullable|file|mimes:pdf|max:5120',
                 ],
                 [
                     'name.required' => 'Nama pelatih harus diisi!',
@@ -71,6 +74,9 @@ class BackCoachController extends Controller
                     'awal_masa_berlaku.required' => 'Awal Masa Berlaku pelatih harus diisi!',
                     'akhir_masa_berlaku.required' => 'Akhir Masa Berlaku pelatih harus diisi!',
                     'clubhouse_id.required' => 'Clubhouse harus dipilih!',
+                    'no_ktp.digits' => 'Nomor KTP harus 16 digit angka!',
+                    'sertifikat_pelatih.mimes' => 'Sertifikat pelatih harus berupa file PDF!',
+                    'sertifikat_pelatih.max' => 'Ukuran file sertifikat maksimal 5MB!',
                 ]
             );
 
@@ -81,12 +87,17 @@ class BackCoachController extends Controller
             $pelatih = new Customer();
             $pelatih->name = $request->name;
             $pelatih->phone = $request->phone;
+            $pelatih->no_ktp = $request->no_ktp;
             $pelatih->awal_masa_berlaku = $request->awal_masa_berlaku;
             $pelatih->akhir_masa_berlaku = $request->akhir_masa_berlaku;
             $pelatih->clubhouse_id = $request->clubhouse_id;
             $pelatih->id_club_renang = $request->clubhouse_id;
             $pelatih->is_pelatih = true;
-            
+
+            if ($request->hasFile('sertifikat_pelatih')) {
+                $pelatih->sertifikat_pelatih = $request->file('sertifikat_pelatih')->store('coach_certificates', 'public');
+            }
+
             if (!$pelatih->save()) {
                 throw new \Exception("Gagal menyimpan data Pelatih.");
             }
@@ -108,8 +119,14 @@ class BackCoachController extends Controller
     {
         $coach = Customer::find($id);
         $clubhouse = Clubhouse::orderBy('name', 'asc')->get();
+
+        $coachData = $coach->toArray();
+        $coachData['sertifikat_pelatih_url'] = $coach->sertifikat_pelatih
+            ? asset('storage/' . ltrim($coach->sertifikat_pelatih, '/'))
+            : null;
+
         return response()->json([
-            'coach' => $coach,
+            'coach' => $coachData,
             'clubhouse' => $clubhouse
         ]);
     }
@@ -126,6 +143,8 @@ class BackCoachController extends Controller
                     'awal_masa_berlaku' => 'required|date',
                     'akhir_masa_berlaku' => 'required|date',
                     'clubhouse_id' => 'required|integer',
+                    'no_ktp' => 'nullable|digits:16',
+                    'sertifikat_pelatih' => 'nullable|file|mimes:pdf|max:5120',
                 ],
                 [
                     'name.required' => 'Nama pelatih harus diisi!',
@@ -133,6 +152,9 @@ class BackCoachController extends Controller
                     'awal_masa_berlaku.required' => 'Awal Masa Berlaku pelatih harus diisi!',
                     'akhir_masa_berlaku.required' => 'Akhir Masa Berlaku pelatih harus diisi!',
                     'clubhouse_id.required' => 'Clubhouse harus dipilih!',
+                    'no_ktp.digits' => 'Nomor KTP harus 16 digit angka!',
+                    'sertifikat_pelatih.mimes' => 'Sertifikat pelatih harus berupa file PDF!',
+                    'sertifikat_pelatih.max' => 'Ukuran file sertifikat maksimal 5MB!',
                 ]
             );
 
@@ -143,12 +165,20 @@ class BackCoachController extends Controller
             $pelatih = Customer::findOrFail($id);
             $pelatih->name = $request->name;
             $pelatih->phone = $request->phone;
+            $pelatih->no_ktp = $request->no_ktp;
             $pelatih->awal_masa_berlaku = $request->awal_masa_berlaku;
             $pelatih->akhir_masa_berlaku = $request->akhir_masa_berlaku;
             $pelatih->clubhouse_id = $request->clubhouse_id;
             $pelatih->id_club_renang = $request->clubhouse_id;
             $pelatih->is_pelatih = true;
-            
+
+            if ($request->hasFile('sertifikat_pelatih')) {
+                if ($pelatih->sertifikat_pelatih) {
+                    Storage::disk('public')->delete($pelatih->sertifikat_pelatih);
+                }
+                $pelatih->sertifikat_pelatih = $request->file('sertifikat_pelatih')->store('coach_certificates', 'public');
+            }
+
             if (!$pelatih->save()) {
                 throw new \Exception("Gagal memperbarui data Pelatih.");
             }
@@ -171,6 +201,10 @@ class BackCoachController extends Controller
     public function delete($id)
     {
         $coach = Customer::find($id);
+
+        if ($coach->sertifikat_pelatih) {
+            Storage::disk('public')->delete($coach->sertifikat_pelatih);
+        }
 
         $coach->delete();
 

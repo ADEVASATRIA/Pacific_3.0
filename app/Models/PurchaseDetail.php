@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseDetail extends Model
 {
+    use SoftDeletes;
+
     public const TYPE_TICKET = 1;
 	public const TYPE_ITEM = 2;
     public const TYPE_PACKAGE_COMBO = 3;

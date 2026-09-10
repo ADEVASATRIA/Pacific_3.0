@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Back\Transaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
+use App\Models\PurchaseDetail;
+use App\Models\Ticket;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -77,5 +80,50 @@ class TransactionController extends Controller
         }
 
         return view('back.partials.transaction.transaction_detail', compact('purchase'));
+    }
+
+    // Logika hapus transaksi (soft-delete + nonaktifkan tiket terkait)
+    public function delete($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $purchase = Purchase::with('purchaseDetails.packageComboRedeem.details')->findOrFail($id);
+
+            foreach ($purchase->purchaseDetails as $detail) {
+                if ($detail->type === PurchaseDetail::TYPE_PACKAGE_COMBO) {
+                    $redeem = $detail->packageComboRedeem;
+
+                    if ($redeem) {
+                        foreach ($redeem->details as $redeemDetail) {
+                            Ticket::where('package_combo_redeem_detail_id', $redeemDetail->id)
+                                ->update(['is_active' => 0]);
+
+                            $redeemDetail->delete();
+                        }
+
+                        $redeem->delete();
+                    }
+                } else {
+                    Ticket::where('purchase_detail_id', $detail->id)
+                        ->update(['is_active' => 0]);
+                }
+
+                $detail->delete();
+            }
+
+            $purchase->delete();
+
+            DB::commit();
+
+            return redirect()->route('transaction')->with([
+                'success' => true,
+                'action' => 'delete',
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menghapus transaksi: ' . $e->getMessage());
+        }
     }
 }

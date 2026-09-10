@@ -126,6 +126,17 @@ class CheckoutService
 
     public function processCheckout(Request $request)
     {
+        // 🔒 Idempotency guard: kalau checkout_token ini sudah pernah berhasil
+        // dipakai (klik ganda / submit ulang), kembalikan purchase yang sudah
+        // ada - jangan buat transaksi baru lagi.
+        $checkoutToken = $request->input('checkout_token');
+        if ($checkoutToken) {
+            $existingPurchase = Purchase::where('checkout_token', $checkoutToken)->first();
+            if ($existingPurchase) {
+                return $existingPurchase;
+            }
+        }
+
         $items = collect($request->input('items', []));
         if ($items->isEmpty()) {
             throw new \Exception('Tidak ada item untuk disimpan.');
@@ -225,6 +236,7 @@ class CheckoutService
             $purchase->voucher_log_id = $request->input('voucher_log_id') ?? null;
             $purchase->staff_id = $staff->id;
             $purchase->invoice_no = $invoice;
+            $purchase->checkout_token = $checkoutToken;
             $purchase->sub_total = $request->input('sub_total');
             $purchase->tax = $request->input('tax');
             $purchase->discount = $request->input('discount') ?? 0;
@@ -236,7 +248,20 @@ class CheckoutService
             $purchase->payment_info = $request->input('payment_info');
             $purchase->approval_code = $request->input('approval_code');
             $purchase->status = Purchase::STATUS_PAID;
-            $purchase->save();
+
+            try {
+                $purchase->save();
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Jaring pengaman race condition murni: 2 request dengan checkout_token
+                // yang sama nyaris bersamaan lolos pengecekan awal sebelum salah satunya
+                // sempat save(). Unique index checkout_token menolak yang kedua di sini -
+                // ambil baris yang menang, jangan buat dobel.
+                if ($checkoutToken && str_contains($e->getMessage(), 'checkout_token')) {
+                    DB::rollBack();
+                    return Purchase::where('checkout_token', $checkoutToken)->firstOrFail();
+                }
+                throw $e;
+            }
 
             // 🔹 Update Quota Promo atau Status Voucher Log
             if ($purchase->promo_id) {

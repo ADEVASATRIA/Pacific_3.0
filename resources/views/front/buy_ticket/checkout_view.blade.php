@@ -28,6 +28,7 @@
 
                 <form id="checkoutForm" action="{{ route('do_checkout') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="checkout_token" value="{{ $checkoutToken }}">
 
                     {{-- Items --}}
                     <div class="items-box">
@@ -199,7 +200,7 @@
                     </div>
 
                     <div class="checkout-submit">
-                        <button type="submit" class="submit-btn">Konfirmasi & Bayar</button>
+                        <button type="submit" id="checkoutSubmitBtn" class="submit-btn">Konfirmasi & Bayar</button>
                     </div>
                 </form>
             </div>
@@ -518,6 +519,11 @@
                         }
                     }
                 }
+
+                // Semua validasi lolos: cegah klik ganda / submit ganda
+                const submitBtn = document.getElementById('checkoutSubmitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Memproses...';
             });
 
             // === HITUNG KEMBALIAN OTOMATIS + FORMAT UANG ===

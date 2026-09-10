@@ -77,6 +77,7 @@ class CheckoutController extends Controller
         $request->validate([
             'items' => 'required|array',
             'customer_id' => 'required|exists:customers,id',
+            'checkout_token' => 'required|string',
 
             // Promo Validate if data promo is valid
             'promo_id' => 'nullable|integer',

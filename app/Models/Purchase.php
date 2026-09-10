@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {
+    use SoftDeletes;
+
     public const STATUS_NEW = 0;
     public const STATUS_PENDING = 1;
     public const STATUS_PAID = 2;
@@ -17,6 +20,7 @@ class Purchase extends Model
         'voucher_log_id',
         'staff_id',
         'invoice_no',
+        'checkout_token',
         'sub_total',
         'tax',
         'total',

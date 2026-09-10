@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PackageComboRedeemDetail extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'package_combo_redeem_id',
         'package_combo_detail_id',

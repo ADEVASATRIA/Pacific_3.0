@@ -148,6 +148,7 @@ Route::middleware('bo.auth')->group(function () {
     // Route Transaction View
     Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
     Route::get('/transaction/detail/{id}', [TransactionController::class, 'detail'])->name('transaction.detail');
+    Route::delete('/delete-transaction/{id}', [TransactionController::class, 'delete'])->name('delete.transaction');
 
     //Route Promo Management view back office
     Route::get('/promo', [PromoController::class, 'index'])->name('promo');

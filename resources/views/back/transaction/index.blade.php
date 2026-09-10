@@ -1,5 +1,6 @@
 @extends('main.back_blank')
 @section('title', 'Data Transaksi')
+@vite('resources/css/admin/close-modal.css')
 
 @section('content')
     <div class="transaction-page">
@@ -124,6 +125,11 @@
                                         onclick="showTransactionDetail({{ $purchase->id }})">
                                         Detail
                                     </button>
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="openConfirmModal({{ $purchase->id }}, '{{ $purchase->invoice_no }}')">
+                                        Hapus
+                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -156,6 +162,74 @@
                 </div>
             </div>
         </div>
+
+        {{-- Modal Delete --}}
+        <div id="confirmDeleteModal" class="closecashier-modal">
+            <div class="closecashier-modal-content">
+                <h2>Hapus Data Transaksi</h2>
+                <div class="closecashier-body">
+                    <p id="deleteTransactionInfo">Apakah Anda yakin ingin menghapus Data ini?</p>
+                </div>
+                <div class="closecashier-footer">
+                    <button id="btnCancelDelete" class="btn-danger">Batal</button>
+                    <form id="deleteTransactionForm" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-success">Ya, Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{-- Modal Success --}}
+        <div id="successModal" class="success-modal">
+            <div class="success-modal-content">
+                <div class="success-icon">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+                <h3 class="success-title">Data Transaksi Berhasil Dihapus!</h3>
+                <p class="success-message">Transaksi telah dihapus dari sistem.</p>
+            </div>
+        </div>
+
+        <script>
+            // Logic untuk modal delete
+            const confirmModal = document.getElementById('confirmDeleteModal');
+            const deleteTransactionForm = document.getElementById('deleteTransactionForm');
+            const deleteTransactionInfo = document.getElementById('deleteTransactionInfo');
+            const cancelBtn = document.getElementById('btnCancelDelete');
+
+            function openConfirmModal(id, invoiceNo) {
+                confirmModal.style.display = 'flex';
+                deleteTransactionInfo.innerHTML =
+                    `<p>Apakah Anda yakin ingin menghapus transaksi dengan invoice <strong>${invoiceNo}</strong>?</p>`;
+                deleteTransactionForm.action = `/delete-transaction/${id}`;
+            }
+
+            cancelBtn.addEventListener('click', () => {
+                confirmModal.style.display = 'none';
+            });
+
+            // Modal success feedback
+            @if (session('success'))
+                window.addEventListener('load', () => {
+                    const successModal = document.getElementById('successModal');
+                    successModal.style.display = 'flex';
+                    setTimeout(() => {
+                        successModal.style.display = 'none';
+                    }, 2500);
+                });
+            @endif
+
+            @if (session('error'))
+                window.addEventListener('load', () => {
+                    alert(@json(session('error')));
+                });
+            @endif
+        </script>
 
         <script>
             function showTransactionDetail(purchaseId) {

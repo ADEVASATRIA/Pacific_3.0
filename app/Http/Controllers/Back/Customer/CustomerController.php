@@ -41,7 +41,7 @@ class CustomerController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
-                'phone' => 'required|string|max:15|unique:customers,phone',
+                'phone' => ['required','string','max:15',\Illuminate\Validation\Rule::unique('customers','phone')->whereNull('deleted_at')],
                 'dob' => 'nullable|date',
                 'tipe_customer' => 'required|in:1,2,3',
                 'kategory_customer' => 'required|in:1,2,3',
@@ -118,7 +118,7 @@ class CustomerController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
-                'phone' => 'required|string|max:15|unique:customers,phone,' . $id,
+                'phone' => ['required','string','max:15',\Illuminate\Validation\Rule::unique('customers','phone')->ignore($id)->whereNull('deleted_at')],
                 'dob' => 'nullable|date',
                 'tipe_customer' => 'nullable|in:1,2,3',
                 'kategory_customer' => 'nullable|in:1,2,3',
@@ -165,7 +165,7 @@ class CustomerController extends Controller
 
             DB::commit();
 
-            return redirect()->route('customer')->with([
+            return redirect()->route('customer', ['phone' => $customer->phone])->with([
                 'success' => 'Berhasil mengedit data customer!',
                 'action' => 'edit'
             ]);
